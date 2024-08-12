@@ -64,13 +64,10 @@ file_field_form <- file.path(dir_raw_field_form, "raw.csv")
 file_pilot_form <- file.path(dir_raw_pilot_form, "raw.csv")
 file_sleep_diary <- file.path(dir_raw_sleep_diary, "raw.csv")
 
-## Get CPF & IDS -----
+## Get CPF & Anonimyzed IDS -----
 
 source(here::here("R", "anonymize_id.R"))
 source(here::here("R", "test_cpf.R"))
-
-# {actschool}: cpf_col_index <- 3
-# {pregnancy}: cpf_col_index <- 5
 
 raw_data_field_form <-
   file_field_form |>
@@ -134,10 +131,6 @@ for (i in split(id_data, seq(nrow(id_data)))) {
     ) |>
     scaler:::filter_data(col_index = 3, value = i$cpf)
 
-  # raw_data_sleep_diary <-
-  #   raw_data_sleep_diary %>% # Don't change the pipe
-  #   dplyr::filter(lubridate::year(lubridate::dmy_hms(.[[1]])) == "2022")
-
   if (!nrow(raw_data_sleep_diary) == 0) {
     # {actschool}: col_indexes = c(1, 4, 8, 10)
     # {pregnancy}: col_indexes = c(1, 4, 8, 10)
@@ -145,8 +138,6 @@ for (i in split(id_data, seq(nrow(id_data)))) {
       raw_data_sleep_diary |>
       scaler:::get_sleep_diary_type_of_day(col_indexes = c(1, 4, 8, 10))
 
-    # {actschool}: col_indexes = c(1, 8, 10, 17:26)
-    # {pregnancy}: col_indexes = c(1, 8, 10, 19:28)
     tidy_data_sleep_diary <-
       raw_data_sleep_diary |>
       scaler:::tidy_sleep_diary(col_indexes = c(1, 8, 10, 19:28))
@@ -279,53 +270,3 @@ lockr::unlock_dir(
   remove_file = TRUE,
   password = password
 )
-
-# Get metadata (remove) -----
-
-form_date <-
-  raw_data_field_form[[1, 1]] |>
-  lubridate::dmy_hms() |>
-  lubridate::date()
-
-# {actschool}: birth_date_col_index <- 81
-birth_date <-
-  raw_data_field_form[[1, 4]] |>
-  lubridate::dmy()
-
-age <-
-  lubridate::interval(birth_date, form_date, tz = "America/Sao_Paulo") |>
-  lubridate::as.period() |>
-  lubridate::year()
-
-# {actschool}: sex_col_index <- 84
-# sex <- ifelse(raw_data_field_form[[1, 84]] == "Masculino", "Male", "Female")
-# weight <- as.numeric(raw_data_field_form[[1, 77]])
-# height <- as.numeric(raw_data_field_form[[1, 78]]) / 100
-# bmi_cat <- scaler:::bmi(weight, height, number = FALSE, cat = TRUE)
-
-# {actschool}: dominant_wrist_col_index <- 79
-dominant_wrist <- ifelse(
-  raw_data_field_form[[1, 98]] == "Esquerdo", "Left", "Right"
-  )
-
-non_dominant_wrist <- ifelse(dominant_wrist == "Left", "Right", "Left")
-
-start <- lubridate::dmy_hms("19/12/2022 17:36:00")
-end <- lubridate::dmy_hms("20/01/2023 11:35:00")
-
-days <-
-  (end - start) |>
-  as.numeric() |>
-  floor()
-
-cli::cli_bullets(c(
-  "*" = "Age: {age}",
-  "*" = "Sex: {sex}",
-  "*" = "Height: {height} m",
-  "*" = "Weight: {weight} kg",
-  "*" = "BMI: {bmi_cat}",
-  "*" = "Body part: {non_dominant_wrist} wrist (non-dominant wrist)",
-  "*" = "Start: {start}",
-  "*" = "End: {end}",
-  "*" = "Days: {days}"
-))
