@@ -1,0 +1,288 @@
+---
+eval: false
+---
+
+<!-- %:::% .common h1 begin %:::% -->
+# Appendice - Mean stats for actigraphy data
+<!-- %:::% .common h1 end %:::% -->
+
+```{r}
+#| label: setup
+#| include: false
+
+source(here::here("R/quarto-setup.R"))
+```
+
+## Overview
+
+This notebook aims to help compute mean statistics for actigraphy data.
+
+## Setup
+
+```{r}
+#| eval: false
+
+library(checkmate, quietly = TRUE)
+library(cli, quietly = TRUE)
+library(here, quietly = TRUE)
+library(hms, quietly = TRUE)
+library(lubritime, quietly = TRUE)
+library(remotes, quietly = TRUE)
+library(rutils, quietly = TRUE) # github.com/danielvartan/rutils
+```
+
+```{r}
+circular_time_mean <- function(label, min, max, mean, sd) {
+  checkmate::assert_string(label)
+  rutils:::assert_hms(min)
+  rutils:::assert_hms(max)
+  rutils:::assert_hms(mean)
+  rutils:::assert_hms(sd)
+  rutils:::assert_identical(min, max, mean, sd, type = "length")
+  out <- list (
+    label = label,
+    min = min |> link_to_timeline_mean(),
+    max = max |> link_to_timeline_mean(),
+    mean = mean |> link_to_timeline_mean(),
+    sd = sd |> link_to_timeline_mean()
+  )
+  cli::cli_h1(label)
+  cli::cli_bullets(c(
+    paste("Min:", out$min),
+    paste("Max:", out$max),
+    paste("Mean:", out$mean),
+    paste("SD:", out$sd)
+  ))
+  invisible(out)
+}
+link_to_timeline_mean <- function(x) {
+  rutils:::assert_hms(x)
+  x |>
+    lubritime:::link_to_timeline() |>
+    mean(na.rm = TRUE) |>
+    hms::as_hms() |>
+    hms::round_hms(secs = 1)
+}
+```
+
+```{r}
+linear_time_mean <- function(label, min, max, mean, sd) {
+  checkmate::assert_string(label)
+  rutils:::assert_hms(min)
+  rutils:::assert_hms(max)
+  rutils:::assert_hms(mean)
+  rutils:::assert_hms(sd)
+  rutils:::assert_identical(min, max, mean, sd, type = "length")
+  out <- list (
+    min = min |> mean_duration(),
+    max = max |> mean_duration(),
+    mean = mean |> mean_duration(),
+    sd = sd |> mean_duration()
+  )
+  cli::cli_h1(label)
+  cli::cli_bullets(c(
+    paste("Min:", out$min),
+    paste("Max:", out$max),
+    paste("Mean:", out$mean),
+    paste("SD:", out$sd)
+  ))
+  invisible(out)
+}
+mean_duration <- function(x) {
+  rutils:::assert_hms(x)
+  x |>
+    mean(na.rm = TRUE) |>
+    hms::as_hms() |>
+    hms::round_hms(secs = 1)
+}
+```
+
+```{r}
+rounded_mean <- function(label, min, max, mean, sd) {
+  checkmate::assert_string(label)
+  checkmate::assert_numeric(min)
+  checkmate::assert_numeric(max)
+  checkmate::assert_numeric(mean)
+  checkmate::assert_numeric(sd)
+  rutils:::assert_identical(min, max, mean, sd, type = "length")
+  out <- list (
+    min = min |> mean(na.rm = TRUE) |> round(3),
+    max = max |> mean(na.rm = TRUE) |> round(3),
+    mean = mean |> mean(na.rm = TRUE) |> round(3),
+    sd = sd |> mean(na.rm = TRUE) |> round(3)
+  )
+  cli::cli_h1(label)
+  cli::cli_bullets(c(
+    paste("Min:", out$min),
+    paste("Max:", out$max),
+    paste("Mean:", out$mean),
+    paste("SD:", out$sd)
+  ))
+  invisible(out)
+}
+```
+
+## HIS
+
+```{r}
+circular_time_mean(
+  label = "HIS",
+  min = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  ),
+  max = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  ),
+  mean = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  ),
+  sd = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  )
+)
+```
+
+## HFS
+
+```{r}
+circular_time_mean(
+  label = "HFS",
+  min = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  ),
+  max = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  ),
+  mean = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  ),
+  sd = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  )
+)
+```
+
+## FPS
+
+```{r}
+linear_time_mean(
+  label = "FPS",
+  min = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  ),
+  max = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  ),
+  mean = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  ),
+  sd = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  )
+)
+```
+
+
+## TTS
+
+```{r}
+linear_time_mean(
+  label = "TTS",
+  min = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  ),
+  max = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  ),
+  mean = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  ),
+  sd = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  )
+)
+```
+
+## WASO
+
+```{r}
+linear_time_mean(
+  label = "WASO",
+  min = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  ),
+  max = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  ),
+  mean = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  ),
+  sd = c(
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00"),
+    hms::parse_hms("00:00:00")
+  )
+)
+```
+
+## TTS/FPS
+
+```{r}
+rounded_mean(
+  label = "TTS/FPS",
+  min = c(0, 0, 0),
+  max = c(0, 0, 0),
+  mean = c(0, 0, 0),
+  sd = c(0, 0, 0)
+)
+```
+
+## Awakenings
+
+```{r}
+rounded_mean(
+  label = "TTS/FPS",
+  min = c(0, 0, 0),
+  max = c(0, 0, 0),
+  mean = c(0, 0, 0),
+  sd = c(0, 0, 0)
+)
+```
