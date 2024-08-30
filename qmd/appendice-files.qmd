@@ -1,12 +1,47 @@
-# !Make a copy of the vault before continuing!
+---
+eval: false
+---
 
-## Anonymize files -----
+<!-- %:::% .common h1 begin %:::% -->
+# Appendice - Files and anonymization
+<!-- %:::% .common h1 end %:::% -->
 
+```{r}
+#| label: setup
+#| include: false
+
+source(here::here("R/quarto-setup.R"))
+```
+
+## Setup
+
+```{r}
+#| eval: false
+
+library(checkmate, quietly = TRUE)
+library(magrittr,quietly = TRUE)
+library(readr, quietly = TRUE)
+library(rutils, quietly = TRUE) # github.com/danielvartan/rutils
+library(sodium, quietly = TRUE)
+library(stringr, quietly = TRUE)
+```
+
+## Comments
+
+**Make a copy of the vault before continuing!**
+
+## Anonymize files
+
+```{r}
 source(here::here("R", "anonymize_id.R"))
+```
 
+```{r}
 salt <- askpass::askpass() # !Configure `salt` before running!
 dir_vault <- normalizePath(readClipboard(), "/", mustWork = FALSE)
+```
 
+```{r}
 anonymize <- function(file, salt) {
   file_dir <- dirname(file)
   file_name <- basename(file)
@@ -30,22 +65,36 @@ anonymize <- function(file, salt) {
     file
   }
 }
+```
 
+```{r}
 vapply(
   X = list.files(dir_vault, full.names = TRUE, recursive = TRUE),
   FUN = anonymize,
   FUN.VALUE = character(1),
   salt = salt
 )
+```
 
-## Settings -----
+## Parameters
 
+```{r}
 password <- askpass::askpass()
+```
 
+```{r}
 dir_bundles <- normalizePath(readClipboard(), "/", mustWork = FALSE)
-dir_processed_data <- normalizePath(readClipboard(), "/", mustWork = FALSE)
-dir_raw_data <- normalizePath(readClipboard(), "/", mustWork = FALSE)
+```
 
+```{r}
+dir_processed_data <- normalizePath(readClipboard(), "/", mustWork = FALSE)
+```
+
+```{r}
+dir_raw_data <- normalizePath(readClipboard(), "/", mustWork = FALSE)
+```
+
+```{r}
 dir_raw_actigraphy <- file.path(dir_raw_data, "actigraphy")
 dir_raw_consent <- file.path(dir_raw_data, "consent")
 dir_raw_control_form <- file.path(dir_raw_data, "control-form")
@@ -63,12 +112,16 @@ dir_processed_sleep_diary <- file.path(dir_processed_data, "sleep-diary")
 file_field_form <- file.path(dir_raw_field_form, "raw.csv")
 file_pilot_form <- file.path(dir_raw_pilot_form, "raw.csv")
 file_sleep_diary <- file.path(dir_raw_sleep_diary, "raw.csv")
+```
 
-## Get CPF & Anonimyzed IDS -----
+## Get CPF & anonimyzed IDs
 
+```{r}
 source(here::here("R", "anonymize_id.R"))
 source(here::here("R", "test_cpf.R"))
+```
 
+```{r}
 raw_data_field_form <-
   file_field_form |>
   readr::read_csv(
@@ -76,7 +129,9 @@ raw_data_field_form <-
     na = c("", "NA")
     ) |>
   rutils:::shush()
+```
 
+```{r}
 raw_data_pilot_form <-
   file_pilot_form |>
   readr::read_csv(
@@ -84,18 +139,24 @@ raw_data_pilot_form <-
     na = c("", "NA")
   ) |>
   rutils:::shush()
+```
 
+```{r}
 cpf_values <- c(raw_data_field_form[[5]], raw_data_pilot_form[[5]])
 
 id_data <- dplyr::tibble(
   id = anonymize_id(cpf_values, salt = salt),
   cpf = cpf_values
 )
+```
 
+```{r}
 test_cpf(id_data$cpf)
+```
 
-## Load, filter & write data -----
+## Load, filter & write data
 
+```{r}
 for (i in split(id_data, seq(nrow(id_data)))) {
   raw_data_field_form <-
     file_field_form |>
@@ -173,9 +234,11 @@ for (i in split(id_data, seq(nrow(id_data)))) {
       )
   }
 }
+```
 
-## Create bundles -----
+## Create bundles
 
+```{r}
 for (i in split(id_data, seq(nrow(id_data)))) {
   bundle_files <- c(
     "actigraphy-raw-data" = file.path(
@@ -231,38 +294,66 @@ for (i in split(id_data, seq(nrow(id_data)))) {
     )
   }
 }
+```
 
-## Lock files -----
+## Lock files
 
+```{r}
 dir_path <- normalizePath(readClipboard(), "/", mustWork = FALSE)
-private_key <- rstudioapi::selectFile()
-public_key <- rstudioapi::selectFile()
-password <- askpass::askpass()
+```
 
+```{r}
+private_key <- rstudioapi::selectFile()
+```
+
+```{r}
+public_key <- rstudioapi::selectFile()
+```
+
+```{r}
+password <- askpass::askpass()
+```
+
+```{r}
 lockr::lock_dir(
   dir = dir_path,
   public_key = public_key,
   suffix = ".lockr",
   remove_file = TRUE
 )
+```
 
-# test_file <- rstudioapi::selectFile()
-#
-# lockr::unlock_file(
-#   file = test_file,
-#   private_key = private_key,
-#   suffix = ".lockr",
-#   remove_file = FALSE,
-#   password = password
-# )
+```{r}
+test_file <- rstudioapi::selectFile()
 
-## Unlock files -----
+lockr::unlock_file(
+  file = test_file,
+  private_key = private_key,
+  suffix = ".lockr",
+  remove_file = FALSE,
+  password = password
+)
+```
 
+## Unlock files
+
+```{r}
 dir_path <- normalizePath(readClipboard(), "/", mustWork = FALSE)
-private_key <- rstudioapi::selectFile()
-public_key <- rstudioapi::selectFile()
-password <- askpass::askpass()
+```
 
+```{r}
+private_key <- rstudioapi::selectFile()
+```
+
+```{r}
+public_key <- rstudioapi::selectFile()
+```
+
+```{r}
+password <- askpass::askpass()
+```
+
+```{r}
 lockr::unlock_dir(
   dir = dir_path,
   private_key  = private_key ,
@@ -270,3 +361,4 @@ lockr::unlock_dir(
   remove_file = TRUE,
   password = password
 )
+```

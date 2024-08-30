@@ -37,41 +37,49 @@ ga_start <- function(ultrasound, ga) {
   lubridate::as_date(ultrasound - ga)
 }
 
-ga_point <- function(ga_start, point) {
-  checkmate::assert_date(ga_start, len = 1)
+ga_point <- function(ga_start, point, print = TRUE) {
+  checkmate::assert_date(ga_start)
   checkmate::assert_multi_class(point, c("Date", "POSIXt"))
-  rutils:::assert_length_one(point)
+  checkmate::assert_flag(print)
 
-  if (point < ga_start) {
-    cli::cli_abort(paste(
-      "{.strong {cli::col_red('point')}} must be equal or greater than",
-      "{.strong {cli::col_blue('ga_start')}}."
-    ))
+  for (i in seq_along(ga_start)) {
+    for (j in seq_along(point)) {
+      if (point[i] < ga_start[i]) {
+        cli::cli_abort(paste(
+          "{.strong {cli::col_red('point')}} must be equal or greater than",
+          "{.strong {cli::col_blue('ga_start')}}."
+        ))
+      }
+    }
   }
 
   ga_start <- ga_start |> lubridate::as_date()
   point <- point |> lubridate::as_date()
 
-  out <- lubridate::interval(ga_start, point, tzone = tz) |>
-    lubridate::as.duration()
+  out <-
+    lubridate::interval(ga_start, point, tzone ="UTC") |>
+    as.numeric() %>%
+    `/`(as.numeric(lubridate::ddays())) %>%
+    lubridate::days()
 
-  # `lubridate::dweeks()` gives a time-span of exactly 7 days.
-  # nolint start: object_usage_linter.
-  weeks <- floor(out / lubridate::dweeks())
-  days <- out %% lubridate::dweeks() / lubridate::ddays()
-  # nolint end
+  if (isTRUE(print)) {
+    out_duration <- out |> lubridate::as.duration()
 
-  cli::cli_alert_info(paste(
-    "{.strong",
-    "{weeks} {.strong {cli::col_red('week(s)')}}",
-    "{days} {.strong {cli::col_red('day(s)')}}",
-    "}"
-  ))
+    weeks <- floor(out_duration / lubridate::dweeks())
+    days <- out_duration %% lubridate::dweeks() / lubridate::ddays()
+
+    cli::cli_alert_info(paste(
+      "{.strong",
+      "{weeks} {.strong {cli::col_red('week(s)')}}",
+      "{days} {.strong {cli::col_red('day(s)')}}",
+      "}"
+    ))
+  }
 
   invisible(out)
 }
 
-ga_week <- function(ga_start, week) {
+ga_week_int <- function(ga_start, week) {
   checkmate::assert_date(ga_start, len = 1)
   checkmate::assert_number(week, lower = 0)
 
@@ -86,13 +94,29 @@ ga_week <- function(ga_start, week) {
   lubridate::interval(week_start, week_end)
 }
 
-# ultrasound <- lubridate::dmy("18/10/2022")
-# ga <- lubridate::dweeks(6) + lubridate::ddays(3)
+ga_weeks <- function(ga) {
+  rutils:::assert_period(ga)
 
-# start <- ga_start(ultrasound, ga)
-# start
+  ga <- ga |> lubridate::as.duration()
 
-# point <- lubridate::dmy_hms("27/05/2023 05:44:04")
-# ga_point(start, point)
+  floor(ga / lubridate::dweeks())
+}
 
-# ga_week(start, 37)
+ga_days <- function(ga) {
+  rutils:::assert_period(ga)
+
+  ga <- ga |> lubridate::as.duration()
+  weeks <- floor(ga / lubridate::dweeks())
+
+  ga %% lubridate::dweeks() / lubridate::ddays()
+}
+
+ga_weeks_days <- function(ga) {
+  rutils:::assert_period(ga)
+
+  ga <- ga |> lubridate::as.duration()
+  weeks <- floor(ga / lubridate::dweeks())
+  days <- ga %% lubridate::dweeks() / lubridate::ddays()
+
+  paste0(weeks, "/", days)
+}
