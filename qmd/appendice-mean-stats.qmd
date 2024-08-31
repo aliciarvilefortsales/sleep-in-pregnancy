@@ -22,12 +22,13 @@ This notebook aims to help compute mean statistics for actigraphy data.
 ```{r}
 #| eval: false
 
+library(astroFns, quietly = TRUE)
 library(checkmate, quietly = TRUE)
 library(cli, quietly = TRUE)
+library(circular, quietly = TRUE)
 library(here, quietly = TRUE)
 library(hms, quietly = TRUE)
 library(lubritime, quietly = TRUE) # github.com/danielvartan/lubritime
-library(remotes, quietly = TRUE)
 library(rutils, quietly = TRUE) # github.com/danielvartan/rutils
 ```
 
@@ -36,7 +37,6 @@ library(rutils, quietly = TRUE) # github.com/danielvartan/rutils
 
 library(magrittr)
 ```
-
 
 ## Importing data
 
@@ -73,11 +73,11 @@ data <-
       .fns = hms::parse_hms
     ),
     dplyr::across(
-      .cols = dplyr::matches("^fps|^tts|^waso"),
+      .cols = dplyr::matches("^fps|^tts_m|^tts_s|^waso"),
       .fns = parse_hms_as_duration
     ),
     dplyr::across(
-      .cols = dplyr::matches("^tss_fps|^awakenings"),
+      .cols = dplyr::matches("^tts_fps|^awakenings"),
       .fns = as.numeric
     )
   )
@@ -88,97 +88,6 @@ data |> dplyr::glimpse()
 ```
 
 ## Analysis
-
-```{r}
-hms_to_circular <- function(x) {
-  rutils:::assert_hms(x)
-  
-  x |>
-    hms_to_decimal_hours() |>
-    circular::circular(
-      type = "angles",
-      units = "hours", # radians
-      template = "clock24"
-    )
-}
-```
-
-```{r}
-circular_time_mean <- function(x) {
-  rutils:::assert_hms(x)
-  
-  x |>
-    hms_to_circular() |>
-    circular::mean.circular() |>
-    as.numeric() |>
-    lubritime::cycle_time(cycle = 24) |>
-    decimal_hours_to_hms() |>
-    hms::round_hms(secs = 1)
-}
-```
-
-```{r}
-linear_time_mean <- function(x) {
-  rutils:::assert_duration(x)
-
-  x |>
-    mean(na.rm = TRUE) |>
-    hms::as_hms() |>
-    hms::round_hms(secs = 1)
-}
-```
-
-```{r}
-rounded_mean <- function(x) {
-  checkmate::assert_numeric(x)
-  
-  x |>
-    mean(na.rm = TRUE) |>
-    round(3)
-}
-```
-
-### What is the aggregate mean of the actigraphic summary statistics of the selected pregnant women?
-
-```{r}
-aggregate_data <-
-  data |>
-  dplyr::select(-id) |>
-  dplyr::group_by() |>
-  dplyr::summarise(
-    dplyr::across(
-      .cols = dplyr::matches("^his|^hfs"),
-      .fns = circular_time_mean
-    ),
-    dplyr::across(
-      .cols = dplyr::matches("^fps|^tts|^waso"),
-      .fns = linear_time_mean
-    ),
-    dplyr::across(
-      .cols = dplyr::matches("^tss_fps|^awakenings"),
-      .fns = rounded_mean
-    )
-  )|>
-  tidyr::pivot_longer(
-    cols = dplyr::everything(),
-    names_to = c(".value", "type"), 
-    names_sep = "_(?!.*_)",
-  )
-```
-
-```{r}
-aggregate_data
-```
-
-## Comparing methods
-
-`lubritime:::link_to_timeline()` + `mean()` versus `circular::mean.circular()`
-
-```{r}
-circular_vector <- data |> magrittr::extract2("hfs_max")
-```
-
-## A primitive way for doing circular statistics
 
 ```{r}
 hms_to_decimal_hours <- function(x) {
@@ -201,6 +110,160 @@ decimal_hours_to_hms <- function(x) {
 ```
 
 ```{r}
+hms_to_circular <- function(
+    x, 
+    ...,
+    type = "angles", 
+    units = "hours", 
+    template = "clock24"
+) {
+  rutils:::assert_hms(x)
+  
+  x |>
+    hms_to_decimal_hours() |>
+    circular::circular(
+      type = type,
+      units = units,
+      template = template,
+      ...
+    )
+}
+```
+
+```{r}
+circular_time_stat <- function(x, fun = circular::mean.circular) {
+  rutils:::assert_hms(x)
+  checkmate::assert_function(fun)
+  
+  if (identical(fun, circular::sd.circular) || 
+      identical(fun, stats::sd)) {
+    x |>
+      hms_to_circular() |>
+      fun() |>
+      astroFns::rad2hms() |>
+      hms::as_hms() |>
+      hms::round_hms(secs = 1)
+  } else {
+    x |>
+      hms_to_circular() |>
+      fun() |>
+      as.numeric() |>
+      lubritime::cycle_time(cycle = 24) |>
+      decimal_hours_to_hms() |>
+      hms::round_hms(secs = 1)
+  }
+}
+```
+
+```{r}
+alt_circular_time_stat <- function(x, fun = mean) {
+  rutils:::assert_hms(x)
+  checkmate::assert_function(fun)
+
+  x |>
+    lubritime:::link_to_timeline(threshold = hms::parse_hms("12:00:00")) |>
+    fun() |>
+    hms::as_hms() |>
+    hms::round_hms(secs = 1)
+}
+```
+
+```{r}
+linear_time_stat <- function(x, fun = mean) {
+  rutils:::assert_duration(x)
+  checkmate::assert_function(fun)
+
+  x |>
+    fun() |>
+    hms::as_hms() |>
+    hms::round_hms(secs = 1)
+}
+```
+
+```{r}
+rounded_stat <- function(x, fun = mean) {
+  checkmate::assert_numeric(x)
+  checkmate::assert_function(fun)
+  
+  x |>
+    fun() |>
+    round(3)
+}
+```
+
+### What is the aggregate mean/standasrd deviation of the actigraphic summary statistics from the selected pregnant women?
+
+```{r}
+aggregate_mean_data <-
+  data |>
+  dplyr::select(-id) |>
+  dplyr::group_by() |>
+  dplyr::summarise(
+    dplyr::across(
+      .cols = dplyr::matches("^his|^hfs"),
+      .fns = ~ circular_time_stat(.x, fun = circular::mean.circular)
+    ),
+    dplyr::across(
+      .cols = dplyr::matches("^fps|^tts_m|^tts_s|^waso"),
+      .fns = ~ linear_time_stat(.x, fun = mean)
+    ),
+    dplyr::across(
+      .cols = dplyr::matches("^tts_fps|^awakenings"),
+      .fns = ~ rounded_stat(.x, fun = mean)
+    )
+  )|>
+  tidyr::pivot_longer(
+    cols = dplyr::everything(),
+    names_to = c(".value", "type"), 
+    names_sep = "_(?!.*_)",
+  ) |>
+  dplyr::relocate(tts_fps, .after = tts)
+```
+
+```{r}
+aggregate_mean_data
+```
+
+```{r}
+aggregate_sd_data <-
+  data |>
+  dplyr::select(-id) |>
+  dplyr::group_by() |>
+  dplyr::summarise(
+    dplyr::across(
+      .cols = dplyr::matches("^his|^hfs"),
+      .fns = ~ circular_time_stat(.x, fun = circular::sd.circular)
+    ),
+    dplyr::across(
+      .cols = dplyr::matches("^fps|^tts_m|^tts_s|^waso"),
+      .fns = ~ linear_time_stat(.x, fun = stats::sd)
+    ),
+    dplyr::across(
+      .cols = dplyr::matches("^tts_fps|^awakenings"),
+      .fns = ~ rounded_stat(.x, fun = stats::sd)
+    )
+  )|>
+  tidyr::pivot_longer(
+    cols = dplyr::everything(),
+    names_to = c(".value", "type"), 
+    names_sep = "_(?!.*_)",
+  ) |>
+  dplyr::relocate(tts_fps, .after = tts)
+```
+
+```{r}
+aggregate_sd_data
+```
+
+## Comparing methods
+
+```{r}
+circular_vector <- data |> magrittr::extract2("his_max")
+```
+
+### A primitive way for doing circular statistics
+
+```{r}
 x <- circular_vector |> hms_to_decimal_hours()
 x <- ifelse(x < 1, x + 24, x)
 
@@ -209,25 +272,25 @@ x |>
   decimal_hours_to_hms() |>
   hms::round_hms(secs = 1)
 ```
-## Using `lubritime:::link_to_timeline()` + `mean()` with a 12 hours threshold
 
 ```{r}
-circular_time_mean <- function(x) {
-  rutils:::assert_hms(x)
+x |>
+  stats::sd() |>
+  decimal_hours_to_hms() |>
+  hms::round_hms(secs = 1)
+```
 
-  x |>
-    lubritime:::link_to_timeline(threshold = hms::parse_hms("12:00:00")) |>
-    mean(na.rm = TRUE) |>
-    hms::as_hms() |>
-    hms::round_hms(secs = 1)
-}
+### Using `lubritime:::link_to_timeline()` with mid-day as threshold
+
+```{r}
+circular_vector |> alt_circular_time_stat(fun = mean)
 ```
 
 ```{r}
-circular_vector |> circular_time_mean()
+circular_vector |> alt_circular_time_stat(fun = stats::sd)
 ```
 
-## How much we lost by transformig the vector to decimal hours?
+### How much we lost by transformig the `hms` vector to decimal hours?
 
 ```{r}
 dplyr::tibble(
@@ -238,44 +301,10 @@ dplyr::tibble(
 )
 ```
 
-### Circular mean using the `circular` package
-
-```{r}
-hms_to_circular <- function(x) {
-  rutils:::assert_hms(x)
-  
-  x |>
-    hms_to_decimal_hours() |>
-    circular::circular(
-      type = "angles",
-      units = "hours", # radians
-      template = "clock24"
-    )
-}
-```
-
-```{r}
-circular_time_mean <- function(x) {
-  rutils:::assert_hms(x)
-  
-  x |>
-    hms_to_circular() |>
-    circular::mean.circular() |>
-    as.numeric() |>
-    lubritime::cycle_time(cycle = 24) |>
-    decimal_hours_to_hms() |>
-    hms::round_hms(secs = 1)
-}
-```
+### Circular statistics using the `circular` package
 
 ```{r}
 circular_vector |> hms_to_circular()
-```
-
-```{r}
-circular_vector |>
-  hms_to_circular() |>
-  circular::mean.circular()
 ```
 
 ```{r}
@@ -285,5 +314,20 @@ circular_vector |>
 ```
 
 ```{r}
-circular_vector |> circular_time_mean()
+circular_vector |>
+  hms_to_circular() |>
+  circular::mean.circular()
+```
+
+```{r}
+circular_vector |> circular_time_stat(fun = mean)
+```
+
+```{r}
+circular_vector |>
+  hms_to_circular() |>
+  circular::sd.circular() |>
+  astroFns::rad2hms() |>
+  hms::as_hms() |>
+  hms::round_hms(secs = 1)
 ```
