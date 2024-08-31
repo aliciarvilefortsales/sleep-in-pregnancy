@@ -26,39 +26,102 @@ library(checkmate, quietly = TRUE)
 library(cli, quietly = TRUE)
 library(here, quietly = TRUE)
 library(hms, quietly = TRUE)
-library(lubritime, quietly = TRUE)
+library(lubritime, quietly = TRUE) # github.com/danielvartan/lubritime
 library(remotes, quietly = TRUE)
 library(rutils, quietly = TRUE) # github.com/danielvartan/rutils
 ```
 
 ```{r}
-circular_time_mean <- function(label, min, max, mean, sd) {
-  checkmate::assert_string(label)
-  rutils:::assert_hms(min)
-  rutils:::assert_hms(max)
-  rutils:::assert_hms(mean)
-  rutils:::assert_hms(sd)
-  rutils:::assert_identical(min, max, mean, sd, type = "length")
-  out <- list (
-    label = label,
-    min = min |> link_to_timeline_mean(),
-    max = max |> link_to_timeline_mean(),
-    mean = mean |> link_to_timeline_mean(),
-    sd = sd |> link_to_timeline_mean()
-  )
-  cli::cli_h1(label)
-  cli::cli_bullets(c(
-    paste("Min:", out$min),
-    paste("Max:", out$max),
-    paste("Mean:", out$mean),
-    paste("SD:", out$sd)
-  ))
-  invisible(out)
-}
-link_to_timeline_mean <- function(x) {
-  rutils:::assert_hms(x)
+#| includes: false
+
+library(magrittr)
+```
+
+
+## Importing data
+
+```{r}
+#| output: false
+
+googlesheets4::gs4_auth()
+```
+
+```{r}
+#| output: false
+
+ss <- "1iqjhdSiWYr9RYSvIvJQfFw35DR31YA_oj2SW8iR5WPw"
+
+raw_data <- ss |> googlesheets4::read_sheet(sheet = "Dataset")
+```
+
+## Tidying data
+
+```{r}
+parse_hms_as_duration <- function(x) {
   x |>
-    lubritime:::link_to_timeline() |>
+    hms::parse_hms() |>
+    lubridate::as.duration()
+}
+```
+
+```{r}
+data <-
+  raw_data |>
+  dplyr::mutate(
+    dplyr::across(
+      .cols = dplyr::matches("^his|^hfs"),
+      .fns = hms::parse_hms
+    ),
+    dplyr::across(
+      .cols = dplyr::matches("^fps|^tts|^waso"),
+      .fns = parse_hms_as_duration
+    ),
+    dplyr::across(
+      .cols = dplyr::matches("^tss_fps|^awakenings"),
+      .fns = as.numeric
+    )
+  )
+```
+
+```{r}
+data |> dplyr::glimpse()
+```
+
+## Analysis
+
+```{r}
+hms_to_circular <- function(x) {
+  rutils:::assert_hms(x)
+  
+  x |>
+    hms_to_decimal_hours() |>
+    circular::circular(
+      type = "angles",
+      units = "hours", # radians
+      template = "clock24"
+    )
+}
+```
+
+```{r}
+circular_time_mean <- function(x) {
+  rutils:::assert_hms(x)
+  
+  x |>
+    hms_to_circular() |>
+    circular::mean.circular() |>
+    as.numeric() |>
+    lubritime::cycle_time(cycle = 24) |>
+    decimal_hours_to_hms() |>
+    hms::round_hms(secs = 1)
+}
+```
+
+```{r}
+linear_time_mean <- function(x) {
+  rutils:::assert_duration(x)
+
+  x |>
     mean(na.rm = TRUE) |>
     hms::as_hms() |>
     hms::round_hms(secs = 1)
@@ -66,31 +129,94 @@ link_to_timeline_mean <- function(x) {
 ```
 
 ```{r}
-linear_time_mean <- function(label, min, max, mean, sd) {
-  checkmate::assert_string(label)
-  rutils:::assert_hms(min)
-  rutils:::assert_hms(max)
-  rutils:::assert_hms(mean)
-  rutils:::assert_hms(sd)
-  rutils:::assert_identical(min, max, mean, sd, type = "length")
-  out <- list (
-    min = min |> mean_duration(),
-    max = max |> mean_duration(),
-    mean = mean |> mean_duration(),
-    sd = sd |> mean_duration()
-  )
-  cli::cli_h1(label)
-  cli::cli_bullets(c(
-    paste("Min:", out$min),
-    paste("Max:", out$max),
-    paste("Mean:", out$mean),
-    paste("SD:", out$sd)
-  ))
-  invisible(out)
-}
-mean_duration <- function(x) {
-  rutils:::assert_hms(x)
+rounded_mean <- function(x) {
+  checkmate::assert_numeric(x)
+  
   x |>
+    mean(na.rm = TRUE) |>
+    round(3)
+}
+```
+
+### What is the aggregate mean of the actigraphic summary statistics of the selected pregnant women?
+
+```{r}
+aggregate_data <-
+  data |>
+  dplyr::select(-id) |>
+  dplyr::group_by() |>
+  dplyr::summarise(
+    dplyr::across(
+      .cols = dplyr::matches("^his|^hfs"),
+      .fns = circular_time_mean
+    ),
+    dplyr::across(
+      .cols = dplyr::matches("^fps|^tts|^waso"),
+      .fns = linear_time_mean
+    ),
+    dplyr::across(
+      .cols = dplyr::matches("^tss_fps|^awakenings"),
+      .fns = rounded_mean
+    )
+  )|>
+  tidyr::pivot_longer(
+    cols = dplyr::everything(),
+    names_to = c(".value", "type"), 
+    names_sep = "_(?!.*_)",
+  )
+```
+
+```{r}
+aggregate_data
+```
+
+## Comparing methods
+
+`lubritime:::link_to_timeline()` + `mean()` versus `circular::mean.circular()`
+
+```{r}
+circular_vector <- data |> magrittr::extract2("hfs_max")
+```
+
+## A primitive way for doing circular statistics
+
+```{r}
+hms_to_decimal_hours <- function(x) {
+  rutils:::assert_hms(x)
+  
+  x |>
+    as.numeric() %>%
+    `/`(60 * 60)
+}
+```
+
+```{r}
+decimal_hours_to_hms <- function(x) {
+  checkmate::assert_numeric(x)
+  
+  x %>%
+    `*`(60 * 60) |>
+    hms::as_hms()
+}
+```
+
+```{r}
+x <- circular_vector |> hms_to_decimal_hours()
+x <- ifelse(x < 1, x + 24, x)
+
+x |>
+  mean() |>
+  decimal_hours_to_hms() |>
+  hms::round_hms(secs = 1)
+```
+## Using `lubritime:::link_to_timeline()` + `mean()` with a 12 hours threshold
+
+```{r}
+circular_time_mean <- function(x) {
+  rutils:::assert_hms(x)
+
+  x |>
+    lubritime:::link_to_timeline(threshold = hms::parse_hms("12:00:00")) |>
     mean(na.rm = TRUE) |>
     hms::as_hms() |>
     hms::round_hms(secs = 1)
@@ -98,191 +224,66 @@ mean_duration <- function(x) {
 ```
 
 ```{r}
-rounded_mean <- function(label, min, max, mean, sd) {
-  checkmate::assert_string(label)
-  checkmate::assert_numeric(min)
-  checkmate::assert_numeric(max)
-  checkmate::assert_numeric(mean)
-  checkmate::assert_numeric(sd)
-  rutils:::assert_identical(min, max, mean, sd, type = "length")
-  out <- list (
-    min = min |> mean(na.rm = TRUE) |> round(3),
-    max = max |> mean(na.rm = TRUE) |> round(3),
-    mean = mean |> mean(na.rm = TRUE) |> round(3),
-    sd = sd |> mean(na.rm = TRUE) |> round(3)
-  )
-  cli::cli_h1(label)
-  cli::cli_bullets(c(
-    paste("Min:", out$min),
-    paste("Max:", out$max),
-    paste("Mean:", out$mean),
-    paste("SD:", out$sd)
-  ))
-  invisible(out)
+circular_vector |> circular_time_mean()
+```
+
+## How much we lost by transformig the vector to decimal hours?
+
+```{r}
+dplyr::tibble(
+  original = circular_vector,
+  processed = circular_vector |> 
+    hms_to_decimal_hours() |> 
+    decimal_hours_to_hms()
+)
+```
+
+### Circular mean using the `circular` package
+
+```{r}
+hms_to_circular <- function(x) {
+  rutils:::assert_hms(x)
+  
+  x |>
+    hms_to_decimal_hours() |>
+    circular::circular(
+      type = "angles",
+      units = "hours", # radians
+      template = "clock24"
+    )
 }
 ```
 
-## HIS
-
 ```{r}
-circular_time_mean(
-  label = "HIS",
-  min = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  ),
-  max = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  ),
-  mean = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  ),
-  sd = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  )
-)
+circular_time_mean <- function(x) {
+  rutils:::assert_hms(x)
+  
+  x |>
+    hms_to_circular() |>
+    circular::mean.circular() |>
+    as.numeric() |>
+    lubritime::cycle_time(cycle = 24) |>
+    decimal_hours_to_hms() |>
+    hms::round_hms(secs = 1)
+}
 ```
 
-## HFS
-
 ```{r}
-circular_time_mean(
-  label = "HFS",
-  min = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  ),
-  max = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  ),
-  mean = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  ),
-  sd = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  )
-)
+circular_vector |> hms_to_circular()
 ```
 
-## FPS
-
 ```{r}
-linear_time_mean(
-  label = "FPS",
-  min = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  ),
-  max = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  ),
-  mean = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  ),
-  sd = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  )
-)
+circular_vector |>
+  hms_to_circular() |>
+  circular::mean.circular()
 ```
 
-
-## TTS
-
 ```{r}
-linear_time_mean(
-  label = "TTS",
-  min = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  ),
-  max = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  ),
-  mean = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  ),
-  sd = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  )
-)
+circular_vector |>
+  hms_to_circular() |>
+  plot()
 ```
 
-## WASO
-
 ```{r}
-linear_time_mean(
-  label = "WASO",
-  min = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  ),
-  max = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  ),
-  mean = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  ),
-  sd = c(
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00"),
-    hms::parse_hms("00:00:00")
-  )
-)
-```
-
-## TTS/FPS
-
-```{r}
-rounded_mean(
-  label = "TTS/FPS",
-  min = c(0, 0, 0),
-  max = c(0, 0, 0),
-  mean = c(0, 0, 0),
-  sd = c(0, 0, 0)
-)
-```
-
-## Awakenings
-
-```{r}
-rounded_mean(
-  label = "TTS/FPS",
-  min = c(0, 0, 0),
-  max = c(0, 0, 0),
-  mean = c(0, 0, 0),
-  sd = c(0, 0, 0)
-)
+circular_vector |> circular_time_mean()
 ```

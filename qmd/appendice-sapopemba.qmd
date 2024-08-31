@@ -43,21 +43,23 @@ library(magrittr,quietly = TRUE)
 ### Importing data
 
 ```{r}
+#| output: false
+
 googlesheets4::gs4_auth()
 ```
 
 ```{r}
+#| output: false
+
 ss <- "1w5mLtYYoh6MPsP8lPqj1tyKNzX9XJuPMmCMsNFM-bcs"
 
-data <- 
-  ss |>
-  googlesheets4::read_sheet(sheet = "Sapopemba")
+raw_data <- ss |> googlesheets4::read_sheet(sheet = "Dataset")
 ```
 
 ### Tidying data
 
 ```{r}
-data <- 
+raw_data <- 
   data |>
   dplyr::mutate(
     date_on_entry = lubridate::ymd(date_on_entry),
