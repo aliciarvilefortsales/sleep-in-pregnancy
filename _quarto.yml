@@ -6,7 +6,7 @@ execute:
 
 profile:
   group:
-    - [html, pdf, revealjs]
+    - [html, pdf, revealjs, gfm]
   default: pdf
 
 book:

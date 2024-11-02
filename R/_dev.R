@@ -1,4 +1,4 @@
-# # For development use only (comment the code after use (Ctrl + Shift + C)).
+# # For development use only (comment out the code after use)
 #
 # .rs.restartR()
 # .libPaths()
@@ -8,10 +8,6 @@
 # lintr::use_lintr()
 # lintr::lint_dir("R")
 # normalizePath(readClipboard(), "/", mustWork = FALSE)
-# targets::tar_manifest()
-# targets::tar_visnetwork(targets_only = TRUE)
-# targets::tar_make()
-# targets::tar_outdated()
 # renv::init()
 # utils::install.packages("renv", dependencies = TRUE)
 # renv:::renv_download_method()
@@ -20,12 +16,12 @@
 # renv::activate()
 # renv::deactivate()
 # renv::status()
-# renv::dependencies("R/quarto-setup.R")
+# renv::dependencies("R/_setup.R")
 # renv::install()
 # renv::update()
 # renv::restore()
 # renv::snapshot()
-# renv::clean(actions = "unused.packages")
+# renv::clean(actions = "unsed.packages")
 # rutils:::bbt_scan_citation_keys()
 # rutils:::bbt_write_quarto_bib()
 # rutils:::set_quarto_speel_check()
@@ -38,17 +34,25 @@
 # urlchecker::url_check()
 # urlchecker::url_update()
 
+# # {targets}
+#
+# targets::tar_manifest()
+# targets::tar_visnetwork(targets_only = TRUE)
+# targets::tar_make()
+# targets::tar_outdated()
+# data <- targets::tar_read(geocoded_data)
+
 # # Quarto (see <https://quarto.org/docs/projects/quarto-projects.html>)
 #
-# source(here::here("R", "quarto-pre-render-pdf.R"))
-# source(here::here("R", "quarto-pre-render-html.R"))
-# source(here::here("R", "quarto-pre-render-revealjs.R"))
+# source(here::here("R", "_pre-render-pdf.R"))
+# source(here::here("R", "_pre-render-html.R"))
+# source(here::here("R", "_pre-render-revealjs.R"))
 #
 # quarto render
+# quarto render --profile gfm
 # quarto render --profile pdf
 # quarto render --profile html
 # quarto render --profile revealjs
-# quarto publish gh-pages
 
 # # LaTeX
 #
@@ -57,7 +61,22 @@
 # \AtEndEnvironment{}{}
 # \AfterEndEnvironment{}{}
 
-# # TODO
+# # Encryption
 #
-# * When uploading data from OSF, check if the ID from the file name
-#   matches the ID of the subject you're ana;yzing.
+# password <- Sys.getenv("MASTERSTHESIS_PASSWORD")
+#
+# lockr::rsa_keygen()
+#
+# lockr::lock_dir(dir = "temp", public_key = "_ssh/id_rsa.pub")
+#
+# lockr::unlock_dir(
+#   dir = "temp", private_key = "_ssh/id_rsa", password = password
+# )
+#
+# lockr::lock_file(
+#   rstudioapi::selectFile(), public_key = "_ssh/id_rsa.pub"
+# )
+#
+# lockr::unlock_file(
+#   rstudioapi::selectFile(), private_key = "_ssh/id_rsa", password = password
+# )

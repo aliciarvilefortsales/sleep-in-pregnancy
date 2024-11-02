@@ -1,6 +1,6 @@
 # MIT License
 
-Copyright (c) Alícia Rafaelly Vilefort Sales
+Copyright (c) 2024 Alícia Rafaelly Vilefort Sales
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

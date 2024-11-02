@@ -1,0 +1,221 @@
+<!-- %:::% .common h1 begin %:::% -->
+# Appendice - Download or upload files to OSF
+<!-- %:::% .common h1 end %:::% -->
+
+```{r}
+#| label: setup
+#| include: false
+
+source(here::here("R/quarto-setup.R"))
+```
+
+## Overview
+
+This notebook aim to help download or upload files to OSF.
+
+## Settings things up
+
+```{r}
+#| eval: false
+
+library(lubritime)
+library(osfr)
+library(readr)
+library(utils)
+```
+
+## Setting parameters
+
+```{r}
+#| eval: false
+
+osf_pat <- askpass::askpass()
+```
+
+```{r}
+#| eval: false
+
+osfr::osf_auth(osf_pat)
+```
+
+```{r}
+#| eval: false
+
+private_key <- here::here("_ssh", "id_rsa")
+```
+
+```{r}
+#| eval: false
+
+public_key <- here::here("_ssh", "id_rsa.pub")
+```
+
+```{r}
+#| eval: false
+
+password <- askpass::askpass()
+```
+
+## Uploading files
+
+```{r}
+#| eval: false
+
+id <- "7kg34"
+osf_id <- paste0("https://osf.io/", id)
+```
+
+```{r}
+#| eval: false
+
+# Create the README.md file
+
+readme_file <- tempdir() |> file.path("README.md")
+
+c(
+  "# {pregnancy}",
+  "",
+  "* All files were locked with the project's public key. Ask the project administrators for the key if you need access.",
+  "",
+  paste0("* Last update: ", lubritime::round_time(Sys.time()), ".")  
+) |> 
+  readr::write_lines(readme_file)
+
+readr::read_lines(readme_file)
+```
+
+```{r}
+#| eval: false
+
+osf_id |>
+  osfr::osf_retrieve_node() |> 
+  osfr::osf_upload(
+    path = readme_file, 
+    conflicts = "overwrite",
+    progress = TRUE
+  )
+```
+
+```{r}
+#| eval: false
+
+osf_dir <- "sleep-diary" # Use `NULL` to refer to the root.
+```
+
+```{r}
+#| eval: false
+
+osf_data <- 
+  osf_id |> 
+  osfr::osf_retrieve_node() |> 
+  osfr::osf_ls_files(
+    path = osf_dir,
+    n_max = Inf
+  ) |> 
+  dplyr::arrange(name)
+
+osf_data
+```
+
+```{r}
+#| eval: false
+
+dir_path <- normalizePath(utils::readClipboard(), "/", mustWork = FALSE)
+```
+
+```{r}
+#| eval: false
+
+files <- setdiff(list.files(dir_path), osf_data$name)
+
+# files <- list.files(dir_path)
+
+files
+```
+
+```{r}
+#| eval: false
+
+file.path(dir_path, files)|>
+  vapply( prettycheck:::test_file_exists, logical(1)) |>
+  unname()
+```
+
+```{r}
+#| eval: false
+
+utils::writeClipboard(files)
+```
+
+```{r}
+#| eval: false
+
+target_dir <- osf_id |> osfr::osf_retrieve_node()
+```
+
+```{r}
+#| eval: false
+
+target_dir <- 
+  osf_id |> 
+  osfr::osf_retrieve_node() |> 
+  osfr::osf_ls_files(
+    pattern = osf_dir,
+    n_max = Inf
+  ) |> 
+  dplyr::slice(1)
+
+target_dir
+```
+
+```{r}
+#| eval: false
+
+target_dir |>
+  osfr::osf_upload(
+    path = file.path(dir_path, files), 
+    conflicts = "overwrite",
+    progress = TRUE
+  )
+```
+
+## Downloading files
+
+```{r}
+#| eval: false
+
+osf_id <- 
+  "a2dsw" %>%
+  paste0("https://osf.io/", .)
+```
+
+```{r}
+#| eval: false
+
+file <-
+  osf_id |> 
+  osfr::osf_retrieve_node() |> 
+  osfr::osf_ls_files(n_max = Inf) |>
+  osfr::osf_download(path = tempdir(), conflicts = "overwrite") |>
+  magrittr::extract2("local_path")
+```
+
+```{r}
+#| eval: false
+
+lockr::unlock_file(
+  file, 
+  private_key = private_key, 
+  password = password
+)
+```
+
+```{r}
+#| eval: false
+
+lockr::lock_file(
+  file, 
+  public_key = public_key, 
+  remove_file = TRUE
+)
+```

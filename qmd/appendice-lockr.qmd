@@ -1,0 +1,95 @@
+<!-- %:::% .common h1 begin %:::% -->
+# Appendice - Lock and unlock files
+<!-- %:::% .common h1 end %:::% -->
+
+```{r}
+#| label: setup
+#| include: false
+
+source(here::here("R/quarto-setup.R"))
+```
+
+## Overview
+
+This notebook aim to help crypting and decrypting files from the project's vault.
+
+**Be careful!**
+
+## Settings things up
+
+```{r}
+#| eval: false
+
+library(lockr) # github.com/danielvartan/lockr
+library(utils)
+```
+
+## Setting parameters
+
+```{r}
+#| eval: false
+
+dir_path <- normalizePath(utils::readClipboard(), "/", mustWork = FALSE)
+```
+
+```{r}
+#| eval: false
+
+private_key <- here::here("_ssh", "id_rsa")
+```
+
+```{r}
+#| eval: false
+
+public_key <- here::here("_ssh", "id_rsa.pub")
+```
+
+```{r}
+#| eval: false
+
+password <- askpass::askpass()
+```
+
+## Locking files (extra)
+
+```{r}
+#| eval: false
+#| output: false
+
+lockr::lock_dir(
+  dir = dir_path,
+  public_key = public_key,
+  suffix = ".lockr",
+  remove_file = TRUE
+)
+```
+
+```{r}
+#| eval: false
+#| output: false
+
+test_file <- rstudioapi::selectFile()
+
+lockr::unlock_file(
+  file = test_file,
+  private_key = private_key,
+  suffix = ".lockr",
+  remove_file = FALSE,
+  password = password
+)
+```
+
+## Unlock files (extra)
+
+```{r}
+#| eval: false
+#| output: false
+
+lockr::unlock_dir(
+  dir = dir_path,
+  private_key  = private_key ,
+  suffix = ".lockr",
+  remove_file = TRUE,
+  password = password
+)
+```
