@@ -6,7 +6,7 @@
 #| label: setup
 #| include: false
 
-source(here::here("R/quarto-setup.R"))
+source(here::here("R", "_setup.R"))
 ```
 
 ## Overview
@@ -18,10 +18,18 @@ This notebook aim to help download or upload files to OSF.
 ```{r}
 #| eval: false
 
+library(clipr)
 library(lubritime)
+library(magrittr)
 library(osfr)
 library(readr)
 library(utils)
+```
+
+```{r}
+#| include: false
+
+library(magrittr)
 ```
 
 ## Setting parameters
@@ -56,13 +64,85 @@ public_key <- here::here("_ssh", "id_rsa.pub")
 password <- askpass::askpass()
 ```
 
+```{r}
+osf_feedbacks_id <- "8hs7v"
+osf_raw_data_id <- "7kg34"
+osf_processed_data_id <- "a2dsw"
+osf_bundles_id <- "fvh4u"
+osf_pilot_data_id <- "tj5u2"
+osf_tidy_data_id <- "npkjw"
+```
+
+## Downloading files
+
+```{r}
+#| eval: false
+
+osf_id <- 
+  osf_raw_data_id %>%
+  paste0("https://osf.io/", .)
+```
+
+```{r}
+path <- "actigraphy" # default: NULL
+type <- "file" # default: "any"
+pattern <- "7cbf7851" # default: NULL (fixer — no regex)
+```
+
+```{r}
+#| eval: false
+
+files <-
+  osf_id |> 
+  osfr::osf_retrieve_node() |> 
+  osfr::osf_ls_files(
+    path = path,
+    type = type,
+    pattern = pattern,
+    n_max = Inf
+  ) |>
+  osfr::osf_download(path = tempdir(), conflicts = "overwrite") |>
+  magrittr::extract2("local_path")
+```
+
+```{r}
+#| eval: false
+
+unlocked_files <- character()
+
+for (i in files) {
+  i_path <- lockr::unlock_file(
+    i, 
+    private_key = private_key, 
+    password = password
+  )
+  
+  cli::cat_line()
+  
+  unlocked_files <- c(unlocked_files, i_path)
+}
+```
+
+```{r}
+#| eval: false
+
+for (i in unlocked_files) {
+  lockr::lock_file(
+    i, 
+    public_key = public_key, 
+    remove_file = TRUE
+  )
+  
+  cli::cat_line()
+}
+```
+
 ## Uploading files
 
 ```{r}
 #| eval: false
 
-id <- "7kg34"
-osf_id <- paste0("https://osf.io/", id)
+osf_id <- osf_bundles_id
 ```
 
 ```{r}
@@ -99,7 +179,7 @@ osf_id |>
 ```{r}
 #| eval: false
 
-osf_dir <- "sleep-diary" # Use `NULL` to refer to the root.
+path <- NULL # Use `NULL` to refer to the root.
 ```
 
 ```{r}
@@ -109,7 +189,7 @@ osf_data <-
   osf_id |> 
   osfr::osf_retrieve_node() |> 
   osfr::osf_ls_files(
-    path = osf_dir,
+    path = path,
     n_max = Inf
   ) |> 
   dplyr::arrange(name)
@@ -120,13 +200,18 @@ osf_data
 ```{r}
 #| eval: false
 
-dir_path <- normalizePath(utils::readClipboard(), "/", mustWork = FALSE)
+dir_path <- clipr::read_clip() |> normalizePath("/", mustWork = FALSE)
 ```
 
 ```{r}
 #| eval: false
 
-files <- setdiff(list.files(dir_path), osf_data$name)
+files <- 
+  list.files(dir_path) |>
+  paste0(".lockr") |>
+  setdiff(osf_data$name) |>
+  stringr::str_subset("^README", negate = TRUE) |>
+  stringr::str_remove("\\.lockr$")
 
 # files <- list.files(dir_path)
 
@@ -144,78 +229,44 @@ file.path(dir_path, files)|>
 ```{r}
 #| eval: false
 
-utils::writeClipboard(files)
+files |> clipr::write_clip()
+```
+
+```{r}
+new_files <- character()
+
+for (i in seq_along(files)) {
+  i_from <- file.path(dir_path, files[i])
+  i_to <- file.path(tempdir(), files[i])
+  
+  test <- file.copy(from = i_from, to = i_to, overwrite = TRUE)
+  
+  if (isTRUE(test)) new_files <- c(new_files, i_to)
+}
+
+locked_files <- character()
+
+for (i in new_files) {
+  i_path <- lockr::lock_file(
+    i, 
+    public_key = public_key, 
+    remove_file = TRUE
+  )
+  
+  cli::cat_line()
+  
+  locked_files <- c(locked_files, i_path)
+}
 ```
 
 ```{r}
 #| eval: false
 
-target_dir <- osf_id |> osfr::osf_retrieve_node()
-```
-
-```{r}
-#| eval: false
-
-target_dir <- 
-  osf_id |> 
+osf_id |> 
   osfr::osf_retrieve_node() |> 
-  osfr::osf_ls_files(
-    pattern = osf_dir,
-    n_max = Inf
-  ) |> 
-  dplyr::slice(1)
-
-target_dir
-```
-
-```{r}
-#| eval: false
-
-target_dir |>
   osfr::osf_upload(
-    path = file.path(dir_path, files), 
+    path = locked_files, 
     conflicts = "overwrite",
     progress = TRUE
   )
-```
-
-## Downloading files
-
-```{r}
-#| eval: false
-
-osf_id <- 
-  "a2dsw" %>%
-  paste0("https://osf.io/", .)
-```
-
-```{r}
-#| eval: false
-
-file <-
-  osf_id |> 
-  osfr::osf_retrieve_node() |> 
-  osfr::osf_ls_files(n_max = Inf) |>
-  osfr::osf_download(path = tempdir(), conflicts = "overwrite") |>
-  magrittr::extract2("local_path")
-```
-
-```{r}
-#| eval: false
-
-lockr::unlock_file(
-  file, 
-  private_key = private_key, 
-  password = password
-)
-```
-
-```{r}
-#| eval: false
-
-lockr::lock_file(
-  file, 
-  public_key = public_key, 
-  remove_file = TRUE
-)
 ```

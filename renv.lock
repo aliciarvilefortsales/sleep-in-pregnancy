@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.4.1",
+    "Version": "4.4.2",
     "Repositories": [
       {
         "Name": "BioCsoft",
@@ -106,24 +106,14 @@
     },
     "Rcpp": {
       "Package": "Rcpp",
-      "Version": "1.0.13",
+      "Version": "1.0.13-1",
       "Source": "Repository",
       "Repository": "RSPM",
       "Requirements": [
         "methods",
         "utils"
       ],
-      "Hash": "f27411eb6d9c3dada5edd444b8416675"
-    },
-    "Rttf2pt1": {
-      "Package": "Rttf2pt1",
-      "Version": "1.3.12",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R"
-      ],
-      "Hash": "a60168d094ca7e4de5106d60001c3964"
+      "Hash": "6b868847b365672d6c1677b1608da9ed"
     },
     "askpass": {
       "Package": "askpass",
@@ -194,13 +184,13 @@
     },
     "bit": {
       "Package": "bit",
-      "Version": "4.5.0",
+      "Version": "4.5.0.1",
       "Source": "Repository",
-      "Repository": "RSPM",
+      "Repository": "CRAN",
       "Requirements": [
         "R"
       ],
-      "Hash": "5dc7b2677d65d0e874fc4aaf0e879987"
+      "Hash": "f89f074e0e49bf1dbe3eba0a15a91476"
     },
     "bit64": {
       "Package": "bit64",
@@ -365,13 +355,13 @@
     },
     "cpp11": {
       "Package": "cpp11",
-      "Version": "0.5.0",
+      "Version": "0.5.1",
       "Source": "Repository",
-      "Repository": "RSPM",
+      "Repository": "CRAN",
       "Requirements": [
         "R"
       ],
-      "Hash": "91570bba75d0c9d3f1040c835cee8fba"
+      "Hash": "9df43854f1c84685d095ed6270b52387"
     },
     "crayon": {
       "Package": "crayon",
@@ -387,24 +377,24 @@
     },
     "curl": {
       "Package": "curl",
-      "Version": "5.2.3",
+      "Version": "6.0.1",
       "Source": "Repository",
       "Repository": "RSPM",
       "Requirements": [
         "R"
       ],
-      "Hash": "d91263322a58af798f6cf3b13fd56dde"
+      "Hash": "e8ba62486230951fcd2b881c5be23f96"
     },
     "data.table": {
       "Package": "data.table",
-      "Version": "1.16.2",
+      "Version": "1.16.4",
       "Source": "Repository",
-      "Repository": "RSPM",
+      "Repository": "CRAN",
       "Requirements": [
         "R",
         "methods"
       ],
-      "Hash": "2e00b378fc3be69c865120d9f313039a"
+      "Hash": "38bbf05fc2503143db4c734a7e5cab66"
     },
     "digest": {
       "Package": "digest",
@@ -450,30 +440,6 @@
       ],
       "Hash": "3fd29944b231036ad67c3edb32e02201"
     },
-    "extrafont": {
-      "Package": "extrafont",
-      "Version": "0.19",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "Rttf2pt1",
-        "extrafontdb",
-        "grDevices",
-        "utils"
-      ],
-      "Hash": "03d9939b37164f34e0522fef13e63158"
-    },
-    "extrafontdb": {
-      "Package": "extrafontdb",
-      "Version": "1.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R"
-      ],
-      "Hash": "a861555ddec7451c653b40e713166c6f"
-    },
     "fansi": {
       "Package": "fansi",
       "Version": "1.0.6",
@@ -512,15 +478,15 @@
     },
     "fontawesome": {
       "Package": "fontawesome",
-      "Version": "0.5.2",
+      "Version": "0.5.3",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Requirements": [
         "R",
         "htmltools",
         "rlang"
       ],
-      "Hash": "c2efdd5f0bcd1ea861c2d4e2a883a67d"
+      "Hash": "bd1297f9b5b1fc1372d19e2c4cd82215"
     },
     "fs": {
       "Package": "fs",
@@ -699,9 +665,10 @@
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteRepo": "groomr",
       "RemoteUsername": "danielvartan",
-      "RemoteSha": "89be2d933435a923a372a376c7e657974292ea02",
+      "RemoteRepo": "groomr",
+      "RemoteRef": "main",
+      "RemoteSha": "f329bd40f6cc55cade54efcc515b32472c5ebed7",
       "Requirements": [
         "R",
         "checkmate",
@@ -715,7 +682,7 @@
         "rutils",
         "stringr"
       ],
-      "Hash": "b32efd31e85a663069fec41aa3da07a6"
+      "Hash": "8fbd7c3dca788a621055141c1c12216a"
     },
     "gtable": {
       "Package": "gtable",
@@ -824,7 +791,7 @@
     },
     "igraph": {
       "Package": "igraph",
-      "Version": "2.1.1",
+      "Version": "2.1.2",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -843,7 +810,7 @@
         "utils",
         "vctrs"
       ],
-      "Hash": "c03878b48737a0e2da3b772d7b2e22da"
+      "Hash": "9a93b743b2461ba06ba3b5df12011145"
     },
     "isoband": {
       "Package": "isoband",
@@ -878,7 +845,7 @@
     },
     "knitr": {
       "Package": "knitr",
-      "Version": "1.48",
+      "Version": "1.49",
       "Source": "Repository",
       "Repository": "RSPM",
       "Requirements": [
@@ -890,7 +857,7 @@
         "xfun",
         "yaml"
       ],
-      "Hash": "acf380f300c721da9fde7df115a5f86f"
+      "Hash": "9fcb189926d93c636dea94fbe4f44480"
     },
     "labeling": {
       "Package": "labeling",
@@ -905,14 +872,14 @@
     },
     "later": {
       "Package": "later",
-      "Version": "1.3.2",
+      "Version": "1.4.1",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "Rcpp",
         "rlang"
       ],
-      "Hash": "a3e051d405326b8b0012377434c62b37"
+      "Hash": "501744395cac0bab0fbcfab9375ae92c"
     },
     "lattice": {
       "Package": "lattice",
@@ -957,10 +924,11 @@
       "Version": "0.3.0.9000",
       "Source": "GitHub",
       "RemoteType": "github",
+      "RemoteHost": "api.github.com",
       "RemoteUsername": "danielvartan",
       "RemoteRepo": "lockr",
+      "RemoteRef": "main",
       "RemoteSha": "4b8184a59f572e5cea01aa77706f03e940d72423",
-      "RemoteHost": "api.github.com",
       "Requirements": [
         "R",
         "checkmate",
@@ -970,11 +938,11 @@
         "openssl",
         "rutils"
       ],
-      "Hash": "cc5514a0ecc5037ea80e856ec3bd6efb"
+      "Hash": "07fc1eb07d128b98c6c8d9c4aaa42fb7"
     },
     "lubridate": {
       "Package": "lubridate",
-      "Version": "1.9.3",
+      "Version": "1.9.4",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -983,7 +951,7 @@
         "methods",
         "timechange"
       ],
-      "Hash": "680ad542fbcf801442c83a6ac5a2126c"
+      "Hash": "be38bc740fc51783a78edb5a157e4104"
     },
     "lubritime": {
       "Package": "lubritime",
@@ -991,8 +959,9 @@
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteRepo": "lubritime",
       "RemoteUsername": "danielvartan",
+      "RemoteRepo": "lubritime",
+      "RemoteRef": "main",
       "RemoteSha": "f3826bbb45f0ff6a457644a06ec7ae51e1319871",
       "Requirements": [
         "R",
@@ -1005,7 +974,7 @@
         "rutils",
         "stringdist"
       ],
-      "Hash": "d401cf93248132b19fff6bc9e86bcfce"
+      "Hash": "7244e0d3da85dbe3a5c6b76a022fff34"
     },
     "magrittr": {
       "Package": "magrittr",
@@ -1085,14 +1054,14 @@
     },
     "mvtnorm": {
       "Package": "mvtnorm",
-      "Version": "1.3-1",
+      "Version": "1.3-2",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "R",
         "stats"
       ],
-      "Hash": "77c61d51ce0f36e3c1a76e6b295aab31"
+      "Hash": "9e8405eacb262c0a939e121650247f4b"
     },
     "nlme": {
       "Package": "nlme",
@@ -1110,34 +1079,33 @@
     },
     "openssl": {
       "Package": "openssl",
-      "Version": "2.2.2",
+      "Version": "2.3.0",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "askpass"
       ],
-      "Hash": "d413e0fef796c9401a4419485f709ca1"
+      "Hash": "5bfe2927efa9f87766ca9605301ea48f"
     },
     "parallelly": {
       "Package": "parallelly",
-      "Version": "1.38.0",
+      "Version": "1.41.0",
       "Source": "Repository",
-      "Repository": "RSPM",
+      "Repository": "CRAN",
       "Requirements": [
         "parallel",
         "tools",
         "utils"
       ],
-      "Hash": "6e8b139c1904f5e9e14c69db64453bbe"
+      "Hash": "f5ae11e8e15ee84950752e7b01c55295"
     },
     "pillar": {
       "Package": "pillar",
-      "Version": "1.9.0",
+      "Version": "1.10.0",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "cli",
-        "fansi",
         "glue",
         "lifecycle",
         "rlang",
@@ -1145,7 +1113,7 @@
         "utils",
         "vctrs"
       ],
-      "Hash": "15da5a8412f317beeee6175fbc76f4bb"
+      "Hash": "101ca350beea21261a15ba169d7a8513"
     },
     "pkgconfig": {
       "Package": "pkgconfig",
@@ -1163,9 +1131,10 @@
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteRepo": "prettycheck",
       "RemoteUsername": "danielvartan",
-      "RemoteSha": "e40db953fc83e06f45416eb91b90b383488bda15",
+      "RemoteRepo": "prettycheck",
+      "RemoteRef": "main",
+      "RemoteSha": "aa592a27ed057ef13a8d40fe89e7de29d85e04c1",
       "Requirements": [
         "R",
         "checkmate",
@@ -1184,7 +1153,7 @@
         "tibble",
         "utils"
       ],
-      "Hash": "fbb9853e50a1e74b1043956c421b4d06"
+      "Hash": "dd7913168c5db248b6b9745cdc0d3786"
     },
     "prettyunits": {
       "Package": "prettyunits",
@@ -1296,11 +1265,11 @@
       "Version": "0.0.0.9000",
       "Source": "GitHub",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
       "RemoteUsername": "paleolimbot",
       "RemoteRepo": "rbbt",
       "RemoteRef": "master",
-      "RemoteSha": "ec1ebe1e9b7e60bc4523e6cb2ca47f73a9cbfba3",
+      "RemoteSha": "212680cf89b22784bbbb9754d021c3196e85398f",
+      "RemoteHost": "api.github.com",
       "Requirements": [
         "R",
         "clipr",
@@ -1312,7 +1281,7 @@
         "rstudioapi",
         "stringr"
       ],
-      "Hash": "ad6475542f89f6a7481a36feb99ae46b"
+      "Hash": "8323921cdcefb27aa2fb35e3a770829a"
     },
     "readr": {
       "Package": "readr",
@@ -1377,7 +1346,7 @@
     },
     "rmarkdown": {
       "Package": "rmarkdown",
-      "Version": "2.28",
+      "Version": "2.29",
       "Source": "Repository",
       "Repository": "RSPM",
       "Requirements": [
@@ -1396,7 +1365,7 @@
         "xfun",
         "yaml"
       ],
-      "Hash": "062470668513dcda416927085ee9bdc7"
+      "Hash": "df99277f63d01c34e95e3d2f06a79736"
     },
     "rprojroot": {
       "Package": "rprojroot",
@@ -1420,11 +1389,11 @@
       "Version": "0.0.0.9000",
       "Source": "GitHub",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
       "RemoteUsername": "danielvartan",
       "RemoteRepo": "rutils",
       "RemoteRef": "main",
-      "RemoteSha": "8fab4f7b707bab35515de4dd35dddc244ba44f58",
+      "RemoteSha": "ad28c2e43152170bf67472858c7448188be0535e",
+      "RemoteHost": "api.github.com",
       "Requirements": [
         "R",
         "checkmate",
@@ -1450,7 +1419,7 @@
         "utils",
         "yaml"
       ],
-      "Hash": "076008d0aa6d5b8b51a552e5b3c7be45"
+      "Hash": "67732c0b900faddd29bc0e57a7c93eaa"
     },
     "sass": {
       "Package": "sass",
@@ -1472,8 +1441,9 @@
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteRepo": "scaler",
       "RemoteUsername": "danielvartan",
+      "RemoteRepo": "scaler",
+      "RemoteRef": "main",
       "RemoteSha": "4feb41daaacf14ef378afe19db5e21c0462a06ce",
       "Requirements": [
         "R",
@@ -1489,7 +1459,7 @@
         "rutils",
         "tidyr"
       ],
-      "Hash": "f6853ff89a28b1c89a7cc806079b3e12"
+      "Hash": "2281112b962167161391542fd2b0806d"
     },
     "scales": {
       "Package": "scales",
@@ -1534,10 +1504,10 @@
     },
     "sodium": {
       "Package": "sodium",
-      "Version": "1.3.2",
+      "Version": "1.4.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "869b09ca565ecaa9efc62534ebfa3efd"
+      "Hash": "ae00d33a499e429a04409bc1167c4995"
     },
     "spelling": {
       "Package": "spelling",
@@ -1554,14 +1524,14 @@
     },
     "stringdist": {
       "Package": "stringdist",
-      "Version": "0.9.12",
+      "Version": "0.9.14",
       "Source": "Repository",
-      "Repository": "RSPM",
+      "Repository": "CRAN",
       "Requirements": [
         "R",
         "parallel"
       ],
-      "Hash": "f360720fa3feb7db9d4133b31ebb067f"
+      "Hash": "be192673ec3a4efd32e8823298745a8d"
     },
     "stringi": {
       "Package": "stringi",
@@ -1602,9 +1572,9 @@
     },
     "tarchetypes": {
       "Package": "tarchetypes",
-      "Version": "0.10.0",
+      "Version": "0.11.0",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Requirements": [
         "R",
         "dplyr",
@@ -1619,11 +1589,11 @@
         "vctrs",
         "withr"
       ],
-      "Hash": "554afb784cbe615ae628dfed026cf77f"
+      "Hash": "cf140014f9d00f97f4bd22d961e20471"
     },
     "targets": {
       "Package": "targets",
-      "Version": "1.8.0",
+      "Version": "1.9.1",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -1647,7 +1617,7 @@
         "vctrs",
         "yaml"
       ],
-      "Hash": "021ef38b55dac09df3c2c75befe54e8f"
+      "Hash": "e543d1527ad26f8d6fd0f4f4b17bf39a"
     },
     "tibble": {
       "Package": "tibble",
@@ -1720,13 +1690,13 @@
     },
     "tinytex": {
       "Package": "tinytex",
-      "Version": "0.53",
+      "Version": "0.54",
       "Source": "Repository",
       "Repository": "RSPM",
       "Requirements": [
         "xfun"
       ],
-      "Hash": "9db859e8aabbb474293dde3097839420"
+      "Hash": "3ec7e3ddcacc2d34a9046941222bf94d"
     },
     "tzdb": {
       "Package": "tzdb",

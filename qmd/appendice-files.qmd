@@ -6,7 +6,7 @@
 #| label: setup
 #| include: false
 
-source(here::here("R/quarto-setup.R"))
+source(here::here("R", "_setup.R"))
 ```
 
 ## Overview
@@ -21,6 +21,7 @@ This notebook aim to normalize files from the project's vault.
 #| eval: false
 
 library(checkmate)
+library(clipr)
 library(googlesheets4)
 library(prettycheck) # github.com/danielvartan/prettycheck
 library(readr)
@@ -53,7 +54,7 @@ salt <- askpass::askpass() # !Configure `salt` before running!
 ```{r}
 #| eval: false
 
-dir_vault <- utils::readClipboard() |> normalizePath("/", mustWork = FALSE)
+dir_vault <- clipr::read_clip() |> normalizePath("/", mustWork = FALSE)
 ```
 
 ```{r}
@@ -82,15 +83,6 @@ dir_raw_sleep_diary <- file.path(dir_raw_data, "sleep-diary")
 ```{r}
 #| eval: false
 
-# To Do: Add code to test if directories and files exist.
-# 
-# prettycheck:::assert_directory_exists()
-# prettycheck:::assert_file_exists()
-```
-
-```{r}
-#| eval: false
-
 dir_processed_actigraphy <- file.path(dir_processed_data, "actigraphy")
 dir_processed_sleep_diary <- file.path(dir_processed_data, "sleep-diary")
 ```
@@ -102,6 +94,22 @@ file_pilot_form <- file.path(dir_raw_pilot_form, "raw.csv")
 file_field_form <- file.path(dir_raw_field_form, "raw.csv")
 file_sleep_diary <- file.path(dir_raw_sleep_diary, "raw.csv")
 file_control_form <- file.path(dir_raw_control_form, "raw.csv")
+```
+
+```{r}
+#| eval: false
+
+for (i in ls() |> stringr::str_subset("^dir_")) {
+  prettycheck:::assert_directory_exists(get(i))
+}
+```
+
+```{r}
+#| eval: false
+
+for (i in ls() |> stringr::str_subset("^file_")) {
+  prettycheck:::assert_file_exists(get(i))
+}
 ```
 
 ## Get data from Google Sheets
@@ -225,8 +233,12 @@ raw_data_control_form |> readr::write_csv(file_control_form)
 #| eval: false
 
 cpf_values <- c(
-  raw_data_pilot_form[[5]], 
-  raw_data_field_form[[5]]
+  # raw_data_pilot_form, 
+  # raw_data_field_form
+  "23710056810",
+  "38013021807",
+  "42849940852",
+  "09494930401"
 )
 
 id_data <- dplyr::tibble(
@@ -246,17 +258,6 @@ test_cpf(id_data$cpf)
 ```
 
 ## Load, filter & write data
-
-```{r}
-#| eval: false
-
-# For testing
-
-i <- id_data |> dplyr::filter(id %in% "575f0b25")
-# i <- id_data |> dplyr::filter(cpf %in% "45141075818")
-
-i
-```
 
 ```{r}
 #| eval: false

@@ -8,9 +8,9 @@
 
 # Load libraries
 
-library(magrittr, quietly = FALSE, verbose = FALSE)
-library(ggplot2, quietly = FALSE, verbose = FALSE)
-library(targets, quietly = FALSE, verbose = FALSE)
+library(magrittr)
+library(ggplot2)
+library(targets)
 
 # Set variables -----
 
@@ -19,24 +19,6 @@ env_vars <- yaml::read_yaml(here::here("_variables.yml"))
 base_size <- 10
 
 env_vars$base_size <- base_size
-
-# Load fonts -----
-
-if (is.null(env_vars$sansfont)) {
-  cli::cli_abort("Error while importing the environment variables.")
-} else {
-  extrafont::font_import(
-    paths = NULL,
-    recursive = TRUE,
-    prompt = FALSE,
-    pattern = paste0(
-      "^(?i)", stringr::str_extract(env_vars$sansfont, "(?i)^.[a-zÀ-ÿ]+"), "*"
-    )
-  ) |>
-    rutils:::shush()
-
-  extrafont::loadfonts(quiet = TRUE)
-}
 
 # Set knitr -----
 

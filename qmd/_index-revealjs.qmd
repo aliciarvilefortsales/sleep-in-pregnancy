@@ -1,15 +1,12 @@
 <!-- %:::% index begin %:::% -->
-<!-- %:::% slides-preface begin %:::% -->
-## {visibility="hidden"}
+## Hello, there 👋 {.smaller}
 
 ```{r}
 #| label: setup
 #| include: false
 
-source(here::here("R/quarto-setup.R"))
+source(here::here("R", "quarto-setup.R"))
 ```
-
-## Hello, there 👋 {.smaller}
 
 This presentation will provide an overview of the thesis objectives, main concepts, methods, and results. Here is our itinerary.
 
@@ -29,27 +26,19 @@ This presentation will provide an overview of the thesis objectives, main concep
 (@) Final remarks
 :::
 ::::
-<!-- %:::% slides-preface end %:::% -->
 
-<!-- %:::% slides-objectives begin %:::% -->
 ## Object and objectives {.smaller}
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed scelerisque mi ac orci viverra hendrerit a porta nulla. Sed et sem eget turpis vehicula placerat eget sit amet odio. Ut fermentum dolor ut est mollis, nec fermentum ligula hendrerit. In et volutpat justo.
-<!-- %:::% slides-objectives end %:::% -->
 
-<!-- %:::% slides-introduction begin %:::% -->
 ## Introduction {.smaller}
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed scelerisque mi ac orci viverra hendrerit a porta nulla. Sed et sem eget turpis vehicula placerat eget sit amet odio. Ut fermentum dolor ut est mollis, nec fermentum ligula hendrerit. In et volutpat justo.
-<!-- %:::% slides-introduction end %:::% -->
 
-<!-- %:::% slides-thesis-outline begin %:::% -->
 ## Thesis outline {.smaller}
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed scelerisque mi ac orci viverra hendrerit a porta nulla. Sed et sem eget turpis vehicula placerat eget sit amet odio. Ut fermentum dolor ut est mollis, nec fermentum ligula hendrerit. In et volutpat justo.
-<!-- %:::% slides-thesis-outline end %:::% -->
 
-<!-- %:::% slides-methods begin %:::% -->
 ## Methods {.smaller}
 
 * Problem approach method: Hypothetico-deductive method [@popper1979]
@@ -79,21 +68,15 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed scelerisque mi ac o
 ## Sample (raw) characteristics {.smaller}
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed scelerisque mi ac orci viverra hendrerit a porta nulla. Sed et sem eget turpis vehicula placerat eget sit amet odio. Ut fermentum dolor ut est mollis, nec fermentum ligula hendrerit. In et volutpat justo.
-<!-- %:::% slides-methods end %:::% -->
 
-<!-- %:::% slides-results begin %:::% -->
 ## Results {.smaller}
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed scelerisque mi ac orci viverra hendrerit a porta nulla. Sed et sem eget turpis vehicula placerat eget sit amet odio. Ut fermentum dolor ut est mollis, nec fermentum ligula hendrerit. In et volutpat justo.
-<!-- %:::% slides-results end %:::% -->
 
-<!-- %:::% slides-discussion begin %:::% -->
 ## Discussion {.smaller}
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed scelerisque mi ac orci viverra hendrerit a porta nulla. Sed et sem eget turpis vehicula placerat eget sit amet odio. Ut fermentum dolor ut est mollis, nec fermentum ligula hendrerit. In et volutpat justo.
-<!-- %:::% slides-discussion end %:::% -->
 
-<!-- %:::% slides-final-remarks begin %:::% -->
 ## Final remarks {.smaller}
 
 :::: {.columns}
@@ -111,9 +94,7 @@ Area of concentration: Healthcare.
 You can learn more about this work at: <https://github.com/aliciarvilefortsales/mastersthesis>
 :::
 ::::
-<!-- %:::% slides-final-remarks end %:::% -->
 
-<!-- %:::% slides-references begin %:::% -->
 # References {.smaller}
 
 ::: {style="font-size: 0.75em;"}
@@ -122,5 +103,4 @@ In accordance with the [American Psychological Association (APA) Style](https://
 
 ::: {#refs style="font-size: 0.75em;"}
 :::
-<!-- %:::% slides-references end %:::% -->
 <!-- %:::% index end %:::% -->
