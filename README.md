@@ -83,7 +83,7 @@ be made with the author’s approval and participation.
 
 You can find the thesis citation below.
 
-Sales, A. R. V. (2024). *Associations between the duration and quality
+Sales, A. R. V. (2025). *Associations between the duration and quality
 of sleep of pregnant women in the third trimester with the duration of
 labor* \[Master’s thesis, University of São Paulo\].
 
@@ -92,7 +92,7 @@ A BibTeX entry for LaTeX users is
     @mastersthesis{vartanian_2023,
       title = {Associations between the duration and quality of sleep of pregnant women in the third trimester with the duration of labor},
       author = {Alícia Rafaelly Vilefort Sales},
-      year = {2024},
+      year = {2025},
       address = {São Paulo},
       school  = {University of São Paulo},
       langid = {en-us},
