@@ -1,15 +1,40 @@
 # See <https://books.ropensci.org/targets/> to learn more.
 
-# library(here)
+library(here)
 library(tarchetypes)
 library(targets)
 
+# source(here::here("R", "set_locale.R"))
+source(here::here("R", "get_raw_data.R"))
+source(here::here("R", "tidy_data_.R"))
+source(here::here("R", "validate_data.R"))
+source(here::here("R", "analyze_data.R"))
+source(here::here("R", "anonymize_data.R"))
+source(here::here("R", "filter_data.R"))
+source(here::here("R", "lock_and_store_data.R"))
+
 targets::tar_option_set(
   packages = c(
+    "cli",
+    "curl",
+    "dplyr",
+    "here",
+    "hms",
+    "lockr", # github.com/danielvartan/lockr
     "lubridate", # For masking reasons.
-    "checkmate", "cli", "curl", "dplyr", "here", "hms", "lockr", "lubritime",
-    "mctq", "readr", "rlang", "rutils", "scaler", "stringr", "tidyr", "utils"
-    )
+    "lubritime", # github.com/danielvartan/lubritime
+    "methods",
+    "mctq",
+    "prettycheck", # github.com/danielvartan/prettycheck
+    "osfr",
+    "readr",
+    "rlang",
+    "rutils", # github.com/danielvartan/rutils
+    "scaler", # github.com/danielvartan/scaler
+    "stringr",
+    "tidyr",
+    "utils"
+  )
 )
 
 # tar_make_clustermq() is an older (pre-{crew}) way to do distributed computing
@@ -26,13 +51,32 @@ future::plan(future.callr::callr)
 
 # Replace the target list below with your own:
 list(
-  targets::tar_target(name = raw_data, command = get_raw_data()),
-  targets::tar_target(name = tidy_data, command = tidy_data_(raw_data)),
-  targets::tar_target(name = validated_data,
-                      command = validate_data(tidy_data)),
-  targets::tar_target(name = analyzed_data,
-                      command = analyze_data(validated_data)),
-  targets::tar_target(name = filtered_data,
-                      command = filter_data(analyzed_data))
-  # tarchetypes::tar_quarto(name = book, path = here::here())
+  targets::tar_target(
+    name = raw_data,
+    command = get_raw_data()
+  ),
+  targets::tar_target(
+    name = tidy_data,
+    command = tidy_data_(raw_data)
+  ),
+  targets::tar_target(
+    name = validated_data,
+    command = validate_data(tidy_data)
+  ),
+  targets::tar_target(
+    name = analyzed_data,
+    command = analyze_data(validated_data)
+  ),
+  targets::tar_target(
+    name = anonymized_data,
+    command = anonymize_data(analyzed_data)
+  ),
+  targets::tar_target(
+    name = filtered_data,
+    command = filter_data(anonymized_data)
+  ),
+  targets::tar_target(
+    name = weighted_data,
+    command = weigh_data(filtered_data)
+  )
 )

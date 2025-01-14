@@ -1,0 +1,72 @@
+# For detailed documentation on the format, refer to:
+#
+# - https://posit-dev.github.io/brand-yml
+# - https://quarto.org/docs/authoring/brand.html
+
+meta:
+  name:
+    short: |
+      Associations between the duration and quality of sleep of pregnant 
+      women in the third trimester with the duration of labor 
+    full: |
+      Associations between the duration and quality of sleep of pregnant 
+      women in the third trimester with the duration of labor 
+      [Master's Thesis]
+  link:
+    home: https://aliciarvilefortsales.github.io/mastersthesis
+    github: https://github.com/aliciarvilefortsales/mastersthesis
+    osf: https://doi.org/10.17605/OSF.IO/S4TBZ
+  description: |
+    Quarto book of the Master's Thesis: 
+    Associations between the duration and quality of sleep of pregnant 
+    women in the third trimester with the duration of labor 
+
+logo:
+  images:
+    favicon:
+      path: images/favicon.png
+      alt: "Logo favicon"
+
+color:
+  palette:
+    pantone-x: "#EA7701" # PANTONE X
+    pantone-y: "#EEB6A5"  # PANTONE X
+    white: "#FFFFFF"
+    grey: "#4F5556"
+    black: "#EEB6A5" # PANTONE x
+    black-725: "#7D898E" # get_brand_color_tint(725, "black")
+
+  background: orange-980
+  primary: orange
+  secondary: black
+  tertiary: gray
+  success: orange
+  info: black
+  warning: black
+  danger: black
+  light: light-orange
+  dark: gray
+
+typography:
+  fonts:
+    - family: Poppins
+      source: google
+      weight: [300, 400, 500, 600]
+    - family: DM Sans
+      source: google
+    - family: DM Mono
+      source: google
+  base:
+    family: DM Sans
+  headings:
+    family: Poppins
+    color: black
+    weight: bold
+  monospace: DM Mono
+  monospace-inline:
+    color: black
+  monospace-block:
+    background-color: orange-975
+  link:
+    color: orange
+    decoration: underline

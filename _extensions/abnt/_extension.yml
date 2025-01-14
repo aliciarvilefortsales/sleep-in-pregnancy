@@ -16,10 +16,10 @@ description: >
   Quarto format designed for theses and dissertations that adhere to the
   standards of the Brazilian Association of Technical Standards (ABNT).
 keyword: >-
-    ABNT. Quarto. Quarto format. Thesis template. Reproducibility.
-    Open science.
-version: 0.3.0
-quarto-required: ">=1.3.0"
+    abnt. quarto. quarto format. thesis template. reproducibility.
+    open science.
+version: 0.4.0
+quarto-required: ">=1.6.0"
 license:
   text: >
     MIT
@@ -43,35 +43,21 @@ license:
     DEALINGS IN THE SOFTWARE.
   type: open-access
   url: https://opensource.org/license/mit/
-copyright: "Copyright (c) 2023 Daniel Vartanian"
+copyright: "Copyright (c) 2024 Daniel Vartanian"
 contributes:
   formats:
     common:
       df-print: kable
-    html:
-      date-format: "YYYY-MM-DD"
-      open-graph: true
-      locale: en
-      number-depth: 5
-      code-link: true
-      code-fold: true
-      cap-location: bottom
-      reader-mode: false
-      callout-appearance: simple
-      csl: csl/english-abnt-author-date.csl
-      theme:
-        light: [cosmo, scss/theme-light.scss]
-        dark: [cosmo, scss/theme-dark.scss]
     pdf:
-      pdf-engine: latexmk
-      pdf-engine-opt: -xelatex
-      latex-auto-install: true
       documentclass: abntex2
-      mainfont: Arial
-      sansfont: Arial
-      monofont: FragmentMono-Regular.otf
+      # Install the fonts before rendering
+      # (See the extention `ttf` and `otf` folder)
+      # To get font family names see `systemfonts::system_fonts()`
+      # For "DM Sans", discard the variable sizes (e.g., "18pt") from the files.
+      mainfont: DM Sans # Base font {\rmdefault\rmfmaily}
+      sansfont: Poppins # Heading font {\sfdefault\sffamily}
+      monofont: DM Mono # Code font {\ttdefault\ttfamily}
       monofontoptions:
-        - ItalicFont=FragmentMono-Italic.otf
         - Scale=0.75
       fontsize: 12pt
       linestretch: 1.5
@@ -80,12 +66,17 @@ contributes:
       frenchspacing: true
       sides: oneside # options: [oneside, twoside]
       papersize: a4 # options: [a4, a5]
+      sentence-case: true # for `title` and `version-note` (yml)
       section-options:
         - chapter=TITLE
         - section=TITLE
+      hyperrefoptions:
+        - bookmarksnumbered
+      captionsetup:
+        - justification=justified
       date-format: YYYY
       lang: en # options: [en, pt-br, es, fr]
-      language: ../_extensions/abnt/_language.yml
+      language: "../_extensions/abnt/_language.yml"
       babel-lang: english # options: [english, brazil, spanish, french]
       other-babel-lang: # Don not repeat 'babel-lang' here.
         - french
@@ -98,10 +89,10 @@ contributes:
         According to the Brazilian Association of Technical Standards
         (ABNT NBR 6023).
       biblatexoptions:
-        - backend=biber,
-        - language=english, # [options: english, brazil, spanish, french]
-        - url=true,
-        - useprefix=false,
+        - backend=biber
+        - language=english # [options: english, brazil, spanish, french]
+        - url=true
+        - useprefix=false
         - giveninits=true
       bibhang: 0cm # Use 0.5cm if `biblio-style: apa`.
       bibparsep: 1ex
@@ -120,11 +111,19 @@ contributes:
       code-block-bg: "#F1F3F5"
       fig-format: png
       fig-dpi: 150
+      # See: <https://quarto.org/docs/computations/
+      #       execution-options.html#figure-options>.
+      fig-width: 5.5 # Default: 5.5
+      fig-height: 4 # Default: 3.5
+      # See: <https://quarto.org/docs/reference/cells/cells-knitr.html#figures>.
+      out-width: 80%
       fig-pos: H # `abntex2` default: htb (doesn't work)
       tbl-pos: H # `abntex2` default: htb (doesn't work)
       cap-location: top
+      cap-hyphenpenalty: true
+      legend-hyphenpenalty: true
       prefer-html: false
-      location: "[City]"
+      location: "[Municipality]"
       supervisor: "[Supervisor's full name]"
       cosupervisor: "[Co-supervisor's full name]"
       academic-title: "[Master/PhD]"
@@ -157,8 +156,6 @@ contributes:
         - tex/title.tex
         - tex/toc.tex
       format-resources:
-        - otf/FragmentMono-Regular.otf
-        - otf/FragmentMono-Italic.otf
         - bbx/abnt.bbx
         - bbx/abnt-ibid.bbx
         - bbx/abnt-numeric.bbx
@@ -175,4 +172,11 @@ contributes:
         - lbx/brazil-apa.lbx
         - lbx/spanish-apa.lbx
         - lbx/french-apa.lbx
+      latex-auto-install: true
       keep-tex: true
+
+# TO DO:
+#
+# - Fix the "Source" field, adding a tabulation after "Source: ".
+# - Find a way to center the caption and the source if they are less than
+#   \textwidth, and to justify them if they are greater than \textwidth.

@@ -1,10 +1,13 @@
 # mastersthesis
 
 <!-- quarto render --profile gfm -->
+
 <!-- badges: start -->
-[![Project Status: WIP – Initial development is in progress, but there
-has not yet been a stable, usable release suitable for the
-public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![Project Status: Active – The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![OSF
+DOI](https://img.shields.io/badge/DOI-10.17605/OSF.IO/S4TBZ.svg)](https://doi.org/10.17605/OSF.IO/S4TBZ)
 [![License:
 MIT](https://img.shields.io/badge/license-MIT-green.png)](https://choosealicense.com/licenses/mit/)
 [![License: CC BY
@@ -13,11 +16,15 @@ MIT](https://img.shields.io/badge/license-MIT-green.png)](https://choosealicense
 
 ## Overview
 
-This repository contains the research compendium and [Quarto
-book](https://quarto.org/docs/books/) of my master’s thesis:
+🤰👶🍼🌙💤🛏️🕰️😴🌟☁️👨‍🍼🤱👩‍🍼🌸✨🌜📖🎵🤔📅
+
+This repository contains the [Quarto
+book](https://quarto.org/docs/books/) of my Master’s Thesis:
 *Associations between the duration and quality of sleep of pregnant
-women in the third trimester with the duration of labor*. Its aim is to
-facilitate research work and to improve reproducibility.
+women in the third trimester with the duration of labor*. The research
+compendium is accessible via [The Open Science
+Framework](https://osf.io/) by clicking
+[here](https://doi.org/10.17605/OSF.IO/S4TBZ).
 
 The assemble of this repository was inspired by Ben Marwick, Carl
 Boettiger & Lincoln Mullen’s article [Packaging Data Analytical Work
@@ -26,37 +33,67 @@ Friends)](https://doi.org/10.1080/00031305.2017.1375986).
 
 ## How to use
 
-The analyses contained in this thesis are 100% reproducible. They were
-made using the [R programming language](https://www.r-project.org/) and
+All analyses in this thesis are fully reproducible and were conducted
+using the [R programming language](https://www.r-project.org/) alongside
 the [Quarto](https://quarto.org/) publishing system. The
 [`renv`](https://rstudio.github.io/renv/) package was used to ensure
-that the R environment used can be restored (see `renv.lock`). The
+that the R environment used can be restored (see `renv.lock`). All the
 computational notebooks can be found in the `qmd` directory.
 
 It’s important to note that some restrictions apply to the availability
-of the main research data, which were used under the approval of a
-Research Ethics Committee (REC) linked to the [Brazilian National
-Research Ethics Committee
-(CONEP)](https://conselho.saude.gov.br/Web_comissoes/conep/index.html).
-As a result, this data cannot be publicly shared. To run the analyses,
-users must have an internet connection and request a set of access keys
-from the author.
-
-To reproduce the analyses do the following steps:
-
-1.  Clone this repository.
-2.  Open the R project (`mastersthesis.Rproj`).
-3.  Run
-    [`renv::restore()`](https://rstudio.github.io/renv//reference/restore.html)
-    to install all software dependencies.
-4.  Open and run the analysis in the computational notebook.
+of the main research data, which contain personal and sensitive
+information. As a result, this data cannot be publicly shared. To run
+the analyses, users must have an internet connection and request a set
+of access keys from the author (see *Keys* section).
 
 If you don’t feel comfortable with R, I strongly recommend checking
 Hadley Wickham and Garrett Grolemund’s free and online book [R for Data
-Science](https://r4ds.had.co.nz/) and the Coursera course from John
+Science](https://r4ds.hadley.nz/) and the Coursera course from John
 Hopkins University [Data Science: Foundations using
-R](https://www.coursera.org/specializations/data-science-foundations-r)
-(free for audit students).
+R](https://www.coursera.org/specializations/data-science-foundations-r).
+
+To reproduce the analyses do the following steps:
+
+1.  Make sure that you have the latest R version and the following R
+    packages installed in your machine:
+    `install.packages(c("cli", "here" ,"magrittr", "ragg", "renv", "stats", "stringr"))`.
+2.  Clone this repository.
+3.  Open the R project (`mastersthesis.Rproj`).
+4.  Run
+    [`renv::restore()`](https://rstudio.github.io/renv//reference/restore.html)
+    to install all software dependencies.
+5.  Set all the keys provided by the author in the `.Renviron` file and
+    the `_ssh` folder.
+6.  Run `targets::tar_make()` to create every point of the data
+    wrangling process (from the raw data to the cleaned and weighted
+    data).
+7.  Run any analysis present in the computational notebooks (`qmd`
+    directory).
+
+## Keys
+
+To access the data and run the notebooks, you will need to set the
+following keys in the
+[`.Renviron`](https://bookdown.org/csgillespie/efficientR/set-up.html#:~:text=2.4.6%20The%20.Renviron%20file)
+file:
+
+- `OSF_PAT`: Your [OSF](https://osf.io/) Personal Access Token (PAT). If
+  you don’t have one, go to the settings section of your OSF account and
+  create a new token.
+- `MASTERSTHESIS_PASSWORD`: The password for the project’s RSA private
+  key (32 bytes).
+
+Additionally, you will need the following keys in the project’s `_ssh`
+folder:
+
+- `id_rsa`: The project’s private RSA key (RSA 4096 bits (OpenSSL)).
+- `id_rsa.pub`: The project’s public RSA key.
+
+These project’s keys will be provided by the author of the thesis upon
+reasonable request. As reasonable requests, I consider those made by
+researchers with a legitimate interest in the thesis topic, whose
+projects are of high quality, ethically conducted, and who have obtained
+all necessary approvals for their research proposal.
 
 ## License
 
@@ -65,38 +102,34 @@ MIT](https://img.shields.io/badge/license-MIT-green.png)](https://opensource.org
 [![License: CC BY
 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
-Code related to this repository is released under the [MIT
-license](https://opensource.org/license/mit/). Documents are released
-under the [Creative Commons Attribution 4.0 International
-license](https://creativecommons.org/licenses/by/4.0/).
+The code accompanying this thesis is distributed under the [MIT
+License](https://opensource.org/license/mit/). All documents are
+released under the [Creative Commons Attribution 4.0 International
+Public License](https://creativecommons.org/licenses/by/4.0/).
 
-The main research data were used under the approval of a Research Ethics
-Committee (REC) linked to the [Brazilian National Research Ethics
-Committee
-(CONEP)](https://conselho.saude.gov.br/Web_comissoes/conep/index.html);
-therefore, it cannot be publicly shared. However, it can be provided by
-the author upon reasonable request. If the intention is to use the data
-for new research, the request will need approval from CONEP, which must
-be made with the author’s approval and participation.
+The research data is subject to a private license and is not publicly
+available due to privacy and ethical considerations.
 
 ## Citation
 
-You can find the thesis citation below.
+To cite this work, please use the following format:
 
 Sales, A. R. V. (2025). *Associations between the duration and quality
 of sleep of pregnant women in the third trimester with the duration of
-labor* \[Master’s thesis, University of São Paulo\].
+labor * \[Master’s Thesis, University of São Paulo\].
+<https://doi.org/10.17605/OSF.IO/S4TBZ>
 
-A BibTeX entry for LaTeX users is
+A BibTeX entry for LaTeX users is:
 
-    @mastersthesis{vartanian_2023,
-      title = {Associations between the duration and quality of sleep of pregnant women in the third trimester with the duration of labor},
+    @mastersthesis{sales2025,
+      title = {Associations between the duration and quality of sleep of pregnant women in the third trimester with the duration of labor
+    },
       author = {Alícia Rafaelly Vilefort Sales},
       year = {2025},
       address = {São Paulo},
       school  = {University of São Paulo},
-      langid = {en-us},
-      url = {https://github.com/aliciarvilefortsales/mastersthesis},
+      langid = {en},
+      url = {https://doi.org/10.17605/OSF.IO/S4TBZ},
       note = {Preliminary version}
     }
 
@@ -108,11 +141,8 @@ University of São Paulo ([USP](https://www5.usp.br/)) under the
 supervision of [Prof. Dr. Christiane Borges do Nascimento
 Chofakian](https://orcid.org/0000-0002-5953-3296).
 
-Financial support was provided by the Coordination for the Improvement
-of Higher Education Personnel ([CAPES](https://www.gov.br/capes/)).
+<a href="https://www.gov.br/capes/"><img src= "images/capes-logo-horizontal-rgb.png" height="35"/></a>
 
-### Mandatory notice
-
-This study was financed in part by the Coordenação de Aperfeiçoamento de
-Pessoal de Nível Superior - Brasil
-([CAPES](https://www.gov.br/capes/)) - Finance Code 001.
+This study was financed by the Coordenação de Aperfeiçoamento de Pessoal
+de Nível Superior - Brazil ([CAPES](https://www.gov.br/capes/)) -
+Finance Code 001.

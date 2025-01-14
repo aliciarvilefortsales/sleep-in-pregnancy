@@ -9,7 +9,7 @@
 source(here::here("R/quarto-setup.R"))
 ```
 
-{{< var author-surname >}}, `r sub("\\. .\\.$", "", env_vars[["author-initials"]])`. ({{< var year >}}). _{{< var title >}}_ [{{< var academic-title >}}'s {{< var type-of-work >}}, {{< var university >}}].
+Sales, A. R. V. (`r env_vars[["year"]]`). *`r env_vars[["title"]] |> stringr::str_to_sentence()`* [`r env_vars[["academic-title"]]`'s `r env_vars[["type-of-work"]]`, `r env_vars[["university"]]`]. [https://doi.org/10.17605/OSF.IO/S4TBZ](https://doi.org/10.17605/OSF.IO/S4TBZ)
 
 ::: {.content-visible when-format="pdf"}
 <!-- %:::% vernacular-abstract reference begin %:::% -->

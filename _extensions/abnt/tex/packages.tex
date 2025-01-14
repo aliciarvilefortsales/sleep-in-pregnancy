@@ -1,5 +1,6 @@
+% The package order matters!
+
 \usepackage{array}
-\usepackage{booktabs}
 \usepackage{calc}
 \usepackage{caption}
 \usepackage{color}
@@ -24,19 +25,20 @@
 \usepackage{parskip}
 \usepackage{pdfpages}
 \usepackage[table]{xcolor}
-
+\usepackage{xparse}
+\usepackage{xstring}
 \usepackage{hyperref}
 
 \ifPDFTeX
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
 $if(mathspec)$
-  \ifXeTeX
-    \usepackage{mathspec} % this also loads fontspec
-  \else
-    \usepackage{unicode-math} % this also loads fontspec
-  \fi
+\ifXeTeX
+  \usepackage{mathspec} % this also loads fontspec
+\else
+  \usepackage{unicode-math} % this also loads fontspec
+\fi
 $else$
-  \usepackage{unicode-math}
+\usepackage{unicode-math}
 $endif$
 \fi

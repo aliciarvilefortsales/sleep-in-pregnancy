@@ -1,27 +1,25 @@
 editor: source
 
 execute:
-  cache: false
-  freeze: auto
+  cache: false # "Danger Will Robinson!"
+  freeze: false # If you're going to use it, don't forget to disable it afterward!
+                # Goddammit! What did I tell you?
 
 profile:
   group:
-    - [html, pdf, revealjs, gfm]
+    - [gfm, html, pdf, revealjs]
   default: pdf
-
 book:
   title: >
     Associations between the duration and quality of sleep of pregnant women in
     the third trimester with the duration of labor
-  author: "Alícia Rafaelly Vilefort Sales"
   keyword: >
     Pregnancy. Sleep. Sleep-wake cycle. Sleep quality. Duration of sleep.
     Childbirth. Duration of childbirth. Actigraphy. MCTQ. PSQI. DASS.
   language: en-us
   license: "Creative Commons Attribution 4.0 International (CC BY 4.0)"
-  publisher: "University of São Paulo"
-  publisher-place: "São Paulo, SP, Brazil"
-  submitted: 2023
+  submitted: 2025
+  favicon: images/favicon.png
   url: https://aliciarvilefortsales.github.io/mastersthesis/
   site-url: https://aliciarvilefortsales.github.io/mastersthesis/
   repo-url: https://github.com/aliciarvilefortsales/mastersthesis/
@@ -30,7 +28,12 @@ book:
 
 citation:
   type: thesis
+  publisher: "University of São Paulo"
+  publisher-place: "São Paulo, SP, Brazil"
+  doi: "10.17605/OSF.IO/S4TBZ"
   url: https://aliciarvilefortsales.github.io/mastersthesis/
-google-scholar: false
+  pdf-url: https://aliciarvilefortsales.github.io/mastersthesis/print/index.pdf
 
+google-scholar: true
 bibliography: references.bib
+

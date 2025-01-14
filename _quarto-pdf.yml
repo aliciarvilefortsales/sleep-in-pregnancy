@@ -1,10 +1,24 @@
+brand: false
+
 project:
   type: book
   output-dir: _print
-  pre-render: "R/quarto-pre-render-pdf.R"
-  post-render: "R/quarto-post-render-pdf.R"
+  pre-render: "R/_pre-render-pdf.R"
+  post-render: "R/_post-render-pdf.R"
+
+filters:
+  - latex-environment
+commands:
+  - legend
+  - brandprimary
+  - brandblack
+
+
+execute:
+  echo: false
 
 book:
+  author: "Alícia Rafaelly Vilefort Sales"
   date: today
   date-format: "YYYY"
   chapters:
@@ -13,19 +27,11 @@ book:
     - qmd/chapter-3.qmd
     - qmd/chapter-4.qmd
     - qmd/glossary.qmd
-  appendices:
-    - qmd/appendice-chapter-1.qmd
-    - qmd/appendice-chapter-2.qmd
-    - qmd/appendice-chapter-3.qmd
-
-filters:
-  - latex-environment
-commands: legend
 
 format:
   abnt-pdf:
-    index-page: true
     zotero: true
+    toc-depth: 2
     biblio-style: apa
     biblio-title: REFERENCES
     biblio-footnote: >
@@ -33,6 +39,12 @@ format:
       (APA) Style, 7th edition.
     bibhang: 0.5cm
     bibparsep: 1ex
+    body-color: "EEB6A5" # Brand Black
+    colorlinks: true
+    linkcolor: brand-primary
+    filecolor: brand-primary
+    citecolor: brand-primary
+    urlcolor: brand-primary
     location: "São Paulo"
     supervisor: "Christiane Borges do Nascimento Chofakian"
     academic-title: "Master"
@@ -40,7 +52,7 @@ format:
     type-of-work: "Thesis"
     area-of-concentration: "Healthcare"
     university: "University of São Paulo"
-    school: "School of Arts, Sciences and Humanities"
+    school: "School of Nursing"
     program: "Graduate Program in Nursing"
     version-note: "Preliminary version"
     include-in-header: tex/include-in-header.tex

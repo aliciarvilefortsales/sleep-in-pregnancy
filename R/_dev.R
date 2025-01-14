@@ -48,11 +48,14 @@
 # source(here::here("R", "_pre-render-html.R"))
 # source(here::here("R", "_pre-render-revealjs.R"))
 #
+# --cache
+# --no-cache
+# --cache-refresh
 # quarto render
 # quarto render --profile gfm
-# quarto render --profile pdf
-# quarto render --profile html
-# quarto render --profile revealjs
+# quarto render --profile pdf # Source pre-render first.
+# quarto render --profile html # Source pre-render first.
+# quarto render --profile revealjs # Source pre-render first.
 
 # # LaTeX
 #
@@ -60,6 +63,29 @@
 # \AtBeginEnvironment{}{}
 # \AtEndEnvironment{}{}
 # \AfterEndEnvironment{}{}
+
+# # OSF
+#
+# osf_pat <- Sys.getenv("OSF_PAT")
+# password <- Sys.getenv("MASTERSTHESIS_PASSWORD")
+#
+# osfr::osf_auth(osf_pat)
+#
+# osf_id <- "https://osf.io/cbqsa"
+# pattern <- "lookup.rda"
+#
+# file <-
+#   osfr::osf_ls_files(
+#     osfr::osf_retrieve_node(osf_id),
+#     pattern = pattern
+#   ) |>
+#   osfr::osf_download(path = tempdir(), conflicts = "overwrite") |>
+#   magrittr::extract2("local_path")
+#
+# lockr::unlock_file(file, private_key= private_key, password = password)
+# file <- stringr::str_remove(file, "\\.lockr$")
+# load(file)
+# lockr::lock_file(file, public_key = public_key, remove_file = TRUE)
 
 # # Encryption
 #
