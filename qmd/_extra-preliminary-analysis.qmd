@@ -1,11 +1,92 @@
 # Preliminary Analysis
 
+```{r}
+#| label: setup
+#| include: false
+
+source(here::here("R", "_setup.R"))
+```
+
 ## Setting the Enviroment
 
 ```{r}
 #| eval: false
 
+library(askpass)
+library(car)
 library(googlesheets4)
+library(lubritime) # github.com/danielvartan/lubritime
+library(prettycheck) # github.com/danielvartan/prettycheck
+```
+
+```{r}
+library(magrittr)
+library(ggplot2)
+```
+
+```{r}
+source(here::here("R", "anonymize_id.R"))
+source(here::here("R", "plot_box_plot.R"))
+source(here::here("R", "plot_ggally.R"))
+source(here::here("R", "plot_hist.R"))
+source(here::here("R", "plot_qq.R"))
+source(here::here("R", "stats_summary.R"))
+source(here::here("R", "test_normality.R"))
+source(here::here("R", "utils.R"))
+source(here::here("R", "utils-plots.R"))
+```
+
+```{r}
+# library(dplyr)
+# library(prrettycheck) # github.com/danielvartan/prettycheck
+
+get_n <- function(data, group) {
+  prettycheck:::assert_tibble(data)
+  prettycheck:::assert_subset("group", names(data))
+  prettycheck:::assert_set_equal(levels(data$group), c("Poor", "Good"))
+  prettycheck:::assert_choice(group, c("Poor", "Good"))
+  
+  data |>
+    dplyr::rename(.group = group) |>
+    dplyr::filter(.group == group) |>
+    nrow()
+}
+```
+
+```{r}
+# library(dplyr)
+# library(prrettycheck) # github.com/danielvartan/prettycheck
+
+get_labor_duration <- function(data, group) {
+  prettycheck:::assert_tibble(data)
+  prettycheck:::assert_subset(c("group", "labor_duration"), names(data))
+  prettycheck:::assert_set_equal(levels(data$group), c("Poor", "Good"))
+  prettycheck:::assert_choice(group, c("Poor", "Good"))
+  
+  data |>
+    dplyr::rename(.group = group) |>
+    dplyr::filter(.group == group) |>
+    dplyr::pull(labor_duration)
+}
+```
+
+```{r}
+# See Maxwell et al. (2018, p. 150)
+f_unb <- function(k, n_total, f_test) {
+  checkmate::assert_int(k, lower = 2)
+  checkmate::assert_int(n_total, lower = 2)
+  checkmate::assert_number(f_test)
+  
+  ((k - 1) / n_total) %>%
+  `*`(((n_total - k - 2) / (n_total - k)) * (f_test - 1)) |> 
+  sqrt()
+}
+```
+
+## Adding Key Variables
+
+```{r}
+salt <- askpass::askpass()
 ```
 
 ## Downloading the Data
@@ -30,25 +111,41 @@ field_form <- googlesheets4::read_sheet(
 )
 ```
 
+```{r}
+sleep_input <- googlesheets4::read_sheet(
+  ss = "1iqjhdSiWYr9RYSvIvJQfFw35DR31YA_oj2SW8iR5WPw",
+  sheet = "Dataset",
+  col_types = "c"
+)
+```
+
+```{r}
+medical_record_input <- googlesheets4::read_sheet(
+  ss = "10yvvTOCjZsRKPO8A4yn0NCvWe4Jn_Kq-Zu_CV4miGJI",
+  sheet = "Dataset",
+  col_types = "c"
+)
+```
+
 ## Data Wrangling
 
 ```{r}
 control_data <-
   control_form |>
-  `names<-`(paste0("X", seq_along(data))) |>
+  `names<-`(paste0("X", seq_along(control_form))) |>
   dplyr::select(X5, X6, X7, X12, X13, X14) |>
   dplyr::rename(
     cpf = X5,
     id = X6,
     name = X7,
-    birth_center = X12,
+    birth_center_delivery = X12,
     birth = X13,
     labor_start = X14
   ) |>
   dplyr::mutate(
-    birth_center = dplyr::case_when(
-      tolower(trimws(birth_center)) == "sim" ~ TRUE,
-      tolower(trimws(birth_center)) == "não" ~ FALSE,
+    birth_center_delivery = dplyr::case_when(
+      tolower(trimws(birth_center_delivery)) == "sim" ~ TRUE,
+      tolower(trimws(birth_center_delivery)) == "não" ~ FALSE,
       TRUE ~ NA
     ),
     birth = lubridate::as_datetime(birth),
@@ -58,83 +155,852 @@ control_data <-
     labor_duration = lubritime::int_duration(
       start = labor_start,
       end = birth
-    )
+    ) |>
+      lubridate::as.duration()
   ) |>
-  dplyr::filter(!is.na(labor_duration))
+  dplyr::filter(!is.na(labor_duration)) |>
+  dplyr::select(id, birth_center_delivery, labor_start, labor_duration)
+
+control_data
 ```
 
 ```{r}
 field_form_data <-
   field_form |>
   `names<-`(paste0("X", seq_along(field_form))) |>
-  dplyr::select(X1, X4, X5, X95, X96, X99) |>
+  dplyr::select(
+    X1, X4, X5, X11, X91, X92, X95, X96, X99, X101, X102, X106, X119, X118,
+    X125, X126
+  ) |>
   dplyr::rename(
     timestamp = X1,
     birth_date = X4,
     cpf = X5,
     weight = X95,
     height = X96,
-    family_income = X99
+    ethnicity = X106,
+    education = X118,
+    family_income = X99,
+    health_plan = X101,
+    solo = X102,
+    exercise = X119,
+    work = X92,
+    study = X91,
+    gestations = X11,
+    deliveries = X125,
+    abortions = X126
   ) |>
   dplyr::mutate(
+    id = anonymize_id(cpf, salt),
     timestamp = lubridate::mdy_hms(timestamp),
     birth_date = lubridate::dmy(birth_date),
     age = scaler:::age(birth_date, timestamp),
     weight = as.numeric(weight),
     height = as.numeric(height),
-    family_income = as.numeric(family_income)
+    ethnicity = factor(ethnicity, ordered = FALSE),
+    education = factor(
+      education, 
+      levels = c(
+        "Não frequentou a escola",
+        "Fundamental incompleto",
+        "Fundamental completo",
+        "Ensino médio incompleto",
+        "Ensino médio completo",
+        "Ensino superior incompleto",
+        "Ensino superior completo",
+        "Mestrado incompleto",
+        "Mestrado completo",
+        "Doutorado incompleto",
+        "Doutorado completo",
+        "Pós-doutorado incompleto",
+        "Pós-doutorado completo"
+      ),
+      ordered = TRUE
+    ),
+    family_income = as.numeric(family_income),
+    gestations = dplyr::case_match(
+      gestations,
+      c("Sim", "0") ~ "1",
+      "Não" ~ "0",
+      .default = gestations
+    ),
+    gestations = as.numeric(gestations),
+    gestations = dplyr::case_when(
+      id == "ae5fc5cd" ~ 3,
+      TRUE ~ gestations
+    ),
+    deliveries = dplyr::case_when(
+      is.na(deliveries) ~ "0",
+      TRUE ~ deliveries
+    ),
+    deliveries = as.numeric(deliveries),
+    abortions = dplyr::case_when(
+      is.na(abortions) ~ "0",
+      TRUE ~ abortions
+    ),
+    abortions = as.numeric(abortions),
+  ) |>
+  dplyr::mutate(
+    dplyr::across(
+      .cols = dplyr::all_of(
+        c("health_plan", "solo", "exercise", "work", "study")
+      ),
+      .fns = function(x) {
+        dplyr::case_match(
+          x,
+          "Sim" ~ TRUE,
+          "Não" ~ FALSE
+        )
+      }
+    )
+  ) |>
+  dplyr::select(-timestamp, -cpf) |>
+  dplyr::relocate(id, birth_date, age, weight, height, family_income)
+
+field_form_data
+```
+
+```{r}
+sleep_data <- 
+  sleep_input |>
+  dplyr::mutate(
+    dplyr::across(
+      .cols = dplyr::matches("^his_|^hfs_|^fps_|^tts_m|^tts_sd|^waso_"),
+      .fns = hms::parse_hms
+    ),
+    dplyr::across(
+      .cols = dplyr::matches("^tts_fps_|^awakenings_"),
+      .fns = as.numeric
+    )
+  )
+
+sleep_data
+```
+
+```{r}
+medical_record_data <- 
+  medical_record_input |>
+  dplyr::mutate(
+    dplyr::across(
+      .cols = dplyr::matches("^baby_birth_timestamp$"),
+      .fns = ~ lubridate::ymd_hms(.x, tz = "America/Sao_Paulo")
+    ),
+    dplyr::across(
+      .cols = -dplyr::all_of(c("id", "baby_birth_timestamp")),
+      .fns = as.numeric
+    ),
+    dplyr::across(
+      .cols = dplyr::matches("^apgar_"),
+      .fns = as.integer
+    )
+  )
+
+medical_record_data
+```
+
+
+```{r}
+valid_cases <-
+  field_form_data |>
+  dplyr::left_join(
+    control_data,
+    by = "id"
+  ) |>
+  dplyr::left_join(
+    sleep_data,
+    by = "id"
+  ) |>
+  dplyr::left_join(
+    medical_record_data,
+    by = "id"
+  ) |>
+  dplyr::filter(birth_center_delivery == TRUE) |>
+  tidyr::drop_na(labor_duration, baby_weight, fps_mean, waso_mean) |>
+  dplyr::pull(id)
+
+valid_cases
+```
+
+## Exploration Analysis
+
+### General
+
+<!-- Add categorical data -->
+<!-- cor/etnia, work, escolaridade, mãe solo, plano de saúde -->
+<!-- prática de exercícios, vias de nascimento -->
+
+<!-- Distância da residência para a casa de parto -->
+<!-- Mapa radial conoformes os CEPs e as casas de parto -->
+<!-- Add DASS-21 -->
+
+```{r}
+general_data <- 
+  control_data |>
+  dplyr::left_join(
+    sleep_data,
+    by = "id"
+  ) |>
+  dplyr::left_join(
+    medical_record_data,
+    by = "id"
+  ) |>
+  dplyr::left_join(
+    field_form_data,
+    by = "id"
+  ) |>
+  dplyr::mutate(
+    waso_prop = (as.numeric(waso_mean)) / as.numeric(fps_mean)
+  ) |>
+  dplyr::filter(id %in% valid_cases)
+``` 
+
+```{r}
+general_data |>
+  janitor::tabyl(ethnicity)
+```
+
+```{r}
+general_data |>
+  janitor::tabyl(education)
+```
+
+```{r}
+general_data |> 
+  gtsummary::tbl_summary(age)
+```
+
+```{r}
+#| eval: false
+
+general_data |>
+  plot_ggally(
+    cols = c(
+      "labor_duration", "age", "weight", "height",  "family_income"
+    )
   )
 ```
 
 ```{r}
-data <-
+#| eval: false
+
+general_data |>
+  plot_ggally(
+    cols = c(
+      "labor_duration", "gestations", "deliveries", "abortions"
+    )
+  )
+```
+
+```{r}
+#| eval: false
+
+general_data |>
+  plot_ggally(
+    cols = c(
+      "labor_duration", "baby_weight", "baby_length", 
+      "baby_head_perimeter",  "baby_thoracic_perimeter",
+      "baby_abdominal_perimeter"
+    )
+  )
+```
+
+```{r}
+#| eval: false
+
+general_data |>
+  plot_ggally(
+    cols = c("labor_duration", "fps_mean", "waso_mean", "awakenings_mean")
+  )
+```
+
+### Groups
+
+```{r}
+group_data <- 
   control_data |>
   dplyr::left_join(
-    field_form_data,
-    by = "cpf"
+    sleep_data,
+    by = "id"
   ) |>
-  dplyr::select(
-    id,
-    labor_duration,
-    age, weight, height, family_income
+  dplyr::left_join(
+    medical_record_data,
+    by = "id"
   ) |>
+  dplyr::filter(id %in% valid_cases) |>
+  dplyr::select(labor_duration, fps_mean, waso_mean, baby_weight) |>
+  tidyr::drop_na() |>
   dplyr::mutate(
-    labor_duration = lubridate::as.duration(labor_duration),
-    labor_duration = as.numeric(labor_duration)
+    waso_prop = (as.numeric(waso_mean)) / as.numeric(fps_mean),
+    group_fps = 
+      dplyr::case_when(
+        fps_mean < hms::parse_hm("07:00") ~ "<7h (Poor)",
+        fps_mean >= hms::parse_hm("07:00") ~ ">7h (Good)"
+      ) |>
+      factor(levels = c("<7h (Poor)", ">7h (Good)")),
+    group_waso = 
+      dplyr::case_when(
+        waso_prop > 0.1 ~ ">10% (Poor)",
+        waso_prop < 0.1 ~ "<10% (Good)"
+      ) |>
+      factor(levels = c(">10% (Poor)", "<10% (Good)"))
   ) |>
   tidyr::drop_na()
+``` 
+
+::: {#tbl-pa-groups}
+```{r} 
+row_list <- list(
+  c("group_waso", ">10% (Poor)"),
+  c("group_waso", "<10% (Good)"),
+  c("group_fps", "<7h (Poor)"),
+  c("group_fps", ">7h (Good)")
+)
+
+out <- dplyr::tibble()
+
+for (i in row_list) {
+  out <- 
+    out |>
+    dplyr::bind_rows(
+    dplyr::tibble(
+      n = 
+        group_data |> 
+        dplyr::filter(!!as.symbol(i[1]) == i[2]) |> 
+        nrow(),
+      mean =
+        group_data |> 
+        dplyr::filter(!!as.symbol(i[1]) == i[2]) |> 
+        dplyr::pull(labor_duration) |> 
+        as.numeric() |>
+        mean(na.rm = TRUE),
+      sd = 
+        group_data |> 
+        dplyr::filter(!!as.symbol(i[1]) == i[2]) |> 
+        dplyr::pull(labor_duration) |>
+        as.numeric() |>
+        stats::sd(na.rm = TRUE),
+      labor_duration = paste0(
+        mean |> 
+          hms::as_hms() |> 
+          lubritime::round_time() |>
+          as.character(), 
+        " ± ", 
+        sd |> 
+          hms::as_hms() |>
+          lubritime::round_time() |>
+          as.character()
+      )
+    ) |>
+      dplyr::mutate(group = i[2]) |>
+      dplyr::select(group, everything())
+  )
+}
+
+out |>
+  dplyr::select(n, labor_duration) |>
+  as.data.frame() %>%
+  `row.names<-`(
+    c(
+      "WASO >10% (Poor)", 
+      "WASO <10% (Good)", 
+      "FPS <7h (Poor)",
+      "FPS >7h (Good)"
+    )
+  )
 ```
 
-## Modeling the Final Data
+Differences in labor duration by main phase of sleep (FPS) and wake after sleep onset, adjusted for infant birth weight ($n = 8$).
+
+[Source: Created by the author]{.legend}
+:::
+
+#### FSP
 
 ```{r}
-model <- lm(
- formula = labor_duration ~ age + weight + height + family_income,
- data = data
+#| eval: false
+
+group_data |>
+  plot_ggally(
+    cols = c("labor_duration", "baby_weight", "fps_mean", "group_fps"),
+    mapping = ggplot2::aes(color = group_fps)
+  )
+```
+
+::: {#fig-pa-waso-baby-weight-scatterplot}
+```{r}
+group_data |>
+  dplyr::mutate(
+    labor_duration = 
+      labor_duration |> 
+      as.numeric() |>
+      hms::as_hms()
+  ) |>
+  ggplot2::ggplot(
+    ggplot2::aes(
+      x = labor_duration,
+      y = baby_weight,
+      color = group_fps
+    )
+  ) +
+  ggplot2::geom_point() +
+  ggplot2::stat_smooth(method = lm) +
+  ggplot2::labs(
+    x = "Labor Duration",
+    y = "Baby Weight (g)",
+    color = "FPS"
+  ) +
+  ggplot2::scale_x_continuous(labels = labels_hms) +
+  viridis::scale_color_viridis(end = 0.5, discrete = TRUE)
+```
+
+Relationship between labor duration and the Main Sleep Phase (FPS). Purple points represent pregnant women with poor sleep duration (<10%) and the green points represent pregnant women with proper/good sleep duration.
+
+[Source: Created by the author]{.legend}
+:::
+
+#### WASO
+
+```{r}
+#| eval: false
+
+group_data |>
+  plot_ggally(
+    cols = c("labor_duration", "baby_weight", "waso_prop", "group_waso"),
+    mapping = ggplot2::aes(color = group_waso)
+  )
+```
+
+::: {#fig-pa-waso-baby-weight-scatterplot}
+```{r}
+group_data |>
+  dplyr::mutate(
+    labor_duration = 
+      labor_duration |> 
+      as.numeric() |>
+      hms::as_hms()
+  ) |>
+  ggplot2::ggplot(
+    ggplot2::aes(
+      x = labor_duration,
+      y = baby_weight,
+      color = group_waso
+    )
+  ) +
+  ggplot2::geom_point() +
+  ggplot2::stat_smooth(method = lm) +
+  ggplot2::labs(
+    x = "Labor Duration",
+    y = "Baby Weight (g)",
+    color = "WASO"
+  ) +
+  ggplot2::scale_x_continuous(labels = labels_hms) +
+  viridis::scale_color_viridis(end = 0.5, discrete = TRUE)
+```
+
+Relationship between labor duration and the proportion of WASO (Wake After Sleep Onset) by the Main Sleep Phase (FPS). Purple points represent pregnant women with poor sleep quality (<10%) and the green points represent pregnant women with proper/good sleep quality.
+
+[Source: Created by the author]{.legend}
+:::
+
+## Hypothesis Tests
+
+> Dependent Variable: `labor_duration`
+
+$$
+\begin{cases}
+\text{H}_{0}: \overline{X}_{\text{Poor}} <= \overline{X}_{\text{Good}} \\
+\text{H}_{a}: \overline{X}_{\text{Poor}} > \overline{X}_{\text{Good}}
+\end{cases}
+$$
+
+$$
+\text{Hedge's g} = \cfrac{\overline{\text{X}}_{\text{Poor}} - \overline{\text{X}}_{\text{Good}}}{\text{SD}_{\text{pooled}}}
+$$
+
+```{r}
+model_data <-
+  control_data |>
+  dplyr::left_join(
+    sleep_data,
+    by = "id"
+  ) |>
+  dplyr::left_join(
+    medical_record_data,
+    by = "id"
+  ) |>
+  dplyr::filter(id %in% valid_cases) |>
+  dplyr::select(labor_duration, fps_mean, waso_mean, baby_weight) |>
+  tidyr::drop_na()
+  
+model_data
+```
+
+### FPS (Fase Principal do Sono) (Main Sleep Phase)
+
+::: {.callout-tip}
+#### Consensus Statement
+
+- Adults should sleep 7 or more hours per night on a regular basis to promote optimal health.
+- Sleeping less than 7 hours per night on a regular basis is associated with adverse health outcomes, including weight gain and obesity, diabetes, hypertension, heart disease and stroke, depression, and increased risk of death. Sleeping less than 7 hours per night is also associated with impaired immune function, increased pain, impaired performance, increased errors, and greater
+risk of accidents.
+- Sleeping more than 9 hours per night on a regular basis may be appropriate for young adults, individuals recovering from sleep debt, and individuals with illnesses. For others, it is uncertain whether sleeping more than 9 hours per night is associated with health risk.
+- People concerned they are sleeping too little or too much should consult their healthcare provider.
+
+[@watson2015]
+:::
+
+```{r}
+model_data_fps <-
+  model_data |>
+  dplyr::select(labor_duration, fps_mean, baby_weight) |>
+  dplyr::mutate(
+    group = 
+      dplyr::case_when(
+        fps_mean < hms::parse_hm("07:00") ~ "Poor",
+        fps_mean >= hms::parse_hm("07:00") ~ "Good"
+      ) |>
+      factor(levels = c("Poor", "Good"))
+  ) |>
+  dplyr::mutate(
+    labor_duration = as.numeric(labor_duration)
+  ) |>
+  dplyr::relocate(group) |>
+  dplyr::select(group, labor_duration, baby_weight) |>
+  tidyr::drop_na()
+  
+model_data_fps
+```
+
+```{r}
+model_data_fps |> report::report()
+```
+
+#### Welch's T-Test
+
+##### Power Analysis (*a posteriori*)
+
+::: {.callout-info}
+See the *a priori* power analysis at <https://danielvartan.github.io/sample-size>.
+:::
+
+Desired power: $(1 - \beta) \geq 0.8$
+
+```{r}
+# A posteriori
+
+pwr_analysis_fps_anconva <- pwrss::pwrss.t.2means(
+  mu1 = model_data_fps |> get_labor_duration("Poor") |> mean(na.rm = TRUE),
+  mu2 = model_data_fps |> get_labor_duration("Good") |> mean(na.rm = TRUE),
+  sd1 = model_data_fps |> get_labor_duration("Poor") |> stats::sd(na.rm = TRUE),
+  sd2 = model_data_fps |> get_labor_duration("Good") |> stats::sd(na.rm = TRUE),
+  paired = FALSE,
+  n2 = model_data_fps |> get_n("Good"),
+  kappa = get_n(model_data_fps, "Poor") / get_n(model_data_fps, "Good"),
+  power = NULL,
+  alpha = 0.05,
+  welch.df = TRUE,
+  alternative = "superior"
 )
 ```
 
+<!-- Add power analysis plot -->
+
+##### Test
+
 ```{r}
-model <- lm(
-  formula = labor_duration ~ weight + height + family_income,
-  data = data
+model_t_test_fps <- stats::t.test(
+  x = model_data_fps |> get_labor_duration("Poor"),
+  y = model_data_fps |> get_labor_duration("Good"),
+  alternative = "greater"
 )
+
+model_t_test_fps
 ```
 
 ```{r}
-summary(model)
+report::report(model_t_test_fps)
 ```
+
+##### Effect Size
 
 ```{r}
 dplyr::tibble(
-  labor_duration = data$labor_duration,
-  prediction = stats::predict(model, data = data),
-  error = labor_duration - prediction
+  fps_mean_poor = 
+    model_data_fps |> 
+    get_labor_duration("Poor") |> 
+    mean(na.rm = TRUE) |>
+    hms::as_hms(),
+  fps_mean_good =
+    model_data_fps |> 
+    get_labor_duration("Good") |> 
+    mean(na.rm = TRUE) |>
+    hms::as_hms(),
+  diff = (fps_mean_poor - fps_mean_good) |> hms::as_hms()
+)
+```
+
+```{r}
+effectsize::cohens_d(
+  x = model_data_fps |> get_labor_duration("Poor"),
+  y = model_data_fps |> get_labor_duration("Good"),
+  pooled_sd = TRUE,
+  mu = 0,
+  paired = FALSE,
+  adjust = TRUE, # For small samples
+  ci = 0.95,
+  alternative = "greater",
+  verbose = TRUE
 ) |>
+  effectsize::interpret_hedges_g()
+```
+
+#### ANCOVA
+
+##### Power Analysis (*a posteriori*)
+
+::: {.callout-info}
+See the *a priori* power analysis at <https://danielvartan.github.io/sample-size>.
+:::
+
+Desired power: $(1 - \beta) \geq 0.8$
+
+```{r}
+k <- 3
+num_df <- 2
+den_df <- 125
+n_total_tst <- den_df + k
+f_test <- 5.54
+
+f_unb_fsp<- f_unb(k, n_total_tst, f_test)
+
+f_unb_fsp
+```
+
+```{r}
+# A posteriori
+
+pwr_analysis_fps_anconva <- pwrss::pwrss.f.ancova(
+  f2 = f_unb_fsp^2,
+  n.way = 1,
+  n.levels = 2,
+  n.covariates = 1,
+  # Not really true, since each group has a different number of observations.
+  n = model_data_fps |> 
+    get_labor_duration("Good") |> 
+    length(),
+  alpha = 0.05,
+  verbose = FALSE
+)
+
+pwr_analysis_fps_anconva
+```
+
+<!-- Add power analysis plot -->
+
+##### Test
+
+```{r}
+model_aov_fps <- stats::aov(
+  formula = labor_duration ~ baby_weight * group,
+  data = model_data_fps
+)
+
+model_aov_fps
+```
+
+```{r}
+model_aov_fps |> summary()
+```
+
+```{r}
+model_aov_fps |> report::report()
+```
+
+##### Effect Size
+
+See @cohen1992.
+
+```{r}
+model_aov_fps |>
+  effectsize::cohens_f(
+    partial = FALSE,
+    method = "eta",
+    model2 = NULL,
+    ci = 0.95,
+    alternative = "greater",
+    verbose = TRUE,
+  ) |>
+  effectsize::interpret_eta_squared()
+```
+
+### WASO (Wake Adter Sleep Onset)
+
+> As an estimate of sleep disruption, WASO is reported as the percentage of minutes awake divided by minutes in bed after falling asleep. During a typical 7- to 8-hour sleep period, WASO of 15% represents more than an hour of wake time after falling asleep. WASO between 5% and 10% is typical in healthy, nonpregnant women5 and greater than 15% was considered severe sleep disruption for this study.[@lee2004[p. 2042]].
+
+```{r}
+model_data_waso <-
+  model_data |>
+  dplyr::select(labor_duration, waso_mean, fps_mean, baby_weight) |>
   dplyr::mutate(
-    dplyr::across(
-      dplyr::everything(),
-      hms::as_hms
-    )
-  )
+    waso_prop = (as.numeric(waso_mean)) / as.numeric(fps_mean)
+  ) |>
+  dplyr::mutate(
+    group = 
+      dplyr::case_when(
+        waso_prop > 0.1 ~ "Poor",
+        waso_prop < 0.1 ~ "Good"
+      ) |>
+      factor(levels = c("Poor", "Good"))
+  ) |>
+  dplyr::mutate(
+    labor_duration = as.numeric(labor_duration)
+  ) |>
+  dplyr::relocate(group) |>
+  dplyr::select(group, labor_duration, baby_weight) |>
+  tidyr::drop_na()
+  
+model_data_waso
+```
+
+```{r}
+model_data_waso |> report::report()
+```
+
+#### Welch's T-Test
+
+##### Power Analysis (*a posteriori*)
+
+::: {.callout-info}
+See the *a priori* power analysis at <https://danielvartan.github.io/sample-size>.
+:::
+
+Desired power: $(1 - \beta) \geq 0.8$
+
+```{r}
+#| eval: false
+
+# A posteriori
+
+pwr_analysis_waso_t_test <- pwrss::pwrss.t.2means(
+  mu1 = model_data_waso |> 
+    get_labor_duration("Poor") |> 
+    mean(na.rm = TRUE),
+  mu2 = model_data_waso |> 
+    get_labor_duration("Good") |> 
+    mean(na.rm = TRUE),
+  sd1 = model_data_waso |> 
+    get_labor_duration("Poor") |> 
+    stats::sd(na.rm = TRUE),
+  sd2 = model_data_waso |> 
+    get_labor_duration("Good") |> 
+    stats::sd(na.rm = TRUE),
+  paired = FALSE,
+  n2 = model_data_waso |> get_n("Good"),
+  kappa = get_n(model_data_waso, "Poor") / get_n(model_data_waso, "Good"),
+  power = NULL,
+  alpha = 0.05,
+  welch.df = TRUE,
+  alternative = "superior"
+)
+```
+
+<!-- Add power analysis plot -->
+
+##### Test
+
+```{r}
+#| eval: false
+
+model_t_test_waso <- stats::t.test(
+  x = model_data_waso |> get_labor_duration("Poor"),
+  y = model_data_waso |> get_labor_duration("Good"),
+  alternative = "greater"
+)
+
+model_t_test_waso
+```
+
+```{r}
+#| eval: false
+
+report::report(model_t_test_waso)
+```
+
+#### ANCOVA
+
+##### Power Analysis (*a posteriori*)
+
+::: {.callout-info}
+See the *a priori* power analysis at <https://danielvartan.github.io/sample-size>.
+:::
+
+Desired power: $(1 - \beta) \geq 0.8$
+
+```{r}
+k <- 3
+num_df <- 2
+den_df <- 125
+n_total_waso <- den_df + k
+f_test <- 6.93
+
+f_unb_waso <- f_unb(k, n_total_waso, f_test)
+
+f_unb_waso
+```
+
+```{r}
+# A posteriori
+
+pwr_analysis_waso_ancova <- pwrss::pwrss.f.ancova(
+  f2 = f_unb_waso^2,
+  n.way = 1,
+  n.levels = 2,
+  n.covariates = 1,
+  # Not really true, since each group has a different number of observations.
+  n = model_data_waso |> 
+    get_labor_duration("Poor") |> 
+    length(),
+  alpha = 0.05,
+  verbose = FALSE
+)
+
+pwr_analysis_waso_ancova
+```
+
+<!-- Add power analysis plot -->
+
+##### Test
+
+```{r}
+model_aov_waso <- stats::aov(
+  formula = labor_duration ~ baby_weight * group,
+  data = model_data_waso
+)
+
+model_aov_waso
+```
+
+```{r}
+model_aov_waso |> summary()
+```
+
+```{r}
+model_aov_waso |> report::report()
+```
+
+##### Effect Size
+
+See @cohen1992.
+
+```{r}
+model_aov_waso |>
+  effectsize::cohens_f(
+    partial = FALSE,
+    method = "eta",
+    model2 = NULL,
+    ci = 0.95,
+    alternative = "greater",
+    verbose = TRUE,
+  ) |>
+  effectsize::interpret_eta_squared()
 ```

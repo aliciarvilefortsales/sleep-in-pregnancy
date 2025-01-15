@@ -6,20 +6,20 @@
 meta:
   name:
     short: |
-      Associations between the duration and quality of sleep of pregnant 
-      women in the third trimester with the duration of labor 
+      Associations between the duration and quality of sleep of pregnant
+      women in the third trimester with the duration of labor
     full: |
-      Associations between the duration and quality of sleep of pregnant 
-      women in the third trimester with the duration of labor 
+      Associations between the duration and quality of sleep of pregnant
+      women in the third trimester with the duration of labor
       [Master's Thesis]
   link:
     home: https://aliciarvilefortsales.github.io/mastersthesis
     github: https://github.com/aliciarvilefortsales/mastersthesis
     osf: https://doi.org/10.17605/OSF.IO/S4TBZ
   description: |
-    Quarto book of the Master's Thesis: 
-    Associations between the duration and quality of sleep of pregnant 
-    women in the third trimester with the duration of labor 
+    Quarto book of the Master's Thesis:
+    Associations between the duration and quality of sleep of pregnant
+    women in the third trimester with the duration of labor
 
 logo:
   images:
@@ -27,46 +27,51 @@ logo:
       path: images/favicon.png
       alt: "Logo favicon"
 
+# # See
+#
+# - https://www.pantone.com/skintone
+
 color:
   palette:
-    pantone-x: "#EA7701" # PANTONE X
-    pantone-y: "#EEB6A5"  # PANTONE X
+    pantone-4r14-sp: "#63483E" # PANTONE 4R14 SP
+    pantone-4r14-sp-995: "#FDFDFD" # PANTONE 4R14 SP
+    pantone-2y12-sp: "#89634C" # PANTONE 2Y12 SP
+    pantone-2r03-sp: "#CAA596" # PANTONE 2R03 SP
     white: "#FFFFFF"
-    grey: "#4F5556"
-    black: "#EEB6A5" # PANTONE x
-    black-725: "#7D898E" # get_brand_color_tint(725, "black")
+    black: "#63483E" # PANTONE 4415 SP
+    black-725: "#A99A94" # get_brand_color_tint(725, "black")
 
-  background: orange-980
-  primary: orange
-  secondary: black
-  tertiary: gray
-  success: orange
-  info: black
-  warning: black
-  danger: black
-  light: light-orange
-  dark: gray
+  background: pantone-2r03-sp
+  primary: pantone-4r14-sp
+  secondary: pantone-2y12-sp
+  tertiary: pantone-2r03-sp
+  success: pantone-2r03-sp
+  info: pantone-2r03-sp
+  warning: pantone-2r03-sp
+  danger: pantone-2r03-sp
+  light: pantone-2r03-sp
+  dark: pantone-4r14-sp
 
 typography:
   fonts:
-    - family: Poppins
+    - family: Open Sans
       source: google
       weight: [300, 400, 500, 600]
-    - family: DM Sans
+    - family: Bitter
       source: google
-    - family: DM Mono
+    - family: Source Code Pro
       source: google
   base:
-    family: DM Sans
+    family: Bitter
   headings:
-    family: Poppins
+    family: Open Sans
     color: black
     weight: bold
-  monospace: DM Mono
+  monospace: Source Code Pro
   monospace-inline:
     color: black
   monospace-block:
-    background-color: orange-975
+    background-color: pantone-4r14-sp-995
   link:
-    color: orange
+    color: pantone-2y12-sp
     decoration: underline

@@ -138,6 +138,14 @@ code a:any-link {
   text-align: center;
 }
 
-.brandorange {
+.brandprimary {
   color: $primary;
+}
+
+.brandsecondary {
+  color: $secondary;
+}
+
+.brandterciary {
+  color: $terciary;
 }

@@ -198,16 +198,9 @@ color_brand_qualitative <- function(n, direction = 1) {
   prettycheck:::assert_choice(direction, c(-1, 1))
 
   base <- c(
-    "#EA7701", # orange (primary)
-    "#142A32", # black (secondary)
-    "#964D01", # brown
-    "#D67C20",
-    "#4F5556", # grey (tertiary)
-    "#2B4A5E",
-    "#F5BD83", # light-orange
-    "#F08C3E",
-    "#CC5A15",
-    "#B23300"
+    "#63483E", # get_brand_color("primary")
+    "#CAA596", # get_brand_color("tertiary")
+    "#89634C" # get_brand_color("secondary")
   )
 
   if (direction == -1) base <- rev(base)
@@ -376,7 +369,7 @@ scale_fill_rainbow <- function(direction = 1) {
 # library(prettycheck) # github.com/danielvartan/prettycheck
 # library(rutils) # github.com/danielvartan/rutils
 
-labels_hms <- function(x, type = NULL) {
+labels_hms <- function(x, type = NULL, cycle = FALSE) {
   classes <- c("numeric", "Duration", "difftime", "hms", "POSIXct",
                "POSIXlt", "Interval")
 
@@ -385,11 +378,19 @@ labels_hms <- function(x, type = NULL) {
   if (hms::is_hms(x)) {
     out <- lubritime:::fix_hms(x)
   } else {
-    out <-
-      x |>
-      lubritime::cycle_time(lubridate::ddays()) |>
-      hms::as_hms() |>
-      substr(1, 5)
+    if (isTRUE(cycle)) {
+      out <-
+        x |>
+        lubritime::cycle_time(lubridate::ddays()) |>
+        hms::as_hms() |>
+        substr(1, 5)
+    } else {
+      out <-
+        x |>
+        hms::as_hms() |>
+        substr(1, 5)
+    }
+
   }
 
   if (!is.null(type)) out <- out |> rutils:::label_jump(type = type)

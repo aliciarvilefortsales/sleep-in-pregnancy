@@ -46,7 +46,7 @@ res_vars <- yaml::read_yaml(here::here("_results.yml"))
 if (env_vars$format == "html") {
   base_size <- 11
 } else {
-  base_size <- 10
+  base_size <- 11 # 10
 }
 
 env_vars$base_size <- base_size
@@ -88,11 +88,29 @@ sysfonts::font_paths(
 )
 
 sysfonts::font_add(
-  family = "dm-sans",
-  regular = here::here("ttf", "dmsans-regular.ttf"),
-  bold = here::here("ttf", "dmsans-bold.ttf"),
-  italic = here::here("ttf", "dmsans-italic.ttf"),
-  bolditalic = here::here("ttf", "dmsans-bolditalic.ttf"),
+  family = "arial",
+  regular = here::here("ttf", "arial.ttf"),
+  bold = here::here("ttf", "arial-bold.ttf"),
+  italic = here::here("ttf", "arial-italic.ttf"),
+  bolditalic = here::here("ttf", "arial-bold-italic.ttf"),
+  symbol = NULL
+)
+
+sysfonts::font_add(
+  family = "open-sans",
+  regular = here::here("ttf", "opensans-regular.ttf"),
+  bold = here::here("ttf", "opensans-bold.ttf"),
+  italic = here::here("ttf", "opensans-italic.ttf"),
+  bolditalic = here::here("ttf", "opensans-bolditalic.ttf"),
+  symbol = NULL
+)
+
+sysfonts::font_add(
+  family = "bitter",
+  regular = here::here("ttf", "bitter-regular.ttf"),
+  bold = here::here("ttf", "bitter-bold.ttf"),
+  italic = here::here("ttf", "bitter-italic.ttf"),
+  bolditalic = here::here("ttf", "bitter-bolditalic.ttf"),
   symbol = NULL
 )
 
@@ -108,8 +126,8 @@ ggplot2::theme_set(
   ) +
   ggplot2::theme(
     text = ggplot2::element_text(
-      color = get_brand_color("secondary"),
-      family = "dm-sans",
+      color = "#000000",
+      family = "arial",
       face = "plain"
     ),
     panel.background = ggplot2::element_rect(fill = "transparent"),
