@@ -16,13 +16,17 @@ plot_hist <- function(
     density_line = TRUE,
     na_rm = TRUE,
     x_label = name,
-    y_label = ifelse(stat == "count", "Frequency", "Density"),
+    y_label = ifelse(stat == "count", "Frequência", "Densidade"),
     print = TRUE
   ) {
+  col_class_options <- c(
+    "numeric", "Duration", "Period", "difftime", "hms", "POSIXt"
+  )
+
   prettycheck:::assert_tibble(data)
   prettycheck:::assert_string(col)
   prettycheck:::assert_choice(col, names(data))
-  prettycheck:::assert_numeric(data[[col]])
+  prettycheck:::assert_multi_class(data[[col]], col_class_options)
   prettycheck:::assert_string(name)
   prettycheck:::assert_number(bins, lower = 1)
   prettycheck:::assert_choice(stat, c("count", "density"))
@@ -52,9 +56,13 @@ plot_hist <- function(
     ) +
     ggplot2::theme(legend.position = "none")
 
+  if (prettycheck:::test_temporal(data[[col]])) {
+    plot <- plot + ggplot2::scale_x_continuous(labels = labels_hms)
+  }
+
   if (stat == "density" && isTRUE(density_line)) {
     plot <- plot + ggplot2::geom_density(
-      color = get_brand_color("primary"),
+      color = "red",
       linewidth = 1
     )
   }

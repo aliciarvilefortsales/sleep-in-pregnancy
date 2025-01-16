@@ -82,10 +82,14 @@ test_normality <- function(
   bonett <- x |> moments::bonett.test()
 
   # See also `Rita::DPTest()` (just for Omnibus (K) tests).
-  dagostino <-
-    x |>
-    fBasics::dagoTest() |>
-    rutils::shush()
+  if (n_rm_na >= 20) {
+    dagostino <-
+      x |>
+      fBasics::dagoTest() |>
+      rutils::shush()
+  } else {
+    dagostino <- NULL
+  }
 
   jarque_bera <-
     rutils:::drop_na(x) |>

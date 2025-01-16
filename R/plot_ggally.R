@@ -12,18 +12,23 @@ source(here::here("R", "utils-plots.R"))
 plot_ggally <- function(
     data,
     cols = names(data),
+    labels = colnames(data[cols]),
     mapping = NULL, # ggplot2::aes(colour = sex)
     axis_labels = "none",
     na_rm = TRUE,
+    progress = FALSE,
     print = TRUE,
     ...
   ) {
   prettycheck:::assert_tibble(data)
   prettycheck:::assert_character(cols)
   prettycheck:::assert_subset(cols, names(data))
+  prettycheck:::assert_character(labels)
+  prettycheck::assert_length(labels, length(cols))
   prettycheck:::assert_class(mapping, "uneval", null.ok = TRUE)
   prettycheck:::assert_choice(axis_labels, c("show", "internal", "none"))
   prettycheck:::assert_flag(na_rm)
+  prettycheck:::assert_flag(progress)
   prettycheck:::assert_flag(print)
 
   out <-
@@ -57,6 +62,8 @@ plot_ggally <- function(
       GGally::ggpairs(
         lower = list(continuous = "smooth"),
         axisLabels = axis_labels,
+        progress = progress,
+        columnLabels = labels,
         ...
       )
   } else {
@@ -65,12 +72,12 @@ plot_ggally <- function(
       GGally::ggpairs(
         mapping = mapping,
         axisLabels = axis_labels,
+        progress = progress,
+        columnLabels = labels,
         ...
       ) +
       viridis::scale_color_viridis(discrete = TRUE) +
       viridis::scale_fill_viridis(discrete = TRUE)
-      # scale_color_brand_d() +
-      # scale_fill_brand_d()
   }
 
   plot <-
@@ -80,7 +87,7 @@ plot_ggally <- function(
       panel.grid.minor = ggplot2::element_blank()
     )
 
-  if (isTRUE(print)) print(plot)
+  if (isTRUE(print)) print(plot) |> rutils::shush()
 
   invisible(plot)
 }

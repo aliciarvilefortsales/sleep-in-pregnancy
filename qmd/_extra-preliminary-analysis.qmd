@@ -27,6 +27,7 @@ library(ggplot2)
 ```{r}
 source(here::here("R", "anonymize_id.R"))
 source(here::here("R", "plot_box_plot.R"))
+source(here::here("R", "plot_dist.R"))
 source(here::here("R", "plot_ggally.R"))
 source(here::here("R", "plot_hist.R"))
 source(here::here("R", "plot_qq.R"))
@@ -92,10 +93,14 @@ salt <- askpass::askpass()
 ## Downloading the Data
 
 ```{r}
+#| output: false
+
 googlesheets4::gs4_auth()
 ```
 
 ```{r}
+#| output: false
+
 control_form <- googlesheets4::read_sheet(
   ss = "13wtDr4fRD1wJSM-qdLOdGSchF8oXU1bG0Jtccu24GhY",
   sheet = "Dataset",
@@ -104,6 +109,8 @@ control_form <- googlesheets4::read_sheet(
 ```
 
 ```{r}
+#| output: false
+
 field_form <- googlesheets4::read_sheet(
   ss = "1tY_TT0nPXFsErYQS2VED0-hqTzgHudA9BfhRhYG19fw",
   sheet = "Dataset",
@@ -112,6 +119,8 @@ field_form <- googlesheets4::read_sheet(
 ```
 
 ```{r}
+#| output: false
+
 sleep_input <- googlesheets4::read_sheet(
   ss = "1iqjhdSiWYr9RYSvIvJQfFw35DR31YA_oj2SW8iR5WPw",
   sheet = "Dataset",
@@ -120,6 +129,8 @@ sleep_input <- googlesheets4::read_sheet(
 ```
 
 ```{r}
+#| output: false
+
 medical_record_input <- googlesheets4::read_sheet(
   ss = "10yvvTOCjZsRKPO8A4yn0NCvWe4Jn_Kq-Zu_CV4miGJI",
   sheet = "Dataset",
@@ -197,7 +208,17 @@ field_form_data <-
     age = scaler:::age(birth_date, timestamp),
     weight = as.numeric(weight),
     height = as.numeric(height),
-    ethnicity = factor(ethnicity, ordered = FALSE),
+    ethnicity = factor(
+      ethnicity,
+      levels = c(
+        "Indígena",
+        "Preta",
+        "Parda",
+        "Amarela",
+        "Branca"
+      ),
+      ordered = TRUE
+    ),
     education = factor(
       education, 
       levels = c(
@@ -323,8 +344,6 @@ valid_cases
 
 ## Exploration Analysis
 
-### General
-
 <!-- Add categorical data -->
 <!-- cor/etnia, work, escolaridade, mãe solo, plano de saúde -->
 <!-- prática de exercícios, vias de nascimento -->
@@ -354,20 +373,48 @@ general_data <-
   dplyr::filter(id %in% valid_cases)
 ``` 
 
+### Qualitative Variables
+
 ```{r}
-general_data |>
-  janitor::tabyl(ethnicity)
+#| output: asis
+
+general_data |> summarytools::freq(ethnicity, style = "rmarkdown")
 ```
 
 ```{r}
-general_data |>
-  janitor::tabyl(education)
+#| output: asis
+
+general_data |> summarytools::freq(education,  style = "rmarkdown")
+```
+
+### Variáveis Quantitativas
+
+```{r}
+#| output: asis
+
+# general_data |> 
+#   stats_summary(
+#     col = paste0("waso", "_", "sd"), 
+#     threshold = NULL, # hms::parse_hm("12:00")
+#     round_time =  TRUE
+#   )
+
+general_data |> stats_summary(paste0("awakenings", "_", "sd"))
+
+# general_data |> stats_summary("age")
 ```
 
 ```{r}
-general_data |> 
-  gtsummary::tbl_summary(age)
+#| output: asis
+
+general_data |> summarytools::descr(labor_duration, style = "rmarkdown")
 ```
+
+```{r}
+general_data |> plot_dist(col = "waso_mean")
+```
+
+### Matrizes de Correlação de Pearson
 
 ```{r}
 #| eval: false
@@ -376,6 +423,9 @@ general_data |>
   plot_ggally(
     cols = c(
       "labor_duration", "age", "weight", "height",  "family_income"
+    ),
+    labels = c(
+      "Duração do parto", "Idade", "Peso", "Altura", "Renda familiar"
     )
   )
 ```
@@ -387,6 +437,9 @@ general_data |>
   plot_ggally(
     cols = c(
       "labor_duration", "gestations", "deliveries", "abortions"
+    ),
+    labels = c(
+      "Duração do parto", "# Gestações", "# Partos", "# Abortos"
     )
   )
 ```
@@ -400,6 +453,10 @@ general_data |>
       "labor_duration", "baby_weight", "baby_length", 
       "baby_head_perimeter",  "baby_thoracic_perimeter",
       "baby_abdominal_perimeter"
+    ),
+    labels = c(
+      "Duração do parto", "Peso do bebê", "Comprimento do bebê", 
+      "Per. da cabeça do bebê", "Per. torácico do bebê", "Per. abdominal do bebê"
     )
   )
 ```
@@ -409,7 +466,8 @@ general_data |>
 
 general_data |>
   plot_ggally(
-    cols = c("labor_duration", "fps_mean", "waso_mean", "awakenings_mean")
+    cols = c("labor_duration", "fps_mean", "waso_mean", "awakenings_mean"),
+    labels = c("Duração do parto", "FPS", "WASO", "# Despertares")
   )
 ```
 
@@ -509,7 +567,7 @@ out |>
   )
 ```
 
-Differences in labor duration by main phase of sleep (FPS) and wake after sleep onset, adjusted for infant birth weight ($n = 8$).
+Diferenças na duração do trabalho de parto em função do tempo acordado após o início do sono (Wake After Sleep Onset (WASO)) e da duração do sono (Fase Principal do Sono (FSP)).  NA = Não disponível (Not Available). ($n = 8$).
 
 [Source: Created by the author]{.legend}
 :::
@@ -533,7 +591,12 @@ group_data |>
     labor_duration = 
       labor_duration |> 
       as.numeric() |>
-      hms::as_hms()
+      hms::as_hms(),
+    group_fps = dplyr::case_match(
+      group_fps,
+      "<7h (Poor)" ~ "<7h (Ruim)",
+      ">7h (Good)" ~ ">7h (Bom)"
+    )
   ) |>
   ggplot2::ggplot(
     ggplot2::aes(
@@ -545,17 +608,17 @@ group_data |>
   ggplot2::geom_point() +
   ggplot2::stat_smooth(method = lm) +
   ggplot2::labs(
-    x = "Labor Duration",
-    y = "Baby Weight (g)",
+    x = "Duração do parto",
+    y = "Peso do bebê (g)",
     color = "FPS"
   ) +
   ggplot2::scale_x_continuous(labels = labels_hms) +
   viridis::scale_color_viridis(end = 0.5, discrete = TRUE)
 ```
 
-Relationship between labor duration and the Main Sleep Phase (FPS). Purple points represent pregnant women with poor sleep duration (<10%) and the green points represent pregnant women with proper/good sleep duration.
+Relação da variável `labor_duration` (Duração do parto) com a covariante `baby_weight` (Peso do bebê) (gramas) por grupos com duração de sono baixa/ruim (<7h) (cor roxa) e com duração de sono boa/adequada (>7h) (cor verde). `<br>`{=html} A duração do sono foi medida por meio da média da Fase Principal de Sono (FSP) nos últimos sete dias que antecederam o parto. As linhas representam regressões lineares. A área cinza representa o intervalo de confiança da estimativa.
 
-[Source: Created by the author]{.legend}
+[Fonte: Elaborado pela autora.]{.legend}
 :::
 
 #### WASO
@@ -577,7 +640,12 @@ group_data |>
     labor_duration = 
       labor_duration |> 
       as.numeric() |>
-      hms::as_hms()
+      hms::as_hms(),
+    group_waso = dplyr::case_match(
+      group_waso,
+      ">10% (Poor)" ~ ">10% (Ruim)",
+      "<10% (Good)" ~ "<10% (Bom)"
+    )
   ) |>
   ggplot2::ggplot(
     ggplot2::aes(
@@ -589,32 +657,35 @@ group_data |>
   ggplot2::geom_point() +
   ggplot2::stat_smooth(method = lm) +
   ggplot2::labs(
-    x = "Labor Duration",
-    y = "Baby Weight (g)",
+    x = "Duração do parto",
+    y = "Peso do bebê (g)",
     color = "WASO"
   ) +
   ggplot2::scale_x_continuous(labels = labels_hms) +
-  viridis::scale_color_viridis(end = 0.5, discrete = TRUE)
+  viridis::scale_color_viridis(end = 0.5, discrete = TRUE, direction = -1) +
+  ggplot2::guides(color = ggplot2::guide_legend(reverse = TRUE))
 ```
 
-Relationship between labor duration and the proportion of WASO (Wake After Sleep Onset) by the Main Sleep Phase (FPS). Purple points represent pregnant women with poor sleep quality (<10%) and the green points represent pregnant women with proper/good sleep quality.
+Relação da variável `labor_duration` (Duração do parto) com a covariante `baby_weight` (Peso do bebê) (em gramas) por grupos com baixa qualidade de sono (>10% de WASO/FPS) (cor roxa) e com qualidade de sono boa/adequada (<10% de WASO/FPS) (cor verde). `<br>`{=html} Os dados se referem aos últimos sete dias que antecederam o parto. FPS = Fase Principal do Sono, representando a duração do período entre o horário de início do sono e o horário final do sono. WASO = Wake After Sleep Onset ou tempo acordado após o início do sono, usado como proxy para medir a qualidade do sono. As linhas representam regressões lineares. A área em cinza representa o intervalo de confiança da estimativa.
 
-[Source: Created by the author]{.legend}
+[Fonte: Elaborado pela autora.]{.legend}
 :::
 
-## Hypothesis Tests
+## Testes de Hipótese
 
-> Dependent Variable: `labor_duration`
+> Variável dependente: `labor_duration`
 
 $$
 \begin{cases}
-\text{H}_{0}: \overline{X}_{\text{Poor}} <= \overline{X}_{\text{Good}} \\
-\text{H}_{a}: \overline{X}_{\text{Poor}} > \overline{X}_{\text{Good}}
+\text{H}_{0}: \overline{X}_{\text{Ruim}} <= \overline{X}_{\text{Bom}} \\
+\text{H}_{a}: \overline{X}_{\text{Ruim}} > \overline{X}_{\text{Bom}}
 \end{cases}
 $$
 
+> See @ellis2010 to learn more about Hedges' g and other effect size measures.
+
 $$
-\text{Hedge's g} = \cfrac{\overline{\text{X}}_{\text{Poor}} - \overline{\text{X}}_{\text{Good}}}{\text{SD}_{\text{pooled}}}
+\text{g de Hedges} = \cfrac{\overline{\text{X}}_{\text{Ruim}} - \overline{\text{X}}_{\text{Bom}}}{\text{SD}_{\text{pooled}}}
 $$
 
 ```{r}
@@ -756,46 +827,7 @@ effectsize::cohens_d(
 
 #### ANCOVA
 
-##### Power Analysis (*a posteriori*)
-
-::: {.callout-info}
-See the *a priori* power analysis at <https://danielvartan.github.io/sample-size>.
-:::
-
-Desired power: $(1 - \beta) \geq 0.8$
-
-```{r}
-k <- 3
-num_df <- 2
-den_df <- 125
-n_total_tst <- den_df + k
-f_test <- 5.54
-
-f_unb_fsp<- f_unb(k, n_total_tst, f_test)
-
-f_unb_fsp
-```
-
-```{r}
-# A posteriori
-
-pwr_analysis_fps_anconva <- pwrss::pwrss.f.ancova(
-  f2 = f_unb_fsp^2,
-  n.way = 1,
-  n.levels = 2,
-  n.covariates = 1,
-  # Not really true, since each group has a different number of observations.
-  n = model_data_fps |> 
-    get_labor_duration("Good") |> 
-    length(),
-  alpha = 0.05,
-  verbose = FALSE
-)
-
-pwr_analysis_fps_anconva
-```
-
-<!-- Add power analysis plot -->
+> See @rutherford2011[pp. 237-261] to lear more about ANOVA-ANCOVA assumptions.
 
 ##### Test
 
@@ -818,20 +850,69 @@ model_aov_fps |> report::report()
 
 ##### Effect Size
 
-See @cohen1992.
+Veja @cohen1992 para saber mais.
+
+Tamanho de efeito para duraçõa do parto e FSP encontrado por @lee2004:
 
 ```{r}
-model_aov_fps |>
+k <- 3
+num_df <- 2
+den_df <- 125
+n_total_tst <- den_df + k
+f_test <- 5.54
+
+f_unb_tst <- f_unb(k, n_total_tst, f_test)
+
+f_unb_tst
+```
+
+Tamanho de efeito *a posteriori*:
+
+```{r}
+effect_size_aov_fps <-
+  model_aov_fps |>
   effectsize::cohens_f(
     partial = FALSE,
+    generalized = FALSE,
     method = "eta",
     model2 = NULL,
     ci = 0.95,
     alternative = "greater",
     verbose = TRUE,
   ) |>
-  effectsize::interpret_eta_squared()
+  effectsize::interpret_eta_squared("cohen1992")
+
+effect_size_aov_fps
 ```
+
+##### Power Analysis (*a posteriori*)
+
+::: {.callout-info}
+Veja a análise de poder *a priori* em: <https://danielvartan.github.io/sample-size>.
+:::
+
+Poder desejado: $(1 - \beta) \geq 0.8$
+
+```{r}
+# A posteriori
+
+pwr_analysis_fps_anconva <- pwrss::pwrss.f.ancova(
+  f2 = effect_size_aov_fps$Cohens_f[3]^2,
+  n.way = 1,
+  n.levels = 2,
+  n.covariates = 1,
+  # Not really true, since each group has a different number of observations.
+  n = model_data_fps |> 
+    get_labor_duration("Good") |> 
+    length(),
+  alpha = 0.05,
+  verbose = TRUE
+)
+
+pwr_analysis_fps_anconva
+```
+
+<!-- Add power analysis plot -->
 
 ### WASO (Wake Adter Sleep Onset)
 
@@ -926,48 +1007,40 @@ model_t_test_waso
 report::report(model_t_test_waso)
 ```
 
-#### ANCOVA
-
-##### Power Analysis (*a posteriori*)
-
-::: {.callout-info}
-See the *a priori* power analysis at <https://danielvartan.github.io/sample-size>.
-:::
-
-Desired power: $(1 - \beta) \geq 0.8$
+##### Effect Size
 
 ```{r}
-k <- 3
-num_df <- 2
-den_df <- 125
-n_total_waso <- den_df + k
-f_test <- 6.93
-
-f_unb_waso <- f_unb(k, n_total_waso, f_test)
-
-f_unb_waso
-```
-
-```{r}
-# A posteriori
-
-pwr_analysis_waso_ancova <- pwrss::pwrss.f.ancova(
-  f2 = f_unb_waso^2,
-  n.way = 1,
-  n.levels = 2,
-  n.covariates = 1,
-  # Not really true, since each group has a different number of observations.
-  n = model_data_waso |> 
+dplyr::tibble(
+  waso_mean_poor = 
+    model_data_waso |> 
     get_labor_duration("Poor") |> 
-    length(),
-  alpha = 0.05,
-  verbose = FALSE
+    mean(na.rm = TRUE) |>
+    hms::as_hms(),
+  waso_mean_good =
+    model_data_waso |> 
+    get_labor_duration("Good") |> 
+    mean(na.rm = TRUE) |>
+    hms::as_hms(),
+  diff = (waso_mean_poor - waso_mean_good) |> hms::as_hms()
 )
-
-pwr_analysis_waso_ancova
 ```
 
-<!-- Add power analysis plot -->
+```{r}
+effectsize::cohens_d(
+  x = model_data_waso |> get_labor_duration("Poor"),
+  y = model_data_waso |> get_labor_duration("Good"),
+  pooled_sd = TRUE,
+  mu = 0,
+  paired = FALSE,
+  adjust = TRUE, # For small samples
+  ci = 0.95,
+  alternative = "greater",
+  verbose = TRUE
+) |>
+  effectsize::interpret_hedges_g()
+```
+
+#### ANCOVA
 
 ##### Test
 
@@ -990,10 +1063,27 @@ model_aov_waso |> report::report()
 
 ##### Effect Size
 
-See @cohen1992.
+Veja @cohen1992 para saber mais.
+
+Tamanho de efeito para duração do parto e WASO encontrado por @lee2004:
 
 ```{r}
-model_aov_waso |>
+k <- 3
+num_df <- 2
+den_df <- 125
+n_total_waso <- den_df + k
+f_test <- 6.93
+
+f_unb_waso <- f_unb(k, n_total_waso, f_test)
+
+f_unb_waso
+```
+
+Tamanho de efeito *a posteriori*:
+
+```{r}
+effect_size_aov_waso <-
+  model_aov_waso |>
   effectsize::cohens_f(
     partial = FALSE,
     method = "eta",
@@ -1002,5 +1092,59 @@ model_aov_waso |>
     alternative = "greater",
     verbose = TRUE,
   ) |>
-  effectsize::interpret_eta_squared()
+  effectsize::interpret_eta_squared("cohen1992")
+
+effect_size_aov_waso
 ```
+
+##### Power Analysis (*a posteriori*)
+
+::: {.callout-info}
+Veja a análise de poder *a priori* em: <https://danielvartan.github.io/sample-size>.
+:::
+
+Poder desejado: $(1 - \beta) \geq 0.8$
+
+```{r}
+#| eval: false
+
+pwr_analysis_waso_ancova <- pwrss::pwrss.f.ancova(
+  f2 = effect_size_aov_waso$Cohens_f[3]^2,
+  n.way = 1,
+  n.levels = 2,
+  n.covariates = 1,
+  # Not really true, since each group has a different number of observations.
+  n = model_data_waso |> 
+    get_labor_duration("Poor") |> 
+    length(),
+  alpha = 0.05,
+  verbose = FALSE
+)
+
+pwr_analysis_waso_ancova
+```
+
+<!-- Add power analysis plot -->
+
+## ANCOVA Assumptions
+
+Assumption 1
+: **Predictor is known** (ANOVA). Each condition contains a random sample of the population of such scores [@rutherford2011[p. 237]].
+
+Assumption 2
+: **Normality** (ANOVA). The scores in each condition are distributed normally [@rutherford2011[p. 237]].
+
+Assumption 3
+: **Independence** (ANOVA). The scores in each condition are independent of each other [@rutherford2011[p. 237]].
+
+Assumption 4
+: **Common variance** (homoscedasticity) (ANOVA). The variances of the scores in each experimental condition are homogeneous [@rutherford2011[p. 237]].
+
+Assumption 5
+: **Independence of the covariates** (homoscedasticity) (ANCOVA). The covariate is independent of the treatments [@rutherford2011[p. 237]].
+
+Assumption 6
+: **Linear mean** (ANCOVA). In each treatment group the relationship between the covariate and the dependent variable is linear (the covariate and dependent variable are expressed at the first power only) [@rutherford2011[p. 240]].
+
+Assumption 7
+: **Homogeneity of the coefficients** (ANCOVA). The regression coefficients of the dependent variable on the covariate in each treatment group are homogeneous [@rutherford2011[p. 240]].

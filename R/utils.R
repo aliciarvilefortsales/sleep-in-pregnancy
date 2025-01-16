@@ -1,3 +1,49 @@
+# library(hms)
+# library(lubritime) # github.com/danielvartan/lubritime
+# library(prettycheck) # github.com/danielvartan/prettycheck
+# library(rutils) # github.com/danielvartan/rutils
+
+# TODO: Refactor and move to `lubritime`.
+transform_time <- function(x, threshold = hms::parse_hms("12:00:00")) {
+  prettycheck:::assert_atomic(x)
+  prettycheck:::assert_hms(
+    threshold,
+    lower = hms::hms(0),
+    upper = hms::parse_hms("23:59:59"),
+    null_ok = TRUE
+  )
+
+  classes <- c("Duration", "difftime", "hms", "POSIXt", "Interval")
+
+  if (hms::is_hms(x) && !is.null(threshold)) {
+    x |>
+      lubritime:::link_to_timeline(threshold = threshold) |>
+      as.numeric()
+  } else if (prettycheck:::test_multi_class(x, classes)) {
+    x |> lubritime:::extract_seconds()
+  } else {
+    x
+  }
+}
+
+# library(dplyr)
+# library(prettycheck) # github.com/danielvartan/prettycheck
+# library(tidyr)
+
+list_as_tibble <- function(list) {
+  prettycheck:::assert_list(list)
+
+  list |>
+    dplyr::as_tibble() |>
+    dplyr::mutate(
+      dplyr::across(
+        .cols = dplyr::everything(),
+        .fns = as.character
+      )
+    ) |>
+    tidyr::pivot_longer(cols = dplyr::everything())
+}
+
 # library(lubridate)
 # library(prettycheck) # github.com/danielvartan/prettycheck
 

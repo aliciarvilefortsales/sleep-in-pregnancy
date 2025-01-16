@@ -19,7 +19,8 @@ stats_summary <- function(
     remove_outliers = FALSE,
     iqr_mult = 1.5,
     hms_format = TRUE,
-    threshold = hms::parse_hms("12:00:00"),
+    threshold = NULL, # hms::parse_hms("12:00:00"),
+    round_time = FALSE,
     as_list = FALSE
   ) {
   prettycheck:::assert_tibble(data)
@@ -31,22 +32,22 @@ stats_summary <- function(
   prettycheck:::assert_flag(remove_outliers)
   prettycheck:::assert_number(iqr_mult, lower = 1)
   prettycheck:::assert_flag(hms_format)
+  prettycheck:::assert_flag(round_time)
+  prettycheck:::assert_flag(as_list)
 
   prettycheck:::assert_hms(
     threshold, lower = hms::hms(0), upper = hms::parse_hms("23:59:59"),
     null_ok = TRUE
   )
 
-  prettycheck:::assert_flag(as_list)
-
   x <- data |> dplyr::pull(col) # For `hms` values, the tz doesn't matter.
   tz <- ifelse(lubridate::is.POSIXt(x), lubridate::tz(x), "UTC")
-  x_sample <- x [1]
+  x_sample <- x[1]
 
   if (prettycheck:::test_temporal(x)) {
     if (lubridate::is.POSIXt(x)) {
       x <- x |> as.numeric()
-    } else if (hms::is_hms(x)) {
+    } else if (hms::is_hms(x) && !is.null(threshold)) {
       x <-
         x |>
         lubritime:::link_to_timeline(threshold = threshold) |>
@@ -86,13 +87,18 @@ stats_summary <- function(
   }
 
   if (prettycheck:::test_temporal(x_sample) && isTRUE(hms_format)) {
-    if (test_timeline_link(x)) {
-      out <- purrr::map(
-        .x = out,
+    if (test_timeline_link(x) & !is.null(threshold)) {
+      out <-
+        out |>
+        purrr::map(
         .f = ~ hms::as_hms(lubridate::as_datetime(.x, tz = tz))
       )
     } else {
-      out <- purrr::map(.x = out, .f = hms::hms)
+      out <- out |> purrr::map(.f = hms::hms)
+    }
+
+    if (isTRUE(round_time)) {
+      out <- out |> purrr::map(.f = ~ lubritime::round_time(.x))
     }
 
     out$n <- length(x)
