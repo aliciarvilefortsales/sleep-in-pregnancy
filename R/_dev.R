@@ -1,17 +1,11 @@
 # # For development use only (comment out the code after use)
 #
-# .rs.restartR()
-# .libPaths()
 # cffr::cff_validate()
 # knitr::clean_cache()
-# knitr:::webshot_available()
 # lintr::use_lintr()
 # lintr::lint_dir("R")
-# normalizePath(readClipboard(), "/", mustWork = FALSE)
 # renv::init()
 # utils::install.packages("renv", dependencies = TRUE)
-# renv:::renv_download_method()
-# options(renv.download.override = utils::download.file)
 # renv::equip()
 # renv::activate()
 # renv::deactivate()
@@ -31,6 +25,7 @@
 # rutils:::clean_quarto_mess()
 # rutils:::quarto_status("drafting")
 # spelling::spell_check_files("index.qmd")
+# tcltk::tk_choose.files()
 # urlchecker::url_check()
 # urlchecker::url_update()
 
@@ -87,7 +82,7 @@
 # load(file)
 # lockr::lock_file(file, public_key = public_key, remove_file = TRUE)
 
-# # Encryption
+# # {lockr}
 #
 # password <- Sys.getenv("MASTERSTHESIS_PASSWORD")
 #

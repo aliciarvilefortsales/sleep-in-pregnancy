@@ -914,7 +914,7 @@ pwr_analysis_fps_anconva
 
 <!-- Add power analysis plot -->
 
-### WASO (Wake Adter Sleep Onset)
+### WASO (Wake After Sleep Onset)
 
 > As an estimate of sleep disruption, WASO is reported as the percentage of minutes awake divided by minutes in bed after falling asleep. During a typical 7- to 8-hour sleep period, WASO of 15% represents more than an hour of wake time after falling asleep. WASO between 5% and 10% is typical in healthy, nonpregnant women5 and greater than 15% was considered severe sleep disruption for this study.[@lee2004[p. 2042]].
 
