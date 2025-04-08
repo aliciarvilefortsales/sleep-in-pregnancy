@@ -174,7 +174,7 @@ A BibTeX entry for LaTeX users is:
     <td width="70%">
       <p>
         This study was financed by the Coordenação de Aperfeiçoamento de 
-        Pessoal de Nível Superior - Brazil (<a href="https://orcid.org/0000-0001-6783-6695">CAPES</a>) - Finance Code 001.
+        Pessoal de Nível Superior - Brazil (<a href="https://orcid.org/0000-0001-6783-6695">CAPES</a>) - Finance Code 001, Grant Number: 88887940089/2024-00.
       </p>
     </td>
   </tr>

@@ -172,7 +172,7 @@ htmltools::tags$table(
           href = "https://orcid.org/0000-0001-6783-6695",
           .noWS = "outside"
         ),
-        ") - Finance Code 001."
+        ") - Finance Code 001, Grant Number: 88887940089/2024-00."
       ),
       width = "70%"
     )

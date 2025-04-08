@@ -115,7 +115,7 @@ ggplot2::theme_set(
     ggplot2::theme(
       text = ggplot2::element_text(
         color = brandr::get_brand_color("black"),
-        family = "poppins",
+        family = "open-sans",
         face = "plain"
       ),
       panel.background = ggplot2::element_rect(fill = "transparent"),

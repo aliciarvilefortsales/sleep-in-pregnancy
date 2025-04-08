@@ -17,42 +17,39 @@ source(here::here("R", "_setup.R"))
 #| eval: false
 
 library(askpass)
-library(dplyr)
 library(car)
+library(checkmate)
+library(dplyr)
+library(ggplot2)
 library(googlesheets4)
-library(lubritime) # github.com/danielvartan/lubritime
+library(grDevices)
+library(here)
+library(hms)
 library(lubridate)
+library(lubritime) # github.com/danielvartan/lubritime
 library(plotr) # github.com/danielvartan/plotr
-library(prettycheck) # github.com/danielvartan/prettycheck
+library(rutils) # github.com/danielvartan/rutils
+library(scaler) # github.com/danielvartan/scaler
+library(sodium)
+library(stats)
+library(stringr)
+library(summarytools)
+library(tidyr)
 ```
 
 ```{r}
+#| echo: false
+
 library(magrittr)
 library(ggplot2)
 ```
 
 ```{r}
-source(here::here("R", "anonymize_id.R"))
-source(here::here("R", "plot_box_plot.R"))
-source(here::here("R", "plot_dist.R"))
-source(here::here("R", "plot_ggally.R"))
-source(here::here("R", "plot_hist.R"))
-source(here::here("R", "plot_qq.R"))
-source(here::here("R", "stats_summary.R"))
-source(here::here("R", "test_normality.R"))
-source(here::here("R", "utils.R"))
-source(here::here("R", "utils-plots.R"))
-```
-
-```{r}
-# library(dplyr)
-# library(prrettycheck) # github.com/danielvartan/prettycheck
-
 get_n <- function(data, group) {
-  prettycheck:::assert_tibble(data)
-  prettycheck:::assert_subset("group", names(data))
-  prettycheck:::assert_set_equal(levels(data$group), c("Poor", "Good"))
-  prettycheck:::assert_choice(group, c("Poor", "Good"))
+  checkmate::assert_tibble(data)
+  checkmate::assert_subset("group", names(data))
+  checkmate::assert_set_equal(levels(data$group), c("Poor", "Good"))
+  checkmate::assert_choice(group, c("Poor", "Good"))
 
   data |>
     dplyr::rename(.group = group) |>
@@ -62,14 +59,11 @@ get_n <- function(data, group) {
 ```
 
 ```{r}
-# library(dplyr)
-# library(prrettycheck) # github.com/danielvartan/prettycheck
-
 get_labor_duration <- function(data, group) {
-  prettycheck:::assert_tibble(data)
-  prettycheck:::assert_subset(c("group", "labor_duration"), names(data))
-  prettycheck:::assert_set_equal(levels(data$group), c("Poor", "Good"))
-  prettycheck:::assert_choice(group, c("Poor", "Good"))
+  checkmate::assert_tibble(data)
+  checkmate::assert_subset(c("group", "labor_duration"), names(data))
+  checkmate::assert_set_equal(levels(data$group), c("Poor", "Good"))
+  checkmate::assert_choice(group, c("Poor", "Good"))
 
   data |>
     dplyr::rename(.group = group) |>
@@ -80,6 +74,7 @@ get_labor_duration <- function(data, group) {
 
 ```{r}
 # See Maxwell et al. (2018, p. 150)
+
 f_unb <- function(k, n_total, f_test) {
   checkmate::assert_int(k, lower = 2)
   checkmate::assert_int(n_total, lower = 2)
@@ -91,7 +86,7 @@ f_unb <- function(k, n_total, f_test) {
 }
 ```
 
-## Adding Key Variables
+## Setting Keys
 
 ```{r}
 salt <- askpass::askpass()
@@ -105,6 +100,8 @@ salt <- askpass::askpass()
 googlesheets4::gs4_auth()
 ```
 
+The following are internal data collected and organized using a Google Form to facilitate the management of the study.
+
 ```{r}
 #| output: false
 
@@ -114,6 +111,8 @@ control_form <- googlesheets4::read_sheet(
   col_types = "c"
 )
 ```
+
+The following are data extracted from the Google Form used to collect data from the participants of the study.
 
 ```{r}
 #| output: false
@@ -125,6 +124,8 @@ field_form <- googlesheets4::read_sheet(
 )
 ```
 
+The sleep data were extracted using the Condor Instrument [ActStudio](https://condorinst.com/en/actstudio-software/) software and subsequently formatted in Google Sheets for further analysis.
+
 ```{r}
 #| output: false
 
@@ -134,6 +135,8 @@ sleep_input <- googlesheets4::read_sheet(
   col_types = "c"
 )
 ```
+
+Medical records were obtained from participants' medical files and organized in Google Sheets for subsequent analysis.
 
 ```{r}
 #| output: false
@@ -188,8 +191,8 @@ field_form_data <-
   field_form |>
   `names<-`(paste0("X", seq_along(field_form))) |>
   dplyr::select(
-    X1, X4, X5, X11, X91, X92, X95, X96, X97, X99, X101, X102, X106, X119, X118,
-    X125, X126
+    X1, X4, X5, X11, X91, X92, X95, X96, X97, X99, X101, X102, X106, X119,
+    X118, X125, X126
   ) |>
   dplyr::rename(
     timestamp = X1,
@@ -385,15 +388,9 @@ general_data <-
   dplyr::filter(id %in% valid_cases)
 ```
 
-## Exploration Data Analysis
+## Exploring the Data
 
-<!-- Add categorical data -->
-<!-- cor/etnia, work, escolaridade, mãe solo, plano de saúde -->
-<!-- prática de exercícios, vias de nascimento -->
-
-<!-- Distância da residência para a casa de parto -->
-<!-- Mapa radial conoformes os CEPs e as casas de parto -->
-<!-- Add DASS-21 -->
+The actogram presented in the article was created using the [ActStudio](https://condorinst.com/en/actstudio-software/) software.
 
 ```{r}
 general_data |> dplyr::glimpse()
@@ -419,11 +416,10 @@ general_data |> summarytools::freq(education,  style = "rmarkdown")
 general_data |> summarytools::freq(solo,  style = "rmarkdown")
 ```
 
-### Variáveis Quantitativas
+### Quantitative Variables
 
 ```{r}
 #| output: asis
-library(hms)
 
 dplyr::tibble(
     min = general_data |> dplyr::pull(timestamp) |> min(),
@@ -463,10 +459,10 @@ general_data |>
 
 ```{r}
 general_data |>
-  stats_summary(
+  rutils:::stats_summary(
     paste0("fps", "_", "mean"),
-    # threshold = hms::parse_hms("12:00:00"),
-    round_time = TRUE
+    threshold = NULL
+    # threshold = hms::parse_hms("12:00:00")
   ) |>
   print(n = Inf)
 ```
@@ -474,20 +470,13 @@ general_data |>
 ```{r}
 #| output: asis
 
-# general_data |>
-#   stats_summary(
-#     col = paste0("waso", "_", "sd"),
-#     threshold = NULL, # hms::parse_hm("12:00")
-#     round_time =  TRUE
-#   )
-
 general_data |>
-  stats_summary(
+  rutils:::stats_summary(
     paste0("fps", "_", "sd"),
-    round_time = TRUE
+    threshold = NULL
+    # threshold = hms::parse_hms("12:00:00")
   ) |>
   print(n = Inf)
-# general_data |> stats_summary("age")
 ```
 
 ```{r}
@@ -508,11 +497,13 @@ general_data |> summarytools::descr(labor_duration, style = "rmarkdown")
 general_data |> plotr:::plot_dist(col = "bmi_current")
 ```
 
-### Matrizes de Correlação
+```{r}
+general_data |> plotr:::plot_box_plot(col = "bmi_current")
+```
+
+### Correlation Matrices
 
 ```{r}
-#| eval: false
-
 general_data |>
   plotr:::plot_ggally(
     cols = c(
@@ -525,8 +516,6 @@ general_data |>
 ```
 
 ```{r}
-#| eval: false
-
 general_data |>
   plotr:::plot_ggally(
     cols = c(
@@ -539,8 +528,6 @@ general_data |>
 ```
 
 ```{r}
-#| eval: false
-
 general_data |>
   plotr:::plot_ggally(
     cols = c(
@@ -556,8 +543,6 @@ general_data |>
 ```
 
 ```{r}
-#| eval: false
-
 general_data |>
   plotr:::plot_ggally(
     cols = c("labor_duration", "fps_mean", "waso_mean", "awakenings_mean"),
@@ -566,14 +551,12 @@ general_data |>
 ```
 
 ```{r}
-#| eval: false
-
 general_data |>
   dplyr::mutate(
     his_mean = his_mean |> lubritime::link_to_timeline(),
     hfs_mean = hfs_mean |> lubritime::link_to_timeline()
   ) |>
-  plot_ggally(
+  plotr:::plot_ggally(
     cols = c(
       "his_mean", "hfs_mean", "fps_mean", "tts_mean", "tts_fps_mean",
        "waso_mean", "awakenings_mean"
