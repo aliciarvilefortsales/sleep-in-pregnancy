@@ -11,7 +11,7 @@ source(here::here("R", "_setup.R"))
 
 <!-- badges: start -->
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![OSF DOI](https://img.shields.io/badge/DOI-10.17605/OSF.IO/S4TBZ.svg)](https://doi.org/10.17605/OSF.IO/S4TBZ)
+[![OSF DOI](https://img.shields.io/badge/DOI-10.17605/OSF.IO/S4TBZ-1284C5.svg)](https://doi.org/10.17605/OSF.IO/S4TBZ)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/license/mit)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 <!-- badges: end -->
@@ -20,7 +20,7 @@ source(here::here("R", "_setup.R"))
 
 🤰👶🍼🌙💤🛏️🕰️😴🌟☁️👨‍🍼🤱👩‍🍼🌸✨🌜📖🎵🤔📅
 
-This repository contains the [Quarto book](https://quarto.org/docs/books/) of my Master's Thesis: *Associations between the duration and quality of sleep of pregnant women in the third trimester with the duration of labor*. The research compendium is accessible via [The Open Science Framework](https://osf.io/) by clicking [here](https://doi.org/10.17605/OSF.IO/S4TBZ).
+This repository contains the [Quarto book](https://quarto.org/docs/books/) of my Master's Thesis: *Associations Between the Duration and Quality of Sleep in Third-Trimester Pregnant Women With the Duration of Labor*. The research compendium is accessible via [The Open Science Framework](https://osf.io/) by clicking [here](https://doi.org/10.17605/OSF.IO/S4TBZ).
 
 The assemble of this repository was inspired by Ben Marwick, Carl Boettiger & Lincoln Mullen's article [Packaging Data Analytical Work Reproducibly Using R (and Friends)](https://doi.org/10.1080/00031305.2017.1375986).
 

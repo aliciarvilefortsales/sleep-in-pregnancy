@@ -4,69 +4,49 @@ execute:
 ---
 
 <!-- %:::% index begin %:::% -->
-## Hi there! 👋 {.smaller}
+# Introduction
 
 ```{r}
 #| label: setup
 #| include: false
 
-source(here::here("R/_setup.R"))
+source(here::here("R", "_setup.R"))
 ```
 
-::::: {.columns}
-:::: {.column style="width: 47.5%;"}
-This presentation will provide an overview of the thesis objectives, main concepts, methods, and results.
+```{r}
+#| echo: false
+#| output: asis
 
-::: {style="padding-top: 15px;"}
-Here are the main topics:
+quartor:::quarto_status(
+  type = "drafting",
+  of_what = "of this thesis",
+  latex_parskip = "\\microskip"
+  )
+```
 
-1. **Introduction**
-1. **Methods**
-1. **Results**
-1. **Discussion**
-1. **Conclusion**
-:::
-::::
-:::: {.column style="width: 5%;"}
-::::
-:::: {.column style="width: 47.5%;"}
-![](images/favicon.png){fig-align="center" style="width: 50%; padding-top: 100px;"}
-::::
-:::::
+<!-- %:::% index pdf begin %:::% -->
+You are currently viewing the preliminary `r ifelse(env_vars$format == "pdf", "print", "web")` version of this master's thesis.
 
-::: {.notes}
+This document follows the [collection of articles thesis](https://en.wikipedia.org/wiki/Collection_of_articles) format. This first chapter serves as an introduction to the thesis subject, providing its justification, aims, and a list of all projects and related activities produced during its development. The subsequent chapters consist of a series of articles connected to the thesis, with the exception of the last one, which encompasses a discussion and final remarks.
+
+::: {.content-visible when-format="html"}
+All analyses in this document are reproducible and were conducted using the [R programming language](https://www.r-project.org/) along with the [Quarto](https://quarto.org/) publishing system.
 :::
 
-## Introduction {.smaller}
-
-## Methods {.smaller}
-
-## Results {.smaller}
-
-## Discussion {.smaller}
-
-## Conclusion {.smaller}
-
-## Final remarks {.smaller}
-
-This thesis was presented to the School of Arts, Sciences and Humanities ([EACH](http://www5.each.usp.br/)) at the University of São Paulo ([USP](https://www5.usp.br/)), as a requirement for the degree of Master of Science by the Graduate Program in Nursing ([PPGE](http://www2.ee.usp.br/posgraduacao/ppge/index.php/home)).
-
-Financial support was provided by the Coordination for the Improvement of Higher Education Personnel ([CAPES](https://www.gov.br/capes/)).
-
-::: {style="padding-top: 15px;"}
-Thesis Supervisor: [Prof. Dr. Christiane Borges do Nascimento Chofakian](https://orcid.org/0000-0002-5953-3296).
-
-Area of concentration: Healthcare.
-
-You can learn more about this work at: <https://github.com/aliciarvilefortsales/mastersthesis>
+::: {.content-visible when-format="pdf"}
+All analyses in this document are reproducible and were conducted using the [R programming language](https://www.r-project.org/) along with the [Quarto](https://quarto.org/) publishing system. It's worth noting that this type of thesis is best suited for online viewing. To access the digital version and see the latest research updates, please visit [https://aliciarvilefortsales.github.io/mastersthesis/](https://aliciarvilefortsales.github.io/mastersthesis/).
 :::
 
-## References {.smaller}
+Given its preliminary nature, not all chapters are ready for reading. However, the author has chosen to display the entire state of the thesis rather than presenting only polished sections. This approach provides readers with a more comprehensive understanding of the work in progress. Chapters not suitable for reading will include a call block indicating their status.
 
-::: {style="font-size: 0.75em;"}
-In accordance with the [American Psychological Association (APA) Style](https://apastyle.apa.org/), 7th edition.
-:::
+```{=latex}
+\index{Test}
+```
 
-::: {#refs style="font-size: 0.75em;"}
-:::
+<!-- ## Literature review -->
+
+<!-- ## Thesis aims -->
+
+<!-- ## Projects developed -->
+
 <!-- %:::% index end %:::% -->

@@ -7,9 +7,9 @@
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![OSF
-DOI](https://img.shields.io/badge/DOI-10.17605/OSF.IO/S4TBZ.svg)](https://doi.org/10.17605/OSF.IO/S4TBZ)
+DOI](https://img.shields.io/badge/DOI-10.17605/OSF.IO/S4TBZ-1284C5.svg)](https://doi.org/10.17605/OSF.IO/S4TBZ)
 [![License:
-MIT](https://img.shields.io/badge/license-MIT-green.png)](https://choosealicense.com/licenses/mit/)
+MIT](https://img.shields.io/badge/license-MIT-green.png)](https://opensource.org/license/mit)
 [![License: CC BY
 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 <!-- badges: end -->
@@ -20,8 +20,8 @@ MIT](https://img.shields.io/badge/license-MIT-green.png)](https://choosealicense
 
 This repository contains the [Quarto
 book](https://quarto.org/docs/books/) of my Master’s Thesis:
-*Associations between the duration and quality of sleep of pregnant
-women in the third trimester with the duration of labor*. The research
+*Associations Between the Duration and Quality of Sleep in
+Third-Trimester Pregnant Women With the Duration of Labor*. The research
 compendium is accessible via [The Open Science
 Framework](https://osf.io/) by clicking
 [here](https://doi.org/10.17605/OSF.IO/S4TBZ).
@@ -31,7 +31,7 @@ Boettiger & Lincoln Mullen’s article [Packaging Data Analytical Work
 Reproducibly Using R (and
 Friends)](https://doi.org/10.1080/00031305.2017.1375986).
 
-## How to use
+## How to Use
 
 All analyses in this thesis are fully reproducible and were conducted
 using the [R programming language](https://www.r-project.org/) alongside
@@ -54,28 +54,33 @@ R](https://www.coursera.org/specializations/data-science-foundations-r).
 
 To reproduce the analyses do the following steps:
 
-1.  Make sure that you have the latest R version and the following R
+1)  Make sure that you have the latest R version and the following R
     packages installed in your machine:
-    `install.packages(c("cli", "here" ,"magrittr", "ragg", "renv", "stats", "stringr"))`.
-2.  Clone this repository.
-3.  Open the R project (`mastersthesis.Rproj`).
-4.  Run
+
+``` r
+install.packages(
+  c("cli", "here" ,"magrittr", "ragg", "renv", "stats", "stringr")
+)
+```
+
+2)  Clone this repository.
+3)  Open the R project in your IDE of choice.
+4)  Run
     [`renv::restore()`](https://rstudio.github.io/renv//reference/restore.html)
     to install all software dependencies.
-5.  Set all the keys provided by the author in the `.Renviron` file and
+5)  Set all the keys provided by the author in the `.Renviron` file and
     the `_ssh` folder.
-6.  Run `targets::tar_make()` to create every point of the data
-    wrangling process (from the raw data to the cleaned and weighted
-    data).
-7.  Run any analysis present in the computational notebooks (`qmd`
+6)  Execute `targets::tar_make()` to run the entire pipeline, processing
+    the raw data through to the validated and weighted data.
+7)  Run any analysis present in the computational notebooks (`qmd`
     directory).
 
 ## Keys
 
 To access the data and run the notebooks, you will need to set the
-following keys in the
+following keys in a file named
 [`.Renviron`](https://bookdown.org/csgillespie/efficientR/set-up.html#:~:text=2.4.6%20The%20.Renviron%20file)
-file:
+located in the root directory of the project:
 
 - `OSF_PAT`: Your [OSF](https://osf.io/) Personal Access Token (PAT). If
   you don’t have one, go to the settings section of your OSF account and
@@ -98,14 +103,14 @@ all necessary approvals for their research proposal.
 ## License
 
 [![License:
-MIT](https://img.shields.io/badge/license-MIT-green.png)](https://opensource.org/license/mit/)
+MIT](https://img.shields.io/badge/license-MIT-green.png)](https://opensource.org/license/mit)
 [![License: CC BY
 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
 The code accompanying this thesis is distributed under the [MIT
-License](https://opensource.org/license/mit/). All documents are
-released under the [Creative Commons Attribution 4.0 International
-Public License](https://creativecommons.org/licenses/by/4.0/).
+License](https://opensource.org/license/mit). All documents are released
+under the [Creative Commons Attribution 4.0 International Public
+License](https://creativecommons.org/licenses/by/4.0/).
 
 The research data is subject to a private license and is not publicly
 available due to privacy and ethical considerations.
@@ -115,15 +120,14 @@ available due to privacy and ethical considerations.
 To cite this work, please use the following format:
 
 Sales, A. R. V. (2025). *Associations between the duration and quality
-of sleep of pregnant women in the third trimester with the duration of
-labor * \[Master’s Thesis, University of São Paulo\].
+of sleep in third-trimester pregnant women with the duration of labor*
+\[Master’s Thesis, University of São Paulo\].
 <https://doi.org/10.17605/OSF.IO/S4TBZ>
 
 A BibTeX entry for LaTeX users is:
 
     @mastersthesis{sales2025,
-      title = {Associations between the duration and quality of sleep of pregnant women in the third trimester with the duration of labor
-    },
+      title = {Associations between the duration and quality of sleep in third-trimester pregnant women with the duration of labor},
       author = {Alícia Rafaelly Vilefort Sales},
       year = {2025},
       address = {São Paulo},
@@ -135,14 +139,43 @@ A BibTeX entry for LaTeX users is:
 
 ## Acknowledgments
 
-This thesis was developed in the Graduate Program in Nursing
-([PPGE](http://www2.ee.usp.br/posgraduacao/ppge/index.php/home)) at the
-University of São Paulo ([USP](https://www5.usp.br/)) under the
-supervision of [Prof. Dra. Christiane Borges do Nascimento
-Chofakian](https://orcid.org/0000-0002-5953-3296).
+<table>
+  <tr>
+    <td width="30%">
+      <br/>
+      <br/>
+      <p align="center">
+        <a href="http://www2.ee.usp.br/posgraduacao/ppge/index.php/home">
+          <img src="images/usp-logo.svg" width="150"/>
+        </a>
+      </p>
+      <br/>
+    </td>
+    <td width="70%">
+      <p>
+        This thesis was developed in the Graduate Program in Nursing (<a href="http://www2.ee.usp.br/posgraduacao/ppge/index.php/home">PPGE</a>) at the University of São Paulo (<a href="https://www5.usp.br/">USP</a>) under the supervision of
+        <a href="https://orcid.org/0000-0002-5953-3296">Prof. Dr. Christiane Borges do Nascimento Chofakian</a>.
+      </p>
+    </td>
+  </tr>
+</table>
 
-<a href="https://www.gov.br/capes/"><img src= "images/capes-logo-horizontal-rgb.png" height="35"/></a>
-
-This study was financed by the Coordenação de Aperfeiçoamento de Pessoal
-de Nível Superior - Brazil ([CAPES](https://www.gov.br/capes/)) -
-Finance Code 001, under grant number 88887.940089/2024-00
+<table>
+  <tr>
+    <td width="30%">
+      <br/>
+      <p align="center">
+        <a href="https://www.gov.br/capes/">
+          <img src="images/capes-logo-original.svg" width="120"/>
+        </a>
+      </p>
+      <br/>
+    </td>
+    <td width="70%">
+      <p>
+        This study was financed by the Coordenação de Aperfeiçoamento de 
+        Pessoal de Nível Superior - Brazil (<a href="https://orcid.org/0000-0001-6783-6695">CAPES</a>) - Finance Code 001.
+      </p>
+    </td>
+  </tr>
+</table>
