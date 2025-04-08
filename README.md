@@ -138,7 +138,7 @@ A BibTeX entry for LaTeX users is:
 This thesis was developed in the Graduate Program in Nursing
 ([PPGE](http://www2.ee.usp.br/posgraduacao/ppge/index.php/home)) at the
 University of São Paulo ([USP](https://www5.usp.br/)) under the
-supervision of [Prof. Dr. Christiane Borges do Nascimento
+supervision of [Prof. Dra. Christiane Borges do Nascimento
 Chofakian](https://orcid.org/0000-0002-5953-3296).
 
 <a href="https://www.gov.br/capes/"><img src= "images/capes-logo-horizontal-rgb.png" height="35"/></a>
