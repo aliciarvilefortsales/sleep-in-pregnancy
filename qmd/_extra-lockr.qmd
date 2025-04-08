@@ -1,6 +1,8 @@
-<!-- %:::% .common h1 begin %:::% -->
-# Appendice - Lock and unlock files
-<!-- %:::% .common h1 end %:::% -->
+---
+eval: false
+---
+
+# Extra – Lock and unlock files
 
 ```{r}
 #| label: setup

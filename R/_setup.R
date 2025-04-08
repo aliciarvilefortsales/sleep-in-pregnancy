@@ -1,26 +1,22 @@
-## Based on <https://github.com/hadley/r4ds/blob/main/_common.R>.
-
 # Load packages -----
 
+# library(brandr)
+library(rlang)
 library(downlit)
 library(ggplot2)
 # library(here)
+library(httpgd)
 # library(knitr)
 library(lubridate)
 library(magrittr)
 library(ragg)
-library(rlang)
 # library(rutils) # github.com/danielvartan/rutils
 library(showtext)
 library(sysfonts)
 library(targets)
+library(vscDebugger) # github.com/ManuelHentschel/vscDebugger
 library(xml2)
 # library(yaml)
-
-# Load functions -----
-
-source(here::here("R", "utils.R"))
-source(here::here("R", "utils-plots.R"))
 
 # Set general options -----
 
@@ -43,17 +39,17 @@ set.seed(2025)
 env_vars <- yaml::read_yaml(here::here("_variables.yml"))
 res_vars <- yaml::read_yaml(here::here("_results.yml"))
 
-if (env_vars$format == "html") {
+if (env_vars$format %in% c("html", "revealjs")) {
   base_size <- 11
 } else {
-  base_size <- 11 # 10
+  base_size <- 10
 }
 
 env_vars$base_size <- base_size
 
 # Set knitr -----
 
-knitr::clean_cache() |> rutils:::shush()
+knitr::clean_cache() |> rutils::shush()
 
 knitr::opts_chunk$set(
   comment = "#>",
@@ -64,37 +60,29 @@ knitr::opts_chunk$set(
   fig.showtext = TRUE
 )
 
+# Set `brandr` options -----
+
+options(BRANDR_BRAND_YML = here::here("_brand.yml"))
+
+brandr_options <- list(
+  "BRANDR_COLOR_SEQUENTIAL" =
+    brandr::get_brand_color(c("primary", "secondary")),
+  "BRANDR_COLOR_DIVERGING" =
+    brandr::get_brand_color(c("primary", "white", "secondary")),
+  "BRANDR_COLOR_QUALITATIVE" = c(
+    brandr::get_brand_color("primary"),
+    brandr::get_brand_color("secondary"),
+    brandr::get_brand_color("tertiary")
+    )
+  )
+
+for (i in seq_along(brandr_options)) {
+  options(brandr_options[i])
+}
+
 # Set and load graph fonts -----
 
-# # Helpers
-#
-# sysfonts::font_paths()
-#
-# # "poppins" "dm sans"
-# data <-
-#   sysfonts::font_files() |>
-#   dplyr::as_tibble() |>
-#   dplyr::filter(
-#     stringr::str_detect(tolower(family), "dm sans"),
-#     stringr::str_detect(path, "mastersthesis")
-#   )
-
-sysfonts::font_paths(
-  c(
-    here::here("ttf"),
-    here::here("_extensions", "abnt", "otf"),
-    here::here("_extensions", "abnt", "ttf")
-  )
-)
-
-sysfonts::font_add(
-  family = "arial",
-  regular = here::here("ttf", "arial.ttf"),
-  bold = here::here("ttf", "arial-bold.ttf"),
-  italic = here::here("ttf", "arial-italic.ttf"),
-  bolditalic = here::here("ttf", "arial-bold-italic.ttf"),
-  symbol = NULL
-)
+sysfonts::font_paths(here::here("ttf"))
 
 sysfonts::font_add(
   family = "open-sans",
@@ -106,11 +94,11 @@ sysfonts::font_add(
 )
 
 sysfonts::font_add(
-  family = "bitter",
-  regular = here::here("ttf", "bitter-regular.ttf"),
-  bold = here::here("ttf", "bitter-bold.ttf"),
-  italic = here::here("ttf", "bitter-italic.ttf"),
-  bolditalic = here::here("ttf", "bitter-bolditalic.ttf"),
+  family = "source-code-pro",
+  regular = here::here("ttf", "sourcecodepro-regular.ttf"),
+  bold = here::here("ttf", "sourcecodepro-bold.ttf"),
+  italic = here::here("ttf", "sourcecodepro-italic.ttf"),
+  bolditalic = here::here("ttf", "sourcecodepro-bolditalic.ttf"),
   symbol = NULL
 )
 
@@ -124,23 +112,23 @@ ggplot2::theme_set(
     base_line_size = base_size / 22,
     base_rect_size = base_size / 22
   ) +
-  ggplot2::theme(
-    text = ggplot2::element_text(
-      color = "#000000",
-      family = "arial",
-      face = "plain"
-    ),
-    panel.background = ggplot2::element_rect(fill = "transparent"),
-    plot.background = ggplot2::element_rect(
-      fill = "transparent", color = NA
-    ),
-    panel.grid.major = ggplot2::element_blank(),
-    panel.grid.minor = ggplot2::element_blank(),
-    legend.background = ggplot2::element_rect(fill = "transparent"),
-    legend.box.background = ggplot2::element_rect(
-      fill = "transparent", color = NA
-    ),
-    legend.frame = ggplot2::element_blank(),
-    legend.ticks = ggplot2::element_line(color = "white")
-  )
+    ggplot2::theme(
+      text = ggplot2::element_text(
+        color = brandr::get_brand_color("black"),
+        family = "poppins",
+        face = "plain"
+      ),
+      panel.background = ggplot2::element_rect(fill = "transparent"),
+      plot.background = ggplot2::element_rect(
+        fill = "transparent", color = NA
+      ),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+      legend.background = ggplot2::element_rect(fill = "transparent"),
+      legend.box.background = ggplot2::element_rect(
+        fill = "transparent", color = NA
+      ),
+      legend.frame = ggplot2::element_blank(),
+      legend.ticks = ggplot2::element_line(color = "white")
+    )
 )

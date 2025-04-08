@@ -8,21 +8,22 @@ author-initials: A. R. V. S.
 author: Alícia Rafaelly Vilefort Sales
 cosupervisor: '[Co-supervisor''s full name]'
 keyword: |
-  Pregnancy. Sleep. Sleep-wake cycle. Sleep quality. Duration of sleep. Childbirth. Duration of childbirth. Actigraphy. MCTQ. PSQI. DASS.
+  Pregnancy. Childbirth. Humanizing Delivery. Natural Childbirth. Duration of childbirth. Obstetrics. Sleep. Sleep quality. Sleep Duration. Actigraphy. Chronobiology.
 location: São Paulo
-mainfont: DM Sans
-monofont: DM Mono
+mainfont: Open Sans
+monofont: Source Code Pro
 program: Graduate Program in Nursing
-sansfont: Poppins
-school: School of Arts, Sciences and Humanities
+sansfont: Open Sans
+school: School of Nursing
 supervisor: Christiane Borges do Nascimento Chofakian
 type-of-work: Thesis
 university: University of São Paulo
 version-note: Preliminary version
 url: https://aliciarvilefortsales.github.io/mastersthesis/
 language: en
+submitted: '2025'
 title: |
-  Associations between the duration and quality of sleep of pregnant women in the third trimester with the duration of labor
-date: '2025-01-14'
+  Associations Between the Duration and Quality of Sleep of Pregnant Women in the Third Trimester With the Duration of Labor
+date: '2025-04-07'
 year: '2025'
-format: pdf
+format: revealjs

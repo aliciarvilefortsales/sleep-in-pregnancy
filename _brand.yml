@@ -1,8 +1,3 @@
-# For detailed documentation on the format, refer to:
-#
-# - https://posit-dev.github.io/brand-yml
-# - https://quarto.org/docs/authoring/brand.html
-
 meta:
   name:
     short: |
@@ -25,23 +20,27 @@ logo:
   images:
     favicon:
       path: images/favicon.png
-      alt: "Logo favicon"
+      alt: "Favicon"
+    og-image:
+      path: images/og-image.png
+      alt: "Open Graph Image"
 
 # # See
 #
 # - https://www.pantone.com/skintone
+# - Pantone SkinTone Hex Color Codes: https://bit.ly/4iWW5jJ
 
 color:
   palette:
     pantone-4r14-sp: "#63483E" # PANTONE 4R14 SP
     pantone-4r14-sp-995: "#FDFDFD" # PANTONE 4R14 SP
     pantone-2y12-sp: "#89634C" # PANTONE 2Y12 SP
+    pantone-5r07-sp: "#BE9186" # PANTONE 5R07 SP
     pantone-2r03-sp: "#CAA596" # PANTONE 2R03 SP
     white: "#FFFFFF"
     black: "#63483E" # PANTONE 4415 SP
     black-725: "#A99A94" # get_brand_color_tint(725, "black")
-
-  background: pantone-2r03-sp
+  background: white
   primary: pantone-4r14-sp
   secondary: pantone-2y12-sp
   tertiary: pantone-2r03-sp
@@ -57,12 +56,10 @@ typography:
     - family: Open Sans
       source: google
       weight: [300, 400, 500, 600]
-    - family: Bitter
-      source: google
     - family: Source Code Pro
       source: google
   base:
-    family: Bitter
+    family: Open Sans
   headings:
     family: Open Sans
     color: black
@@ -70,6 +67,7 @@ typography:
   monospace: Source Code Pro
   monospace-inline:
     color: black
+    background-color: pantone-4r14-sp-995
   monospace-block:
     background-color: pantone-4r14-sp-995
   link:

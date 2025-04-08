@@ -16,7 +16,7 @@ book:
         href: ../print/index.pdf
   chapters:
     - index.qmd
-    - part: "Preliminary Pages"
+    - part: "Preliminary Sections"
       chapters:
         - qmd/errata.qmd
         - qmd/inscription.qmd
@@ -35,9 +35,7 @@ book:
     - qmd/references.qmd
     - qmd/glossary.qmd
   appendices:
-    - qmd/appendice-chapter-1.qmd
-    - qmd/appendice-chapter-2.qmd
-    - qmd/appendice-chapter-3.qmd
+    - qmd/appendix-1.qmd
   comments:
     hypothesis:
       theme: clean
@@ -57,7 +55,6 @@ format:
     open-graph: true
     locale: en
     language: en
-    number-depth: 5
     code-fold: true
     code-link: true
     code-tools: false
@@ -70,4 +67,4 @@ format:
     link-external-icon: false
     link-external-newwindow: false
     theme: [cosmo, brand, scss/web.scss]
-
+    include-in-header: "html/include-in-header.html"

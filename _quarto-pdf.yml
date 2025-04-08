@@ -13,7 +13,6 @@ commands:
   - brandprimary
   - brandblack
 
-
 execute:
   echo: false
 
@@ -27,6 +26,8 @@ book:
     - qmd/chapter-3.qmd
     - qmd/chapter-4.qmd
     - qmd/glossary.qmd
+  appendices:
+    - qmd/appendix-1.qmd
 
 format:
   abnt-pdf:
@@ -39,7 +40,10 @@ format:
       (APA) Style, 7th edition.
     bibhang: 0.5cm
     bibparsep: 1ex
-    body-color: "EEB6A5" # Brand Black
+    body-color: "63483E" # Brand Black
+    mainfont: Open Sans
+    sansfont: Open Sans
+    monofont: Source Code Pro
     colorlinks: true
     linkcolor: brand-primary
     filecolor: brand-primary

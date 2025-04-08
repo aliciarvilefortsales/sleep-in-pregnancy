@@ -1,0 +1,23 @@
+<section id="$idprefix$title-slide"$for(title-slide-attributes/pairs)$ $it.key$="$it.value$"$endfor$>
+  <h1 class="title" style="text-align: left;">$title$</h1>
+$if(subtitle)$
+  <p class="subtitle" style="text-align: left;">$subtitle$</p>
+$endif$
+  <div style="text-align: left; float: left;">
+$for(author)$
+    <p class="author">$author$</p>
+$endfor$
+$for(institute)$
+    <p class="institute">$institute$</p>
+$endfor$
+$if(date)$
+    <p class="date">$date$</p>
+$endif$
+  </div>
+  <div style="text-align: left; float: right;">
+    <a href="https://www.ee.usp.br/posgraduacao/ppge/" target="_blank"><img src="images/ppge-usp-logo-rgb-72-dpi.png" style="width: 250px; ; padding-bottom: 5px;"></a>
+    <a href="https://www5.usp.br/" target="_blank"><img src="images/usp-logo.svg" style="width: 150px; padding-left: 20px; padding-bottom: 0px;"></a>
+    <br>
+    <a href="https://www.gov.br/capes/" target="_blank"><img src="images/capes-logo-horizontal.svg" style="width: 300px; padding-left: 40px; padding-bottom: 0px;"></a>
+  </div>
+</section>

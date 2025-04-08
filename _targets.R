@@ -21,7 +21,7 @@ targets::tar_option_set(
     "here",
     "hms",
     "lockr", # github.com/danielvartan/lockr
-    "lubridate", # For masking reasons.
+    "lubridate", # For masking reasons
     "lubritime", # github.com/danielvartan/lubritime
     "methods",
     "mctq",

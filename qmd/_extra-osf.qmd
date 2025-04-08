@@ -1,6 +1,8 @@
-<!-- %:::% .common h1 begin %:::% -->
-# Appendice - Download or upload files to OSF
-<!-- %:::% .common h1 end %:::% -->
+---
+eval: false
+---
+
+# Extra – Download or Upload Files to OSF
 
 ```{r}
 #| label: setup
@@ -78,7 +80,7 @@ osf_tidy_data_id <- "npkjw"
 ```{r}
 #| eval: false
 
-osf_id <- 
+osf_id <-
   osf_raw_data_id %>%
   paste0("https://osf.io/", .)
 ```
@@ -93,8 +95,8 @@ pattern <- "7cbf7851" # default: NULL (fixer — no regex)
 #| eval: false
 
 files <-
-  osf_id |> 
-  osfr::osf_retrieve_node() |> 
+  osf_id |>
+  osfr::osf_retrieve_node() |>
   osfr::osf_ls_files(
     path = path,
     type = type,
@@ -112,13 +114,13 @@ unlocked_files <- character()
 
 for (i in files) {
   i_path <- lockr::unlock_file(
-    i, 
-    private_key = private_key, 
+    i,
+    private_key = private_key,
     password = password
   )
-  
+
   cli::cat_line()
-  
+
   unlocked_files <- c(unlocked_files, i_path)
 }
 ```
@@ -128,11 +130,11 @@ for (i in files) {
 
 for (i in unlocked_files) {
   lockr::lock_file(
-    i, 
-    public_key = public_key, 
+    i,
+    public_key = public_key,
     remove_file = TRUE
   )
-  
+
   cli::cat_line()
 }
 ```
@@ -157,8 +159,8 @@ c(
   "",
   "* All files were locked with the project's public key. Ask the project administrators for the key if you need access.",
   "",
-  paste0("* Last update: ", lubritime::round_time(Sys.time()), ".")  
-) |> 
+  paste0("* Last update: ", lubritime::round_time(Sys.time()), ".")
+) |>
   readr::write_lines(readme_file)
 
 readr::read_lines(readme_file)
@@ -168,9 +170,9 @@ readr::read_lines(readme_file)
 #| eval: false
 
 osf_id |>
-  osfr::osf_retrieve_node() |> 
+  osfr::osf_retrieve_node() |>
   osfr::osf_upload(
-    path = readme_file, 
+    path = readme_file,
     conflicts = "overwrite",
     progress = TRUE
   )
@@ -185,13 +187,13 @@ path <- NULL # Use `NULL` to refer to the root.
 ```{r}
 #| eval: false
 
-osf_data <- 
-  osf_id |> 
-  osfr::osf_retrieve_node() |> 
+osf_data <-
+  osf_id |>
+  osfr::osf_retrieve_node() |>
   osfr::osf_ls_files(
     path = path,
     n_max = Inf
-  ) |> 
+  ) |>
   dplyr::arrange(name)
 
 osf_data
@@ -206,7 +208,7 @@ dir_path <- clipr::read_clip() |> normalizePath("/", mustWork = FALSE)
 ```{r}
 #| eval: false
 
-files <- 
+files <-
   list.files(dir_path) |>
   paste0(".lockr") |>
   setdiff(osf_data$name) |>
@@ -238,9 +240,9 @@ new_files <- character()
 for (i in seq_along(files)) {
   i_from <- file.path(dir_path, files[i])
   i_to <- file.path(tempdir(), files[i])
-  
+
   test <- file.copy(from = i_from, to = i_to, overwrite = TRUE)
-  
+
   if (isTRUE(test)) new_files <- c(new_files, i_to)
 }
 
@@ -248,13 +250,13 @@ locked_files <- character()
 
 for (i in new_files) {
   i_path <- lockr::lock_file(
-    i, 
-    public_key = public_key, 
+    i,
+    public_key = public_key,
     remove_file = TRUE
   )
-  
+
   cli::cat_line()
-  
+
   locked_files <- c(locked_files, i_path)
 }
 ```
@@ -262,10 +264,10 @@ for (i in new_files) {
 ```{r}
 #| eval: false
 
-osf_id |> 
-  osfr::osf_retrieve_node() |> 
+osf_id |>
+  osfr::osf_retrieve_node() |>
   osfr::osf_upload(
-    path = locked_files, 
+    path = locked_files,
     conflicts = "overwrite",
     progress = TRUE
   )

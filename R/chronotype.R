@@ -73,18 +73,18 @@
 chronotype <- function(wd = NULL, fd, so_f, sd_w = NULL, sd_f, round = TRUE) {
   checkmate::assert_integerish(wd, lower = 0, null.ok = TRUE)
   checkmate::assert_integerish(fd, lower = 0)
-  rutils:::assert_hms(so_f, lower = hms::hms(0))
-  rutils:::assert_duration(sd_w, lower = lubridate::duration(0), null.ok = TRUE)
-  rutils:::assert_duration(sd_f, lower = lubridate::duration(0))
+  prettycheck::assert_hms(so_f, lower = hms::hms(0))
+  prettycheck::assert_duration(sd_w, lower = lubridate::duration(0), null.ok = TRUE)
+  prettycheck::assert_duration(sd_f, lower = lubridate::duration(0))
 
   msf <- mctq::msl(so_f, sd_f)
 
   if (is.null(wd) || is.null(sd_w)) {
-    rutils:::assert_identical(fd, so_f, sd_f, type = "length")
+    prettycheck::assert_identical(fd, so_f, sd_f, type = "length")
 
     msf_sc <- msf
   } else {
-    rutils:::assert_identical(wd, fd, sd_w, so_f, sd_f, type = "length")
+    prettycheck::assert_identical(wd, fd, sd_w, so_f, sd_f, type = "length")
 
     sd_mean <- ((sd_w * wd) + (sd_f * fd)) / (wd + fd)
     msf_sc <- mctq::msf_sc(msf, sd_w, sd_f, sd_mean, FALSE)

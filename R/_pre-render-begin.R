@@ -1,11 +1,10 @@
 # library(here)
 # library(lubridate)
-# library(prettycheck) # github.com/danielvartan/prettycheck
 # library(rutils) # github.com/danielvartan/rutils
 # library(showtext)
-# lybrary(stringr)
+# library(stringr)
 library(sysfonts)
-# lybrary(yaml)
+# library(yaml)
 
 # Load common render -----
 
@@ -13,18 +12,19 @@ source(here::here("R", "_render-common.R"))
 
 # Copy images folder to `./qmd` -----
 
-## *Solve issues related to relative paths.
+## Solve issues related to relative paths
 
 dir_path <- here::here("qmd", "images")
 
-if (!prettycheck:::test_directory_exists(dir_path)) {
+if (!checkmate::test_directory_exists(dir_path)) {
   dir.create(dir_path) |> invisible()
 }
 
-for (i in rutils:::list_files(here::here("images"))) {
-  rutils:::copy_file(
-    from = i,
-    to = file.path(dir_path, basename(i))
+for (i in fs::dir_ls(here::here("images"), type = "file")) {
+  fs::file_copy(
+    path = i,
+    new_path = file.path(dir_path, basename(i)),
+    overwrite = TRUE
   )
 }
 
@@ -40,11 +40,11 @@ var_files <- c(
 var_patterns <- c(
   "academic-title", "academic-degree", "area-of-concentration", "author",
   "^book.url$", "cosupervisor", "date", "keyword", "language", "pdf.location$",
-  "mainfont", "monofont", "program", "sansfont", "school", "supervisor",
-  "^book.title$","type-of-work", "university", "version-note"
+  "mainfont", "monofont", "program", "sansfont", "school", "^book.submitted$",
+  "supervisor", "^book.title$", "type-of-work", "university", "version-note"
 )
 
-for (i in var_files){
+for (i in var_files){ #nolint
   values <- unlist(get(i))
 
   for (j in var_patterns) {
@@ -60,7 +60,7 @@ for (i in var_files){
 
       if (j == "date") {
         if (!grepl("\\d{4}", values[test][1]) &&
-            !any(values[test][1] == "today", na.rm = TRUE)) {
+              !any(values[test][1] == "today", na.rm = TRUE)) {
           next()
         } else if (any(values[test][1] == "today", na.rm = TRUE)) {
           env_vars[[j]] <- as.character(Sys.Date())
@@ -73,7 +73,7 @@ for (i in var_files){
       }
 
       if (j == "language" &&
-          !grepl("^[a-z]{2}$|^[a-z]{2}\\-[a-zA-Z]{2}$", values[test][1])) {
+            !grepl("^[a-z]{2}$|^[a-z]{2}\\-[a-zA-Z]{2}$", values[test][1])) {
         next()
       }
 
@@ -81,7 +81,7 @@ for (i in var_files){
         if (!grepl(" ", values[test][1])) {
           env_vars[["author-surname"]] <- values[test][1]
           env_vars[["author-given-name"]] <- values[test][1]
-        } else{
+        } else {
           env_vars[["author-surname"]] <-
             stringr::str_extract(values[test][1], "(?i)(?<= )[a-zÀ-ÿ]+$")
 
@@ -93,7 +93,7 @@ for (i in var_files){
         }
 
         env_vars[["author-initials"]] <-
-          rutils:::extract_initials(values[test][1])
+          rutils::extract_initials(values[test][1])
       }
 
       env_vars[[j]] <- values[test][1] |> unname()
@@ -109,6 +109,9 @@ source(here::here("R", "_pre-render-vars.R"))
 
 # Scan Quarto files for citations and add them to references.bib -----
 
+## Uncheck the option "Apply title-casing to titles" in Zotero Better BibTeX
+## preferences (Edit > Settings > Better BibTeX > Miscellaneous).
+
 quarto_yml_pdf_path <- here::here("_quarto-pdf.yml")
 quarto_yml_pdf_vars <- yaml::read_yaml(quarto_yml_pdf_path)
 
@@ -119,7 +122,7 @@ quarto_yml_pdf_vars <- yaml::read_yaml(quarto_yml_pdf_path)
 # from @wmoldham fork `renv::install("wmoldham/rbbt")`.
 
 if (isTRUE(quarto_yml_pdf_vars$format$`abnt-pdf`$zotero)) {
-  rutils:::bbt_write_quarto_bib(
+  quartor:::bbt_write_quarto_bib(
     bib_file = "references.bib",
     dir = c("", "qmd", "tex"),
     pattern = c("\\.qmd$|\\.tex$"),

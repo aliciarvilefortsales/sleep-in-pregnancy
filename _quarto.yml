@@ -11,11 +11,12 @@ profile:
   default: pdf
 book:
   title: >
-    Associations between the duration and quality of sleep of pregnant women in
-    the third trimester with the duration of labor
+    Associations Between the Duration and Quality of Sleep of Pregnant Women in
+    the Third Trimester With the Duration of Labor
   keyword: >
-    Pregnancy. Sleep. Sleep-wake cycle. Sleep quality. Duration of sleep.
-    Childbirth. Duration of childbirth. Actigraphy. MCTQ. PSQI. DASS.
+    Pregnancy. Childbirth. Humanizing Delivery. Natural Childbirth.
+    Duration of childbirth. Obstetrics. Sleep. Sleep quality. Sleep Duration.
+    Actigraphy. Chronobiology.
   language: en-us
   license: "Creative Commons Attribution 4.0 International (CC BY 4.0)"
   submitted: 2025
@@ -36,4 +37,3 @@ citation:
 
 google-scholar: true
 bibliography: references.bib
-

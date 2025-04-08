@@ -2,9 +2,7 @@
 eval: false
 ---
 
-<!-- %:::% .common h1 begin %:::% -->
-# Appendice - Sapopemba survey
-<!-- %:::% .common h1 end %:::% -->
+# Extra – Sapopemba Survey
 
 ```{r}
 #| label: setup
@@ -59,14 +57,14 @@ raw_data <- ss |> googlesheets4::read_sheet(sheet = "Dataset")
 ### Tidying data
 
 ```{r}
-raw_data <- 
+raw_data <-
   data |>
   dplyr::mutate(
     date_on_entry = lubridate::ymd(date_on_entry),
     baby_birth_date = lubridate::ymd(baby_birth_date),
     age = as.numeric(age),
     ultrassom_date = lubridate::ymd(ultrassom_date),
-    ga_on_ultrassom = 
+    ga_on_ultrassom =
       (
         ga_on_ultrassom |>
          stringr::str_extract("^[0-9]*(?=/)") |>
@@ -93,32 +91,6 @@ data |> dplyr::glimpse()
 ### Transforming data
 
 ```{r}
-#' Computes the gestational age start date
-#'
-#' This function computes the gestational age __start__ date given the
-#' ultrasound date and the __actual__ gestational age.
-#'
-#' @param ultrasound A [`Date`][base::as.Date()] object representing the
-#'  ultrasound date.
-#' @param ga A [`Period`][lubridate::period] object representing the
-#'   gestational age.
-#'
-#' @return A [`Date`][base::as.Date()] object representing the gestational age
-#'  start date.
-#' @export
-#'
-#' @examples
-#' ga_start(
-#'   ultrasound = lubridate::dmy("18/10/2022"),
-#'   ga = lubridate::weeks(6) + lubridate::days(3)
-#' )
-#' #> [1] "2022-09-03"
-#'
-#' ga_start(
-#'   ultrasound = lubridate::dmy("18/10/2022"),
-#'   ga = lubridate::period(1, "month") + lubridate::days(10)
-#' )
-#' #> [1] "2022-09-08"
 ga_start <- function(ultrasound, ga) {
   checkmate::assert_date(ultrasound)
   rutils:::assert_period(ga, lower = lubridate::period(0))
@@ -148,7 +120,7 @@ ga_point <- function(ga_start, point, print = TRUE) {
   ga_start <- ga_start |> lubridate::as_date()
   point <- point |> lubridate::as_date()
 
-  out <- 
+  out <-
     lubridate::interval(ga_start, point, tzone ="UTC") |>
      as.numeric() %>%
     `/`(as.numeric(lubridate::ddays())) %>%
@@ -156,10 +128,10 @@ ga_point <- function(ga_start, point, print = TRUE) {
 
   if (isTRUE(print)) {
     out_duration <- out |> lubridate::as.duration()
-    
+
     weeks <- floor(out_duration / lubridate::dweeks())
     days <- out_duration %% lubridate::dweeks() / lubridate::ddays()
-    
+
     cli::cli_alert_info(paste(
       "{.strong",
       "{weeks} {.strong {cli::col_red('week(s)')}}",
@@ -192,9 +164,9 @@ ga_week_int <- function(ga_start, week) {
 ```{r}
 ga_weeks <- function(ga) {
   rutils:::assert_period(ga)
-  
+
   ga <- ga |> lubridate::as.duration()
-  
+
   floor(ga / lubridate::dweeks())
 }
 ```
@@ -202,10 +174,10 @@ ga_weeks <- function(ga) {
 ```{r}
 ga_days <- function(ga) {
   rutils:::assert_period(ga)
-  
+
   ga <- ga |> lubridate::as.duration()
   weeks <- floor(ga / lubridate::dweeks())
-  
+
   ga %% lubridate::dweeks() / lubridate::ddays()
 }
 ```
@@ -213,11 +185,11 @@ ga_days <- function(ga) {
 ```{r}
 ga_weeks_days <- function(ga) {
   rutils:::assert_period(ga)
-  
+
   ga <- ga |> lubridate::as.duration()
   weeks <- floor(ga / lubridate::dweeks())
   days <- ga %% lubridate::dweeks() / lubridate::ddays()
-  
+
   paste0(weeks, "/", days)
 }
 ```
@@ -226,7 +198,7 @@ ga_weeks_days <- function(ga) {
 extract_weeks_from_interval <- function(start, end) {
   checkmate::assert_date(start)
   checkmate::assert_date(end)
-  
+
   lubridate::interval(start, end, tzone ="UTC") |>
     as.numeric() %>%
     `/`(as.numeric(lubridate::dweeks())) |>
@@ -235,7 +207,7 @@ extract_weeks_from_interval <- function(start, end) {
 ```
 
 ```{r}
-data <- 
+data <-
   data |>
   dplyr::mutate(
     ga_start = ga_start(
@@ -256,7 +228,7 @@ data <-
     ),
     ga_on_baby_birth_date_weeks = ga_weeks(ga_on_baby_birth_date),
     ga_on_baby_birth_date_days = ga_days(ga_on_baby_birth_date),
-    duration_from_entry_to_birth = 
+    duration_from_entry_to_birth =
       lubridate::as.period(baby_birth_date - date_on_entry)
   )
 ```
@@ -299,18 +271,18 @@ min_actigraphy_days <- 7
 period_from_interval <- function(start, end) {
   checkmate::assert_date(start)
   checkmate::assert_date(end)
-  
+
   lubridate::interval(start, end, tzone ="UTC") |>
     lubridate::as.period()
 }
 ```
 
 ```{r}
-start <- data |> 
+start <- data |>
   magrittr::extract2("date_on_entry") |>
   min()
 
-end <- data |> 
+end <- data |>
   magrittr::extract2("date_on_entry") |>
   max()
 
@@ -318,7 +290,7 @@ cli::cli_bullets(c(
   "{.strong From}: {start}",
   "{.strong To}: {end}",
   paste0(
-    "{.strong {cli::col_red('Duration')}}: ", 
+    "{.strong {cli::col_red('Duration')}}: ",
     "{period_from_interval(start, end)}"
   )
 ))
@@ -333,17 +305,17 @@ n_fit <- function(data, start, end, min_actigraphy_days = 7, print = TRUE) {
   checkmate::assert_date(end)
   checkmate::assert_number(min_actigraphy_days)
   checkmate::assert_flag(print)
-  
-  data <- 
-    data |> 
+
+  data <-
+    data |>
     dplyr::filter(
       date_on_entry >= start,
       date_on_entry <= end
     )
-  
+
   total <- data |> nrow()
-  
-  n_fit <- 
+
+  n_fit <-
     data |>
     dplyr::filter(
       age >= 18,
@@ -351,13 +323,13 @@ n_fit <- function(data, start, end, min_actigraphy_days = 7, print = TRUE) {
       birth_center_delivery == TRUE
     ) |>
     nrow()
-  
+
   n_fit_per <- n_fit / total * 100
-  
+
   if (isTRUE(print)) {
     cli::cli_bullets(c(
       paste0(
-      "{.strong {cli::col_red('Number of fit pregnant women')}}: ", 
+      "{.strong {cli::col_red('Number of fit pregnant women')}}: ",
       "{n_fit}/{total}"
       ),
       paste0(
@@ -381,7 +353,7 @@ n_fit <- function(data, start, end, min_actigraphy_days = 7, print = TRUE) {
 ```
 
 ```{r}
-data |> 
+data |>
   n_fit(
     start = start,
     end = end,
@@ -391,15 +363,15 @@ data |>
 ```
 
 ```{r}
-data |> 
+data |>
   dplyr::filter(
     date_on_entry >= start,
     date_on_entry <= end
   ) |>
   ggplot2::ggplot(
     ggplot2::aes(
-      x = 
-        duration_from_entry_to_birth |> 
+      x =
+        duration_from_entry_to_birth |>
         lubridate::as.duration() %>%
         `/`(lubridate::ddays())
     )
@@ -426,8 +398,8 @@ data |>
 
 ```{r}
 gain_minus_loss <- function(
-    data, 
-    ga_cut, 
+    data,
+    ga_cut,
     min_actigraphy_days = 7,
     print = TRUE
   ) {
@@ -435,7 +407,7 @@ gain_minus_loss <- function(
   rutils:::assert_period(ga_cut)
   checkmate::assert_number(min_actigraphy_days)
   checkmate::assert_flag(print)
-  
+
   gain <-
     data |>
     dplyr::filter(
@@ -445,7 +417,7 @@ gain_minus_loss <- function(
       birth_center_delivery == TRUE
     ) |>
     nrow()
-  
+
   loss <-
     data |>
     dplyr::filter(
@@ -458,11 +430,11 @@ gain_minus_loss <- function(
 
   gain_minus_loss <- gain - loss
   total <- gain + loss
-  
+
   if (isTRUE(print)) {
     cli::cli_bullets(c(
       paste0(
-        "{.strong {cli::col_blue('Gestational age cut')}}: ", 
+        "{.strong {cli::col_blue('Gestational age cut')}}: ",
         " {ga_weeks_days(ga_cut)}"
       ),
       paste0("{.strong Gain}: {gain}"),
@@ -471,12 +443,12 @@ gain_minus_loss <- function(
       paste0("{.strong {cli::col_red('Gain - Loss')}}: {gain_minus_loss}")
     ))
   }
-  
+
   invisible(
     list(
-      ga_cut = ga_cut, 
-      gain = gain, 
-      loss = loss, 
+      ga_cut = ga_cut,
+      gain = gain,
+      loss = loss,
       total = total,
       gain_minus_loss = gain_minus_loss,
       min_actigraphy_days = min_actigraphy_days
@@ -499,8 +471,8 @@ ga_options <- purrr::map_vec(
 stats <- purrr::map_df(
   .x = ga_options,
   .f = function(x) {
-    list <- 
-      data |> 
+    list <-
+      data |>
       gain_minus_loss(
         ga_cut = x,
         min_actigraphy_days = min_actigraphy_days,
@@ -514,13 +486,13 @@ stats <- purrr::map_df(
 ```{r}
 indexes <- stats$gain_minus_loss == max(stats$gain_minus_loss, na.rm = TRUE)
 
-ga_max_by_gain_minus_loss <- 
+ga_max_by_gain_minus_loss <-
   stats |>
   magrittr::extract2("ga_cut") %>%
   `[`(indexes) |>
   dplyr::last()
 
-data |> 
+data |>
   gain_minus_loss(
   ga_cut = ga_max_by_gain_minus_loss,
   min_actigraphy_days = min_actigraphy_days,
@@ -532,7 +504,7 @@ data |>
 stats |>
   ggplot2::ggplot(
     ggplot2::aes(
-      x = ga_cut |> 
+      x = ga_cut |>
         lubridate::as.duration() %>%
         `/`(lubridate::dweeks()),
       y = gain_minus_loss
@@ -556,14 +528,14 @@ data |>
   ) |>
   ggplot2::ggplot(
     ggplot2::aes(
-      x = ga_on_entry |> 
+      x = ga_on_entry |>
         lubridate::as.duration() %>%
         `/`(lubridate::dweeks())
     )
   ) +
   ggplot2::geom_histogram(bins = 30) +
   ggplot2::geom_vline(
-    xintercept = 
+    xintercept =
       lubridate::dweeks(37) %>%
       `+`(lubridate::ddays(6)) %>%
       `/`(lubridate::dweeks()),
@@ -591,14 +563,14 @@ data |>
   ) |>
   ggplot2::ggplot(
     ggplot2::aes(
-      x = ga_on_entry |> 
+      x = ga_on_entry |>
         lubridate::as.duration() %>%
         `/`(lubridate::dweeks())
     )
   ) +
   ggplot2::geom_histogram(bins = 30) +
   ggplot2::geom_vline(
-    xintercept = 
+    xintercept =
       lubridate::dweeks(37) %>%
       `+`(lubridate::ddays(6)) %>%
       `/`(lubridate::dweeks()),

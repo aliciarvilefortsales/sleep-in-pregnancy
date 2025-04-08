@@ -1,19 +1,16 @@
-# library(checkmate, quietly = TRUE)
-# See: <https://pt.wikipedia.org/wiki/Cadastro_de_Pessoas_F%C3%ADsicas>
-
 test_cpf <- function(cpf) {
   checkmate::assert_atomic(cpf)
   checkmate::assert_character(as.character(cpf), pattern = "^\\d{11}$")
 
   vapply(
     X = cpf,
-    FUN = test_cpf_builder,
+    FUN = test_cpf_scalar,
     FUN.VALUE = logical(1),
     USE.NAMES = FALSE
   )
 }
 
-test_cpf_builder <- function(cpf) {
+test_cpf_scalar <- function(cpf) {
   checkmate::assert_atomic(cpf, len = 1)
   checkmate::assert_character(as.character(cpf), pattern = "^\\d{11}$")
 

@@ -1,7 +1,3 @@
-# See <https://git-scm.com/docs/gitignore>.
-
-*_cache
-*_files
-*.html
-
-/images/
+*
+!*.gitignore
+!*.qmd

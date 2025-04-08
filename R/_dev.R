@@ -1,30 +1,20 @@
 # # For development use only (comment out the code after use)
 #
+# .libPaths()
 # cffr::cff_validate()
-# knitr::clean_cache()
-# lintr::use_lintr()
-# lintr::lint_dir("R")
-# renv::init()
-# utils::install.packages("renv", dependencies = TRUE)
-# renv::equip()
+# grDevices::dev.off()
+# quartor:::bbt_scan_citation_keys()
+# quartor:::bbt_write_quarto_bib()
+# quartor:::clean_quarto_mess()
 # renv::activate()
+# renv::clean(actions = "unused.packages")
 # renv::deactivate()
-# renv::status()
 # renv::dependencies("R/_setup.R")
-# renv::install()
-# renv::update()
+# renv::equip()
 # renv::restore()
 # renv::snapshot()
-# renv::clean(actions = "unsed.packages")
-# rutils:::bbt_scan_citation_keys()
-# rutils:::bbt_write_quarto_bib()
-# rutils:::set_quarto_speel_check()
-# rutils:::gather_words_from_spell_check(pattern = "\\.qmd$|\\.Rmd$")
-# rutils:::spell_check_quarto(pattern = "\\.qmd$|\\.Rmd$")
-# rutils:::update_quarto_wordlist(pattern = "\\.qmd$|\\.Rmd$")
-# rutils:::clean_quarto_mess()
-# rutils:::quarto_status("drafting")
-# spelling::spell_check_files("index.qmd")
+# renv::status()
+# renv::update()
 # tcltk::tk_choose.files()
 # urlchecker::url_check()
 # urlchecker::url_update()
@@ -37,7 +27,7 @@
 # targets::tar_outdated()
 # data <- targets::tar_read(geocoded_data)
 
-# # Quarto (see <https://quarto.org/docs/projects/quarto-projects.html>)
+# # Quarto
 #
 # source(here::here("R", "_pre-render-pdf.R"))
 # source(here::here("R", "_pre-render-html.R"))
@@ -66,7 +56,7 @@
 #
 # osfr::osf_auth(osf_pat)
 #
-# osf_id <- "https://osf.io/cbqsa"
+# osf_id <- "https://osf.io/s4tbz"
 # pattern <- "lookup.rda"
 #
 # file <-
@@ -82,22 +72,18 @@
 # load(file)
 # lockr::lock_file(file, public_key = public_key, remove_file = TRUE)
 
-# # {lockr}
+# # Encryption
 #
 # password <- Sys.getenv("MASTERSTHESIS_PASSWORD")
 #
 # lockr::rsa_keygen()
-#
 # lockr::lock_dir(dir = "temp", public_key = "_ssh/id_rsa.pub")
-#
 # lockr::unlock_dir(
 #   dir = "temp", private_key = "_ssh/id_rsa", password = password
 # )
-#
 # lockr::lock_file(
-#   rstudioapi::selectFile(), public_key = "_ssh/id_rsa.pub"
+#   tcltk::tk_choose.files(), public_key = "_ssh/id_rsa.pub"
 # )
-#
 # lockr::unlock_file(
-#   rstudioapi::selectFile(), private_key = "_ssh/id_rsa", password = password
+#   tcltk::tk_choose.files(), private_key = "_ssh/id_rsa", password = password
 # )

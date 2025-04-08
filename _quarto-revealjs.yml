@@ -5,12 +5,18 @@ project:
   pre-render: "R/_pre-render-revealjs.R"
   post-render: "R/_post-render-revealjs.R"
 
-title: >
-  Associations between the duration and quality of sleep of pregnant women in
-  the third trimester with the duration of labor
+title: "Associations Between Sleep and Labor Duration"
 author: "Alícia Sales"
 institute: "University of São Paulo"
 date: today
+date-format: "DD/MM/YYYY"
+
+website:
+  favicon: images/favicon.png
+  site-url: https://aliciarvilefortsales.github.io/mastersthesis/
+  repo-url: https://github.com/aliciarvilefortsales/mastersthesis/
+  issue-url: https://github.com/aliciarvilefortsales/mastersthesis/issues/
+  repo-branch: main
 
 format:
   revealjs:
@@ -30,7 +36,10 @@ format:
     fig-align: center
     theme: [default, brand, scss/slides.scss]
     pdf-max-pages-per-slide: 1
+    template-partials:
+      - html/title-slide.html
     menu:
       titleSelector: [h1 h2]
       useTextContentForMissingTitles: false
       hideMissingTitles: false
+    include-in-header: "html/include-in-header.html"

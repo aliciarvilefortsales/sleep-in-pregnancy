@@ -1,0 +1,196 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "",
+    "section": "",
+    "text": "Welcome\nYou are viewing the web version of this thesis. Click here or on the PDF icon in the menu to see the PDF version.\nAll analyses in this document are reproducible and were conducted using the R programming language along with the Quarto publishing system. Click here or on the GitHub icon in the menu to access the research compendium for the thesis.",
+    "crumbs": [
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#citation",
+    "href": "index.html#citation",
+    "title": "",
+    "section": "Citation",
+    "text": "Citation\nFor attribution, please cite this work as:\nSales, A. R. V. (2025). Associations Between the Duration and Quality of Sleep of Pregnant Women in the Third Trimester With the Duration of Labor  [Master’s Thesis, University of São Paulo]. https://aliciarvilefortsales.github.io/mastersthesis/\nBibTeX citation:\n@mastersthesis{sales2025,\n  title = {Associations Between the Duration and Quality of Sleep of Pregnant Women in the Third Trimester With the Duration of Labor\n},\n  author = {Alícia Rafaelly Vilefort Sales},\n  year = {2025},\n  address = {São Paulo},\n  school  = {University of São Paulo},\n  langid = {en},\n  url = {https://aliciarvilefortsales.github.io/mastersthesis/},\n  note = {Preliminary version}\n}",
+    "crumbs": [
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "qmd/errata.html",
+    "href": "qmd/errata.html",
+    "title": "Errata",
+    "section": "",
+    "text": "Sales, A. R. V. (2025). Associations Between the Duration and Quality of Sleep of Pregnant Women in the Third Trimester With the Duration of Labor [Master’s Thesis, University of São Paulo].\n\nThis is the preliminary version of this thesis (version &lt;1.0.0). Any required corrections will be listed here upon approval.",
+    "crumbs": [
+      "Preliminary Sections",
+      "Errata"
+    ]
+  },
+  {
+    "objectID": "qmd/inscription.html",
+    "href": "qmd/inscription.html",
+    "title": "Inscription",
+    "section": "",
+    "text": "I dedicate this work to …",
+    "crumbs": [
+      "Preliminary Sections",
+      "Inscription"
+    ]
+  },
+  {
+    "objectID": "qmd/acknowledgments.html",
+    "href": "qmd/acknowledgments.html",
+    "title": "Acknowledgments",
+    "section": "",
+    "text": "I would like to acknowledge and express my gratitude to the following persons and organizations:\nThe Support Program for Student Permanence and Education (PAPFE) of USP, which enabled me to get this far.\nThe Coordination for the Improvement of Higher Education Personnel (CAPES), for funding this work and enabling my presence in graduate studies.",
+    "crumbs": [
+      "Preliminary Sections",
+      "Acknowledgments"
+    ]
+  },
+  {
+    "objectID": "qmd/epigraph.html",
+    "href": "qmd/epigraph.html",
+    "title": "Epigraph",
+    "section": "",
+    "text": "Nullius in verba1",
+    "crumbs": [
+      "Preliminary Sections",
+      "Epigraph"
+    ]
+  },
+  {
+    "objectID": "qmd/epigraph.html#footnotes",
+    "href": "qmd/epigraph.html#footnotes",
+    "title": "Epigraph",
+    "section": "",
+    "text": "The Royal Society. (n.d.). History of the Royal Society. https://royalsociety.org/about-us/history/↩︎",
+    "crumbs": [
+      "Preliminary Sections",
+      "Epigraph"
+    ]
+  },
+  {
+    "objectID": "qmd/vernacular-abstract.html",
+    "href": "qmd/vernacular-abstract.html",
+    "title": "Abstract",
+    "section": "",
+    "text": "Sales, A. R. V. (2025). Associations between the duration and quality of sleep of pregnant women in the third trimester with the duration of labor  [Master’s Thesis, University of São Paulo]. https://doi.org/10.17605/OSF.IO/S4TBZ\n\nThe text below is related to the project of this thesis. The final abstract can only be produced when the research is completed.\nAmong the biopsychosocial changes that occur during pregnancy are alterations in the sleep-wake cycle pattern. Research suggests that there are associations between the duration and quality of sleep in pregnant women during the prenatal period and adverse maternal-infant health outcomes. The primary aim of this project is to investigate the presence/absence of significant associations between the duration and quality of sleep in pregnant women in the third trimester and the duration of labor. For this purpose, a study will be conducted with 133 pregnant women in the third trimester, followed up at SUS birthing centers located in the city of São Paulo. Demographic, anthropometric, obstetric, actigraphic, sleep-related, and psychological state data will be collected from the participants, in addition to secondary data from the women’s medical records and prenatal books. The study has already obtained all necessary ethical approvals from the competent authorities. The results will be analyzed by comparing group means through an analysis of covariance (ANCOVA). The hypothesis is that poorer sleep quality and duration throughout pregnancy are associated with a longer duration of labor. In addition to training and capacitating professionals and generating knowledge on a public health issue, it is expected that this study will promote and contribute to the development of new services and technologies for monitoring pregnant women, highlighting the relevance of the sleep-wake cycle for maternal-infant health. \nKeywords: Pregnancy. Childbirth. Humanizing Delivery. Natural Childbirth. Duration of childbirth. Obstetrics. Sleep. Sleep quality. Sleep Duration. Actigraphy. Chronobiology.",
+    "crumbs": [
+      "Preliminary Sections",
+      "Abstract"
+    ]
+  },
+  {
+    "objectID": "qmd/foreign-abstract.html",
+    "href": "qmd/foreign-abstract.html",
+    "title": "Resumo",
+    "section": "",
+    "text": "Sales, A. R. V. (2025). Associações entre a duração e a qualidade do sono de gestantes no terceiro trimestre com a duração do trabalho de parto [Dissertação de Mestrado, Universidade de São Paulo].\n\nO texto abaixo está relacionado ao projeto desta dissertação. O resumo final só poderá ser produzido quando a pesquisa for finalizada.\nDentre as alterações biopsicossociais que ocorrem durante a gravidez estão as mudanças no padrão do ciclo sono-vigília. Pesquisas sugerem que há associações entre a duração e a qualidade do sono de gestantes no período pré-natal com desfechos adversos na saúde materno-infantil. O objetivo deste projeto é investigar a presença/ausência de associações significativas entre a duração e a qualidade do sono de gestantes no terceiro trimestre com a duração do trabalho de parto. Para isso, será realizado um estudo com 133 gestantes no terceiro trimestre gestacional acompanhadas em casas de parto do SUS, localizadas no município de São Paulo. Serão coletados dados sociodemográficos, antropométricos, obstétricos, actigráficos, dados relacionados ao sono e ao estado psicológico das participantes, além de dados secundários dos prontuários e cadernetas das gestantes. O estudo já obteve todas as aprovações éticas para sua operação por parte das autoridades competentes. Os resultados serão analisados pela comparação das médias entre grupos por meio de uma análise de covariância (ANCOVA). A hipótese é que uma menor qualidade e duração de sono no final do terceiro trimestre gestacional estão associadas a uma maior duração do trabalho de parto. Além de formar e capacitar profissionais e gerar conhecimento em um assunto de interesse público, espera-se que este estudo promova e contribua para o desenvolvimento de novos serviços e tecnologias de acompanhamento de gestantes, destacando a relevância do ciclo sono-vigília para a saúde materno-infantil. \nPalavras-chaves: Gravidez. Parto. Parto Humanizado. Parto Natural. Duração do parto. Obstetrícia. Sono. Qualidade do sono. Duração do sono. Actigrafia. Cronobiologia.",
+    "crumbs": [
+      "Preliminary Sections",
+      "Resumo"
+    ]
+  },
+  {
+    "objectID": "qmd/list-of-abbreviations.html",
+    "href": "qmd/list-of-abbreviations.html",
+    "title": "Abbreviations and Acronyms",
+    "section": "",
+    "text": "F\n\nSubscript indicating a relation with work-free days\n\nW\n\nSubscript indicating a relation with workdays\n\nBT\n\nLocal time of going to bed\n\nFD\n\nNumber of work-free days per week\n\nGU\n\nLocal time of getting out of bed\n\nHO\n\nHorne & Ostberg’s morningness-eveningness questionnaire (same as MEQ)\n\nLE\n\nLight exposure\n\nLEweek\n\n\nAverage weekly light exposure\n\nMCTQ\n\nMunich ChronoType Questionnaire\n\nMCTQPT\n\n\nPortuguese version of the MCTQ\n\nMEQ\n\nMorningness-Eveningness Questionnaire\n\nMSF\n\nMidsleep on work-free days. Local time of the midpoint between sleep onset and sleep end on work-free days\n\nMSFsc\n\n\nMidsleep on work-free days with a sleep correction – MCTQ’s chronotype proxy. Same as MSF with a sleep correction (SC) made when a possible sleep compensation related to a lack of sleep on workdays is identified.\n\nMSW\n\nMidsleep on workdays. Local time of the midpoint between sleep onset and sleep end on workdays.\n\nPRC\n\nPhase response curve\n\nSD\n\nSleep duration\n\nSDweek\n\n\nAverage weekly sleep duration\n\nSE\n\nLocal time of sleep end\n\nSI\n\n“Sleep inertia”. Despite the name, this abbreviation represents the time that a person takes to get up after sleep end. It is used this way by the MCTQ authors.\n\nSJL\n\nAbsolute social jetlag\n\nSJLrel\n\n\nRelative social jetlag\n\nSJLsc\n\n\nJankowski’s sleep-corrected social jetlag\n\nSJLsc-rel\n\n\nJankowski’s relative sleep-corrected social jetlag\n\nSlossweek\n\n\nWeekly sleep loss\n\nSO\n\nLocal time of sleep onset\n\nSlat\n\nSleep latency, i.e., time (duration) to fall asleep after deciding to sleep\n\nSPrep\n\nLocal time of preparing to sleep\n\nTBT\n\nTotal time in bed\n\nWD\n\nNumber of workdays per week",
+    "crumbs": [
+      "Preliminary Sections",
+      "Abbreviations and Acronyms"
+    ]
+  },
+  {
+    "objectID": "qmd/list-of-symbols.html",
+    "href": "qmd/list-of-symbols.html",
+    "title": "List of Symbols",
+    "section": "",
+    "text": "For an extensive list of chronobiology related symbols, please refer to Aschoff (1965) and Marques & Oda (2012).\n\n\\(\\tau\\)\n\nPeriod of a rhythm in free flow. Only revealed under constant environmental conditions.\n\n\\(T\\)\n\nZeitgeber period\n\n\\(\\phi\\)\n\nPhase\n\n\\(\\Delta\\phi\\)\n\nPhase shift\n\n\\(+\\Delta\\phi\\)\n\nPhase advance\n\n\\(-\\Delta\\phi\\)\n\nPhase delay\n\n\\(\\Psi\\)\n\nPhase relation \n\n\n\n\n\n\nAschoff, J. (Ed.). (1965). Circadian clocks (\\(&lt;\\)https://www.google.com.br/books/edition/Circadian_Clocks/-4gLAQAAIAAJ?hl=pt-BR\\(&gt;\\)). North Holland.\n\n\nMarques, M. D., & Oda, G. (2012). Glossário. Revista da Biologia, 9(3, 3). https://www.revistas.usp.br/revbiologia/article/view/114816",
+    "crumbs": [
+      "Preliminary Sections",
+      "List of Symbols"
+    ]
+  },
+  {
+    "objectID": "qmd/chapter-1.html",
+    "href": "qmd/chapter-1.html",
+    "title": "\n1  Introduction\n",
+    "section": "",
+    "text": "You are reading the work-in-progress of this thesis.\nThis chapter is currently a dumping ground for ideas, and I don’t recommend reading it.\n\n\n\n\nYou are currently viewing the preliminary web version of this master’s thesis.\nThis document follows the collection of articles thesis format. This first chapter serves as an introduction to the thesis subject, providing its justification, aims, and a list of all projects and related activities produced during its development. The subsequent chapters consist of a series of articles connected to the thesis, with the exception of the last one, which encompasses a discussion and final remarks.\nAll analyses in this document are reproducible and were conducted using the R programming language along with the Quarto publishing system.\nGiven its preliminary nature, not all chapters are ready for reading. However, the author has chosen to display the entire state of the thesis rather than presenting only polished sections. This approach provides readers with a more comprehensive understanding of the work in progress. Chapters not suitable for reading will include a call block indicating their status.",
+    "crumbs": [
+      "Chapters",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "qmd/chapter-2.html",
+    "href": "qmd/chapter-2.html",
+    "title": "\n2  The Expression of the Sleep-Wake Cycle Throughout Pregnancy\n",
+    "section": "",
+    "text": "You are reading the work-in-progress of this thesis.\nThis chapter is currently a dumping ground for ideas, and I don’t recommend reading it.\n\n\n\n\n\n\n\n\n\nTarget journal\n\n\n\n\n\nChronobiology International (IF 2022: 2.8/JCR | A1/2017-2020).\n\nJournal of Biological Rhythms (IF 2022: 3.5/JCR | A2/2017-2020).\n\n\n\n\n\n\n\n\n\nThe following study was performed by Alícia Rafaelly Vilefort Sales (ARVS), Daniel Vartanian (DV), Maria Augusta Medeiros de Andrade (MAMA), Mario Pedrazzoli (MP) and Christiane Borges do Nascimento Chofakian (CBNC).\nARVS, DV and MAMA contributed to the study’s design. ARVS implemented the study, performed the statistical analysis, and authored the manuscript. CBNC and MP served as scientific advisors. All authors participated in discussions about the results and contributed to the final manuscript revision.\nFuture reference: Sales, A. R. V., Vartanian, D., Andrade, M. A. M., Pedrazzoli, M., & Chofakian, C. B. N. (2024). The expression of the sleep-wake cycle throughout pregnancy: a systematic and quantitative literature review. Chronobiology International.",
+    "crumbs": [
+      "Chapters",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>The Expression of the Sleep-Wake Cycle Throughout Pregnancy</span>"
+    ]
+  },
+  {
+    "objectID": "qmd/chapter-3.html",
+    "href": "qmd/chapter-3.html",
+    "title": "\n3  Associations Between the Duration and Quality of Sleep of Pregnant Women in the Third Trimester With the Duration of Labor\n",
+    "section": "",
+    "text": "You are reading the work-in-progress of this thesis.\nThis chapter is currently a dumping ground for ideas, and I don’t recommend reading it.\n\n\n\n\n\n\n\n\n\nTarget Journal\n\n\n\n\n\nChronobiology International (IF 2022: 2.8/JCR | A1/2017-2020).\n\nJournal of Biological Rhythms (IF 2022: 3.5/JCR | A2/2017-2020).\n\n\n\n\n\n\n\n\n\nThe following study was performed by Alícia Rafaelly Vilefort Sales (ARVS), Daniel Vartanian (DV), Maria Augusta Medeiros de Andrade (MAMA), Mario Pedrazzoli (MP) and Christiane Borges do Nascimento Chofakian (CBNC).\nARVS, DV and MAMA contributed to the study’s design. ARVS implemented the study, performed the statistical analysis, and authored the manuscript. CBNC and MP served as scientific advisors. All authors participated in discussions about the results and contributed to the final manuscript revision.\nFuture reference: Sales, A. R. V., Vartanian, D., Andrade, M. A. M., Pedrazzoli, M., & Chofakian, C. B. N. (2024). Associations between the duration and quality of sleep of pregnant women in the third trimester with the duration of labor. Chronobiology International.",
+    "crumbs": [
+      "Chapters",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Associations Between the Duration and Quality of Sleep of Pregnant Women in the Third Trimester With the Duration of Labor</span>"
+    ]
+  },
+  {
+    "objectID": "qmd/chapter-4.html",
+    "href": "qmd/chapter-4.html",
+    "title": "\n4  Conclusion\n",
+    "section": "",
+    "text": "You are reading the work-in-progress of this thesis.\nThis chapter is currently a dumping ground for ideas, and I don’t recommend reading it.",
+    "crumbs": [
+      "Chapters",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Conclusion</span>"
+    ]
+  },
+  {
+    "objectID": "qmd/references.html",
+    "href": "qmd/references.html",
+    "title": "References",
+    "section": "",
+    "text": "In accordance with the American Psychological Association (APA) Style, 7th edition.\n\n\nAschoff, J. (Ed.). (1965). Circadian clocks (&lt;https://www.google.com.br/books/edition/Circadian_Clocks/-4gLAQAAIAAJ?hl=pt-BR&gt;). North Holland.\n\n\nLatinitium. (n.d.). Latin dictionaries. Latinitium. Retrieved\nSeptember 21, 2023, from https://latinitium.com/latin-dictionaries/\n\n\nMarques, M. D., & Oda, G. (2012). Glossário. Revista da\nBiologia, 9(3, 3). https://www.revistas.usp.br/revbiologia/article/view/114816\n\n\nPittendrigh, C. S. (1960). Circadian rhythms and the circadian\norganization of living systems. Cold Spring Harbor Symposia on\nQuantitative Biology, 25, 159–184. https://doi.org/10.1101/SQB.1960.025.01.015",
+    "crumbs": [
+      "References"
+    ]
+  },
+  {
+    "objectID": "qmd/glossary.html",
+    "href": "qmd/glossary.html",
+    "title": "Glossary",
+    "section": "",
+    "text": "For an extensive list of chronobiology related terms and definitions, please refer to Aschoff (1965) and Marques & Oda (2012).\n\nCircadian rhythm\n\nA rhythm with a period close to a day/24h, an approximation to the period of the earth’s rotation (Pittendrigh, 1960). From the Latin circā, around, and dĭes, day (Latinitium, n.d.). Example: the sleep-wake cycle.\n\n\n\n\n\n\nAschoff, J. (Ed.). (1965). Circadian clocks (\\(&lt;\\)https://www.google.com.br/books/edition/Circadian_Clocks/-4gLAQAAIAAJ?hl=pt-BR\\(&gt;\\)). North Holland.\n\n\nLatinitium. (n.d.). Latin dictionaries. Latinitium. Retrieved September 21, 2023, from https://latinitium.com/latin-dictionaries/\n\n\nMarques, M. D., & Oda, G. (2012). Glossário. Revista da Biologia, 9(3, 3). https://www.revistas.usp.br/revbiologia/article/view/114816\n\n\nPittendrigh, C. S. (1960). Circadian rhythms and the circadian organization of living systems. Cold Spring Harbor Symposia on Quantitative Biology, 25, 159–184. https://doi.org/10.1101/SQB.1960.025.01.015",
+    "crumbs": [
+      "Glossary"
+    ]
+  },
+  {
+    "objectID": "qmd/appendix-1.html",
+    "href": "qmd/appendix-1.html",
+    "title": "Appendix A — Appendix A",
+    "section": "",
+    "text": "You are reading the work-in-progress of this thesis.\nThis chapter is currently a dumping ground for ideas, and I don’t recommend reading it.",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Appendix A</span>"
+    ]
+  }
+]

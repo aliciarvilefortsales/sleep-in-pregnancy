@@ -2,15 +2,13 @@
 eval: false
 ---
 
-<!-- %:::% .common h1 begin %:::% -->
-# Appendice - Mean stats for actigraphy data
-<!-- %:::% .common h1 end %:::% -->
+# Extra – Mean stats for actigraphy data
 
 ```{r}
 #| label: setup
 #| include: false
 
-source(here::here("R/quarto-setup.R"))
+source(here::here("R", "_setup.R"))
 ```
 
 ## Overview
@@ -92,7 +90,7 @@ data |> dplyr::glimpse()
 ```{r}
 hms_to_decimal_hours <- function(x) {
   rutils:::assert_hms(x)
-  
+
   x |>
     as.numeric() %>%
     `/`(60 * 60)
@@ -102,7 +100,7 @@ hms_to_decimal_hours <- function(x) {
 ```{r}
 decimal_hours_to_hms <- function(x) {
   checkmate::assert_numeric(x)
-  
+
   x %>%
     `*`(60 * 60) |>
     hms::as_hms()
@@ -111,14 +109,14 @@ decimal_hours_to_hms <- function(x) {
 
 ```{r}
 hms_to_circular <- function(
-    x, 
+    x,
     ...,
-    type = "angles", 
-    units = "hours", 
+    type = "angles",
+    units = "hours",
     template = "clock24"
 ) {
   rutils:::assert_hms(x)
-  
+
   x |>
     hms_to_decimal_hours() |>
     circular::circular(
@@ -134,8 +132,8 @@ hms_to_circular <- function(
 circular_time_stat <- function(x, fun = circular::mean.circular) {
   rutils:::assert_hms(x)
   checkmate::assert_function(fun)
-  
-  if (identical(fun, circular::sd.circular) || 
+
+  if (identical(fun, circular::sd.circular) ||
       identical(fun, stats::sd)) {
     x |>
       hms_to_circular() |>
@@ -184,7 +182,7 @@ linear_time_stat <- function(x, fun = mean) {
 rounded_stat <- function(x, fun = mean) {
   checkmate::assert_numeric(x)
   checkmate::assert_function(fun)
-  
+
   x |>
     fun() |>
     round(3)
@@ -214,7 +212,7 @@ aggregate_mean_data <-
   )|>
   tidyr::pivot_longer(
     cols = dplyr::everything(),
-    names_to = c(".value", "type"), 
+    names_to = c(".value", "type"),
     names_sep = "_(?!.*_)",
   ) |>
   dplyr::relocate(tts_fps, .after = tts)
@@ -245,7 +243,7 @@ aggregate_sd_data <-
   )|>
   tidyr::pivot_longer(
     cols = dplyr::everything(),
-    names_to = c(".value", "type"), 
+    names_to = c(".value", "type"),
     names_sep = "_(?!.*_)",
   ) |>
   dplyr::relocate(tts_fps, .after = tts)
@@ -295,8 +293,8 @@ circular_vector |> alt_circular_time_stat(fun = stats::sd)
 ```{r}
 dplyr::tibble(
   original = circular_vector,
-  processed = circular_vector |> 
-    hms_to_decimal_hours() |> 
+  processed = circular_vector |>
+    hms_to_decimal_hours() |>
     decimal_hours_to_hms()
 )
 ```

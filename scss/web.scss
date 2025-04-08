@@ -1,15 +1,12 @@
 /*-- scss:defaults --*/
 
-// See: <https://quarto.org/docs/output-formats/html-themes.htm>.
-// See: <https://quarto.org/docs/authoring/brand.html>.
-
 $content-padding-top: 1.25rem;
 
-$callout-color-note: #EA7701;
-$callout-color-tip: #EA7701;
-$callout-color-caution: #EA7701;
-$callout-color-warning: #EA7701;
-$callout-color-important: #EA7701;
+$callout-color-note: #63483E;
+$callout-color-tip: #63483E;
+$callout-color-caution: #63483E;
+$callout-color-warning: #63483E;
+$callout-color-important: #63483E;
 
 /*-- scss:rules --*/
 
@@ -40,10 +37,6 @@ div.sidebar-item-container .active {
 div.sidebar-item-container .active, div.sidebar-item-container .show>.nav-link, div.sidebar-item-container .sidebar-link>code {
   color: $primary;
 }
-
-// #quarto-margin-sidebar.sidebar.margin-sidebar {
-//   margin-top: 1.25rem
-// }
 
 /* Headings ----- */
 
@@ -138,14 +131,10 @@ code a:any-link {
   text-align: center;
 }
 
-.brandprimary {
-  color: $primary;
+.brandorange {
+  color: $primary !important;
 }
 
-.brandsecondary {
-  color: $secondary;
-}
-
-.brandterciary {
-  color: $terciary;
+.footnote-ref ~ .footnote-ref :before {
+  content: ', '
 }

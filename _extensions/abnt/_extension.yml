@@ -1,14 +1,5 @@
 title: "{abnt}: Quarto format for ABNT theses and dissertations"
 author: "Daniel Vartanian"
-  # name: "Daniel Vartanian"
-  # orcid: 0000-0001-7782-759X
-  # url: https://linktr.ee/danielvartan
-  # email: danvartan@gmail.com
-  # corresponding: true
-  # affiliation:
-  #   - name: University of São Paulo
-  #   - Country: Brazil
-  #   - url: https://www.usp.br
 abstract: >
   Quarto format designed for theses and dissertations that adhere to the
   standards of the Brazilian Association of Technical Standards (ABNT).
@@ -16,9 +7,9 @@ description: >
   Quarto format designed for theses and dissertations that adhere to the
   standards of the Brazilian Association of Technical Standards (ABNT).
 keyword: >-
-    abnt. quarto. quarto format. thesis template. reproducibility.
-    open science.
-version: 0.4.0
+  ABNT, Quarto, Quarto format, Thesis template, Reproducibility,
+  Open science
+version: 0.6.0
 quarto-required: ">=1.6.0"
 license:
   text: >
@@ -49,12 +40,12 @@ contributes:
     common:
       df-print: kable
     pdf:
+      pdf-engine: lualatex
       documentclass: abntex2
       # Install the fonts before rendering
-      # (See the extention `ttf` and `otf` folder)
+      # (See the extension `ttf` and `otf` folder)
       # To get font family names see `systemfonts::system_fonts()`
-      # For "DM Sans", discard the variable sizes (e.g., "18pt") from the files.
-      mainfont: DM Sans # Base font {\rmdefault\rmfmaily}
+      mainfont: Poppins # Base font {\rmdefault\rmfmaily}
       sansfont: Poppins # Heading font {\sfdefault\sffamily}
       monofont: DM Mono # Code font {\ttdefault\ttfamily}
       monofontoptions:
@@ -78,11 +69,11 @@ contributes:
       lang: en # options: [en, pt-br, es, fr]
       language: "../_extensions/abnt/_language.yml"
       babel-lang: english # options: [english, brazil, spanish, french]
-      other-babel-lang: # Don not repeat 'babel-lang' here.
+      other-babel-lang: # Don not repeat 'babel-lang' here
         - french
         - spanish
         - brazil
-      cite-method: biblatex # Do not remove it.
+      cite-method: biblatex # Do not remove it
       biblio-style: abnt # options: [abnt, abnt-ibid, abnt-numeric, apa]
       biblio-title: REFERENCES
       biblio-footnote: >
@@ -94,7 +85,7 @@ contributes:
         - url=true
         - useprefix=false
         - giveninits=true
-      bibhang: 0cm # Use 0.5cm if `biblio-style: apa`.
+      bibhang: 0cm # Use 0.5cm if `biblio-style: apa`
       bibparsep: 1ex
       zotero: false
       index-page: false
@@ -111,14 +102,11 @@ contributes:
       code-block-bg: "#F1F3F5"
       fig-format: png
       fig-dpi: 150
-      # See: <https://quarto.org/docs/computations/
-      #       execution-options.html#figure-options>.
-      fig-width: 5.5 # Default: 5.5
-      fig-height: 4 # Default: 3.5
-      # See: <https://quarto.org/docs/reference/cells/cells-knitr.html#figures>.
+      fig-width: 5.5 # Quarto default: 5.5
+      fig-height: 4 # Quarto default: 3.5
       out-width: 80%
-      fig-pos: H # `abntex2` default: htb (doesn't work)
-      tbl-pos: H # `abntex2` default: htb (doesn't work)
+      fig-pos: H
+      tbl-pos: H
       cap-location: top
       cap-hyphenpenalty: true
       legend-hyphenpenalty: true
@@ -149,7 +137,8 @@ contributes:
         - tex/index.tex
         - tex/layout.tex
         - tex/lengths.tex
-        - tex/other.tex
+        - tex/lua.tex
+        - tex/others.tex
         - tex/packages.tex
         - tex/tables.tex
         - tex/tightlist.tex
@@ -174,9 +163,3 @@ contributes:
         - lbx/french-apa.lbx
       latex-auto-install: true
       keep-tex: true
-
-# TO DO:
-#
-# - Fix the "Source" field, adding a tabulation after "Source: ".
-# - Find a way to center the caption and the source if they are less than
-#   \textwidth, and to justify them if they are greater than \textwidth.

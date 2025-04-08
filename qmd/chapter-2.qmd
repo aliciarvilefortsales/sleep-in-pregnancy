@@ -1,19 +1,19 @@
 <!-- %:::% .common h1 begin %:::% -->
-# The expression of the sleep-wake cycle throughout pregnancy
+# The Expression of the Sleep-Wake Cycle Throughout Pregnancy
 <!-- %:::% .common h1 end %:::% -->
 
 ```{r}
 #| label: setup
 #| include: false
 
-source(here::here("R/quarto-setup.R"))
+source(here::here("R", "_setup.R"))
 ```
 
 ```{r}
 #| echo: false
 #| output: asis
 
-rutils:::quarto_status(
+quartor:::quarto_status(
   type = "drafting",
   of_what = "of this thesis",
   latex_parskip = "\\microskip"
@@ -28,11 +28,11 @@ rutils:::quarto_status(
 :::
 
 ::: {.callout-note}
-The following study was performed by Alícia Rafaelly Vilefort Sales (__ARVS__), Daniel Vartanian (__DV__), Maria Augusta Medeiros de Andrade (__MAMA__), Mario Pedrazzoli (__MP__) and Christiane Borges do Nascimento Chofakian (__CBNC__).
+The following study was performed by Alícia Rafaelly Vilefort Sales (**ARVS**), Daniel Vartanian (**DV**), Maria Augusta Medeiros de Andrade (**MAMA**), Mario Pedrazzoli (**MP**) and Christiane Borges do Nascimento Chofakian (**CBNC**).
 
 \microskip
 
-__ARVS__, __DV__ and __MAMA__ contributed to the study's  design. __ARVS__ implemented the study, performed the statistical analysis, and authored the manuscript. __CBNC__ and __MP__ served as scientific advisors. All authors participated in discussions about the results and contributed to the final manuscript revision.
+**ARVS**, **DV** and **MAMA** contributed to the study's  design. **ARVS** implemented the study, performed the statistical analysis, and authored the manuscript. **CBNC** and **MP** served as scientific advisors. All authors participated in discussions about the results and contributed to the final manuscript revision.
 
 \microskip
 

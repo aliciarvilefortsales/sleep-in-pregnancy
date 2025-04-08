@@ -1,7 +1,6 @@
+# library(fs)
 # library(here)
-# library(prettycheck) # github.com/danielvartan/prettycheck
-# library(rutils) # github.com/danielvartan/rutils
-# lybrary(yaml)
+# library(yaml)
 
 # Set variables -----
 
@@ -18,7 +17,7 @@ quarto_yml_revealjs_vars <- yaml::read_yaml(quarto_yml_revealjs_path)
 quarto_yml_extension_vars <- yaml::read_yaml(quarto_yml_extension_path)
 
 github_user <- "danielvartan"
-project_name <- here::here() |> basename() # rstudioapi::getActiveProject()
+project_name <- here::here() |> basename()
 
 # Create output folders if they don't exist -----
 
@@ -37,27 +36,27 @@ folders <- c(
 )
 
 for (i in folders) {
-  if (!prettycheck:::test_directory_exists(i)) dir.create(i)
+  if (!checkmate::test_directory_exists(i)) dir.create(i)
 }
 
 # Create `_variables.yml` if it doesn't exist -----
 
 env_vars_file_path <- here::here("_variables.yml")
 
-if (!prettycheck:::test_file_exists(env_vars_file_path)) {
-  rutils:::create_file(env_vars_file_path)
+if (!checkmate::test_file_exists(env_vars_file_path)) {
+  fs::file_create(env_vars_file_path)
 }
 
 # Create `_results.yml` if it doesn't exist -----
 
 res_vars_file_path <- here::here("_results.yml")
 
-if (!prettycheck:::test_file_exists(res_vars_file_path)) {
-  rutils:::create_file(res_vars_file_path)
+if (!checkmate::test_file_exists(res_vars_file_path)) {
+  fs::file_create(res_vars_file_path)
 }
 
 # Run the data pipeline if the `_targets` directory doesn't exist -----
 
-if (!prettycheck:::test_directory_exists(here::here("_targets"))) {
-  targets::tar_make()
-}
+# if (!checkmate::test_directory_exists(here::here("_targets"))) {
+#   targets::tar_make()
+# }

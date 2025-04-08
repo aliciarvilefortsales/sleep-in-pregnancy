@@ -6,10 +6,10 @@
 #| label: setup
 #| include: false
 
-source(here::here("R/quarto-setup.R"))
+source(here::here("R", "_setup.R"))
 ```
 
-For an extensive list of chronobiology related terms and definitions, please refer to @aschoff1965 and @marques2012.
+For an extensive list of chronobiology related terms and definitions, please refer to @aschoff1965 and @marques2012a.
 
 Circadian rhythm
 : \hspace{20cm} A rhythm with a period close to a day/24h, an approximation to the period of the earth's rotation [@pittendrigh1960]. From the Latin _circā_, around, and _dĭes_, day [@latinitium]. Example: the sleep-wake cycle.

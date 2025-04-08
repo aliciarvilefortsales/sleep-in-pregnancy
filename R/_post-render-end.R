@@ -1,17 +1,14 @@
 # library(beepr)
+# library(fs)
 # library(here)
 library(magrittr)
 # library(prettycheck) # github.com/danielvartan/prettycheck
+# library(quartor) # github.com/danielvartan/quartor
 # library(readr)
 # library(rutils) # github.com/danielvartan/rutils
 # library(stringr)
 
 # Copy output to `docs` folder -----
-
-# TO DO
-#
-# - Create a function in `rutils` to delete all files and dirs from a
-#   folder.
 
 env_vars <- yaml::read_yaml(env_vars_file_path)
 
@@ -49,23 +46,22 @@ output_docs_new_dirs <- list.dirs(
   here::here(get(paste0("output_docs_", env_vars$format)), .)
 
 for (i in output_docs_old_files) {
-  if (prettycheck:::test_file_exists(i)) rutils:::delete_file(i)
+  if (checkmate::test_file_exists(i)) fs::file_delete(i)
 }
 
 for (i in output_docs_old_dirs) {
-  if (prettycheck:::test_directory_exists(i)) rutils:::delete_dir(i)
+  if (checkmate::test_directory_exists(i)) fs::file_delete(i)
 }
 
 for (i in output_docs_new_dirs) {
-  if (!prettycheck:::test_directory_exists(i)) dir.create(i)
+  if (!checkmate::test_directory_exists(i)) dir.create(i)
 }
 
 for (i in seq_along(output_docs_new_files)) {
-  rutils:::copy_file(
-    from = output_dir_files[i],
-    to = output_docs_new_files[i],
-    overwrite = TRUE,
-    recursive = TRUE
+  fs::file_copy(
+    path = output_dir_files[i],
+    new_path = output_docs_new_files[i],
+    overwrite = TRUE
   )
 }
 
@@ -93,8 +89,8 @@ dir_list <-
   c(".temp", "index_cache", "index_files", "site_libs") |>
   append(x = _, list.dirs("qmd")[-1])
 
-rutils:::clean_quarto_mess(
-  file = NULL,
+quartor:::clean_quarto_mess(
+  file = c(".luarc.json"),
   dir = dir_list,
   ext = c(
     "aux", "bbx", "bcf-SAVE-ERROR", "cbx", "dbx", "fdb_latexmk", "lbx", "loa",
