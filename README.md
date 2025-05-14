@@ -1,4 +1,4 @@
-# mastersthesis
+# Sleep in pregnant
 
 <!-- quarto render --profile gfm -->
 
@@ -121,12 +121,12 @@ To cite this work, please use the following format:
 
 Sales, A. R. V. (2025). *Associations between the duration and quality
 of sleep in third-trimester pregnant women with the duration of labor*
-\[Master’s Thesis, University of São Paulo\].
+\[Sleep in pregnant, University of São Paulo\].
 <https://doi.org/10.17605/OSF.IO/S4TBZ>
 
 A BibTeX entry for LaTeX users is:
 
-    @mastersthesis{sales2025,
+    @msleepinpregnant{sales2025,
       title = {Associations between the duration and quality of sleep in third-trimester pregnant women with the duration of labor},
       author = {Alícia Rafaelly Vilefort Sales},
       year = {2025},
@@ -153,7 +153,7 @@ A BibTeX entry for LaTeX users is:
     </td>
     <td width="70%">
       <p>
-        This thesis was developed in the Graduate Program in Nursing (<a href="http://www2.ee.usp.br/posgraduacao/ppge/index.php/home">PPGE</a>) at the University of São Paulo (<a href="https://www5.usp.br/">USP</a>) under the supervision of
+        This thesis will be developed in the Graduate Program in Nursing (<a href="http://www2.ee.usp.br/posgraduacao/ppge/index.php/home">PPGE</a>) at the University of São Paulo (<a href="https://www5.usp.br/">USP</a>) under the supervision of
         <a href="https://orcid.org/0000-0002-5953-3296">Prof. Dr. Christiane Borges do Nascimento Chofakian</a>.
       </p>
     </td>
@@ -173,7 +173,7 @@ A BibTeX entry for LaTeX users is:
     </td>
     <td width="70%">
       <p>
-        This study was financed by the Coordenação de Aperfeiçoamento de 
+        This study was partially financed by the Coordenação de Aperfeiçoamento de 
         Pessoal de Nível Superior - Brazil (<a href="https://orcid.org/0000-0001-6783-6695">CAPES</a>) - Finance Code 001, Grant Number: 88887940089/2024-00.
       </p>
     </td>
