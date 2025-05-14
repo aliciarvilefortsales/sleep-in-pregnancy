@@ -85,7 +85,7 @@ located in the root directory of the project:
 - `OSF_PAT`: Your [OSF](https://osf.io/) Personal Access Token (PAT). If
   you don’t have one, go to the settings section of your OSF account and
   create a new token.
-- `MASTERSTHESIS_PASSWORD`: The password for the project’s RSA private
+- `sleep-in-pregnancy_PASSWORD`: The password for the project’s RSA private
   key (32 bytes).
 
 Additionally, you will need the following keys in the project’s `_ssh`
@@ -126,7 +126,7 @@ of sleep in third-trimester pregnant women with the duration of labor*
 
 A BibTeX entry for LaTeX users is:
 
-    @msleepinpregnant{sales2025,
+    @sleepinpregnant{sales2025,
       title = {Associations between the duration and quality of sleep in third-trimester pregnant women with the duration of labor},
       author = {Alícia Rafaelly Vilefort Sales},
       year = {2025},
