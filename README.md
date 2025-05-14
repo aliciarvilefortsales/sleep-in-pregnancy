@@ -19,7 +19,7 @@ MIT](https://img.shields.io/badge/license-MIT-green.png)](https://opensource.org
 🤰👶🍼🌙💤🛏️🕰️😴🌟☁️👨‍🍼🤱👩‍🍼🌸✨🌜📖🎵🤔📅
 
 This repository contains the [Quarto
-book](https://quarto.org/docs/books/) of my Master’s Thesis:
+book](https://quarto.org/docs/books/) of our project:
 *Associations Between the Duration and Quality of Sleep in
 Third-Trimester Pregnant Women With the Duration of Labor*. The research
 compendium is accessible via [The Open Science
