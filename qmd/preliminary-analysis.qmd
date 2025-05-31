@@ -29,6 +29,8 @@ library(here)
 library(hms)
 library(lubridate)
 library(lubritime) # github.com/danielvartan/lubritime
+library(orbis) # github.com/danielvartan/orbis
+library(osfr)
 library(plotr) # github.com/danielvartan/plotr
 library(rutils) # github.com/danielvartan/rutils
 library(scaler) # github.com/danielvartan/scaler
@@ -96,21 +98,42 @@ f_unb <- function(k, n_total, f_test) {
 
 ```{r}
 #| eval: false
-
-osfr::osf_auth()
-```
-
-```{r}
 #| output: false
+
+prettycheck:::assert_interactive()
 
 googlesheets4::gs4_auth()
 ```
 
 ```{r}
+#| eval: false
+
+prettycheck:::assert_interactive()
+
+osfr::osf_auth()
+```
+
+```{r}
+private_key_path <- here::here("_ssh", "id_rsa")
+```
+
+```{r}
+#| eval: false
+
+password <- askpass::askpass()
+```
+
+```{r}
+#| eval: false
+
 salt <- askpass::askpass()
 ```
 
-## Downloading the Form Data
+```{r}
+public_key_path <- here::here("_ssh", "id_rsa.pub")
+```
+
+## Getting Data from Google Sheets
 
 The following are internal data collected and organized using a Google Form to facilitate the management of the study.
 
@@ -160,7 +183,7 @@ medical_record_input <- googlesheets4::read_sheet(
 )
 ```
 
-## Processing the Form Data
+## Processing the Google Sheets Data
 
 ```{r}
 control_data <-
@@ -400,7 +423,48 @@ general_data <-
   dplyr::filter(id %in% valid_cases)
 ```
 
-## Downloading the Actigraph Data
+## Getting Data from OSF
+
+```{r}
+data_dir <- here::here("data")
+```
+
+```{r}
+if (!dir.exists(data_dir)) dir.create(data_dir)
+```
+
+```{r}
+valid_cases_pattern <- paste0("^", valid_cases, collapse = "|")
+```
+
+```{r}
+osf_processed_data_id <- "a2dsw"
+```
+
+```{r}
+osf_processed_data_id |>
+  osfr::osf_retrieve_node() |>
+  osfr::osf_ls_files(n_max = Inf) |>
+  dplyr::filter(name == "actigraphy") |>
+  dplyr::pull(id) |>
+  osfr::osf_retrieve_file() |>
+  osfr::osf_ls_files(n_max = Inf) |>
+  dplyr::filter(stringr::str_detect(name, valid_cases_pattern)) |>
+  dplyr::filter(stringr::str_detect(name, "actigraphy-processed-data")) |>
+  osfr::osf_download(
+    path = data_dir,
+    conflicts = "overwrite",
+    progress = TRUE
+  )
+```
+
+```{r}
+data_dir |>
+  lockr::unlock_dir(
+    private_key = private_key_path,
+    password = password
+  )
+```
 
 ## Exploring the Data
 
@@ -600,6 +664,44 @@ general_data |>
 #| eval: false
 
 grDevices::dev.off()
+```
+
+### Actograms
+
+```{r}
+actigraphy_data <-
+  here::here("data") |>
+  fs::dir_ls(type = "file") |>
+  stringr::str_subset(paste0("f1e30a89")) |>
+  actverse::read_acttrust(tz = "America/Sao_Paulo")
+```
+
+```{r}
+actigraphy_data |>
+  actverse::actogram(
+    days = -1,
+    latitude = orbis::get_brazil_state_latitude("sp"),
+    longitude = orbis::get_brazil_state_longitude("sp")
+    # locale = "pt_BR.UTF-8",
+    # x_label = "2 Dias — Horas",
+    # y_label = "Dias",
+    # labels = c(
+    #   "1" = "Sono",
+    #   "2" = "Despertar",
+    #   "4" = "Offwrist",
+    #   "base" = "Atividade (PIM)",
+    #   "lp" = "Fase clara",
+    #   "dp" = "Fase escura"
+    # ),
+    # colors = c(
+    #   "1" = "#410085",
+    #   "2" = "#FFB426",
+    #   "4" = "#FC2913",
+    #   "base" = "#000040",
+    #   "lp" = "#FFFFFF",
+    #   "dp" = "#DBD7D3"
+    # )
+  )
 ```
 
 ### Groups
@@ -802,7 +904,7 @@ Relação da variável `labor_duration` (Duração do parto) com a covariante `b
 [Fonte: Elaborado pela autora.]{.legend}
 :::
 
-## Testes de Hipótese
+## Hypothesis Testing
 
 > Variável dependente: `labor_duration`
 
@@ -1279,3 +1381,9 @@ Assumption 6
 
 Assumption 7
 : **Homogeneity of the coefficients** (ANCOVA). The regression coefficients of the dependent variable on the covariate in each treatment group are homogeneous [@rutherford2011[p. 240]].
+
+## Locking the Data Directory
+
+```{r}
+data_dir |> lockr::lock_dir(public_key = public_key_path)
+```
