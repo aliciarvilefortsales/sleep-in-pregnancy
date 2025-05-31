@@ -1,17 +1,16 @@
 # library(beepr)
 # library(groomr) # github.com/danielvartan/groomr
-# library(here)
 # library(lubridate)
 # library(readr)
 # library(stringr)
 
 # Remove empty lines from `README.md` -----
 
-here::here("README.md") |> groomr::remove_blank_line_dups()
+groomr::remove_blank_line_dups(here::here("README.md"))
 
-# Update project year -----
+# Update `LICENSE.md` year -----
 
-file <- c(here::here("LICENSE.md"))
+file <- here::here("LICENSE.md")
 
 data <-
   file |>

@@ -1,39 +1,10 @@
 editor: source
 
-execute:
-  cache: false # "Danger Will Robinson!"
-  freeze: false # If you're going to use it, don't forget to disable it afterward!
-                # Goddammit! What did I tell you?
+project:
+  render: [README.qmd]
+  post-render: "R/_post-render.R"
 
-profile:
-  group:
-    - [gfm, html, pdf, revealjs]
-  default: pdf
-book:
-  title: >-
-    Associations Between the Duration and Quality of Sleep in
-    Third-Trimester Pregnant Women With the Duration of Labor
-  keyword: >
-    Pregnancy. Childbirth. Humanizing Delivery. Natural Childbirth.
-    Duration of childbirth. Obstetrics. Sleep. Sleep quality. Sleep Duration.
-    Actigraphy. Chronobiology.
-  language: en-us
-  license: "Creative Commons Attribution 4.0 International (CC BY 4.0)"
-  submitted: 2025
-  favicon: images/favicon.png
-  url: https://aliciarvilefortsales.github.io/mastersthesis/
-  site-url: https://aliciarvilefortsales.github.io/mastersthesis/
-  repo-url: https://github.com/aliciarvilefortsales/mastersthesis/
-  issue-url: https://github.com/aliciarvilefortsales/mastersthesis/issues/
-  repo-branch: main
-
-citation:
-  type: thesis
-  publisher: "University of São Paulo"
-  publisher-place: "São Paulo, SP, Brazil"
-  doi: "10.17605/OSF.IO/S4TBZ"
-  url: https://aliciarvilefortsales.github.io/mastersthesis/
-  pdf-url: https://aliciarvilefortsales.github.io/mastersthesis/print/index.pdf
-
-google-scholar: true
-bibliography: references.bib
+format:
+  gfm:
+    html-table-processing: none
+    default-image-extension: ""
