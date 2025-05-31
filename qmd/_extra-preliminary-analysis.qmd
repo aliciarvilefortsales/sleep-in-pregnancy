@@ -1,5 +1,6 @@
 ---
-eval: false
+execute:
+  eval: false
 ---
 
 # Extra – Preliminary Analysis
@@ -16,6 +17,7 @@ source(here::here("R", "_setup.R"))
 ```{r}
 #| eval: false
 
+library(actverse) # github.com/danielvartan/actverse
 library(askpass)
 library(car)
 library(checkmate)
@@ -42,6 +44,10 @@ library(tidyr)
 
 library(magrittr)
 library(ggplot2)
+```
+
+```{r}
+source(here::here("R", "anonymize_id.R"))
 ```
 
 ```{r}
@@ -86,19 +92,25 @@ f_unb <- function(k, n_total, f_test) {
 }
 ```
 
-## Setting Keys
+## Setting Parameters
 
 ```{r}
-salt <- askpass::askpass()
-```
+#| eval: false
 
-## Downloading the Data
+osfr::osf_auth()
+```
 
 ```{r}
 #| output: false
 
 googlesheets4::gs4_auth()
 ```
+
+```{r}
+salt <- askpass::askpass()
+```
+
+## Downloading the Form Data
 
 The following are internal data collected and organized using a Google Form to facilitate the management of the study.
 
@@ -148,7 +160,7 @@ medical_record_input <- googlesheets4::read_sheet(
 )
 ```
 
-## Data Munging
+## Processing the Form Data
 
 ```{r}
 control_data <-
@@ -388,6 +400,8 @@ general_data <-
   dplyr::filter(id %in% valid_cases)
 ```
 
+## Downloading the Actigraph Data
+
 ## Exploring the Data
 
 The actogram presented in the article was created using the [ActStudio](https://condorinst.com/en/actstudio-software/) software.
@@ -460,7 +474,7 @@ general_data |>
 ```{r}
 general_data |>
   rutils:::stats_summary(
-    paste0("fps", "_", "mean"),
+    paste0("hfs", "_", "mean"),
     threshold = NULL
     # threshold = hms::parse_hms("12:00:00")
   ) |>
@@ -472,7 +486,7 @@ general_data |>
 
 general_data |>
   rutils:::stats_summary(
-    paste0("fps", "_", "sd"),
+    paste0("hfs", "_", "sd"),
     threshold = NULL
     # threshold = hms::parse_hms("12:00:00")
   ) |>

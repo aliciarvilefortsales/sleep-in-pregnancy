@@ -1,5 +1,6 @@
 ---
-eval: false
+execute:
+  eval: false
 ---
 
 # Extra – Anonymize and Process Files
@@ -13,23 +14,26 @@ source(here::here("R", "_setup.R"))
 
 ## Overview
 
-This notebook aim to normalize files from the project's vault.
+This report contains a reproducible pipeline for processing and storing data from the study.
 
-**Make a copy of the vault before continuing!**
-
-## Settings things up
+## Settings the Environment
 
 ```{r}
 #| eval: false
 
+library(actverse) # github.com/danielvartan/actverse
 library(checkmate)
 library(clipr)
+library(fs)
 library(googlesheets4)
+library(here)
+library(osfr)
 library(prettycheck) # github.com/danielvartan/prettycheck
 library(readr)
 library(rutils) # github.com/danielvartan/rutils
 library(sodium)
 library(stringr)
+library(zip)
 ```
 
 ```{r}
@@ -39,7 +43,45 @@ source(here::here("R", "anonymize_id.R"))
 source(here::here("R", "test_cpf.R"))
 ```
 
-## Set parameters
+## Setting IDs
+
+```{r}
+ids <- c(
+  "b21511da",
+  "18d5bdc1",
+  "a027a958",
+  "f46f88c5",
+  "6ff93997",
+  "1c559275"
+)
+```
+
+```{r}
+ids_pattern <- paste0("^", ids, collapse = "|")
+```
+
+## Setting Parameters
+
+```{r}
+#| eval: false
+#| output: false
+
+prettycheck:::assert_interactive()
+
+googlesheets4::gs4_auth()
+```
+
+```{r}
+#| eval: false
+
+prettycheck:::assert_interactive()
+
+osfr::osf_auth()
+```
+
+```{r}
+private_key_path <- here::here("_ssh", "id_rsa")
+```
 
 ```{r}
 #| eval: false
@@ -50,71 +92,69 @@ password <- askpass::askpass()
 ```{r}
 #| eval: false
 
-salt <- askpass::askpass() # !Configure `salt` before running!
+salt <- askpass::askpass()
+```
+
+```{r}
+public_key_path <- here::here("_ssh", "id_rsa.pub")
+```
+
+## Setting Directories
+
+```{r}
+dir_temp <- tempfile(pattern = "pregnancy-data-", fileext = "")
 ```
 
 ```{r}
 #| eval: false
 
-dir_vault <- clipr::read_clip() |> normalizePath("/", mustWork = FALSE)
+dir_raw_data <- fs::path(dir_temp, "raw-data")
+dir_processed_data <- fs::path(dir_temp, "processed-data")
+dir_bundles <- fs::path(dir_temp, "bundle")
 ```
 
 ```{r}
 #| eval: false
 
-dir_raw_data <- file.path(dir_vault, "raw-data")
-dir_processed_data <- file.path(dir_vault, "processed-data")
-dir_bundles <- file.path(dir_vault, "bundle")
+dir_raw_data_actigraphy <- fs::path(dir_raw_data, "actigraphy")
+dir_raw_data_consent <- fs::path(dir_raw_data, "consent")
+dir_raw_data_control_form <- fs::path(dir_raw_data, "control-form")
+dir_raw_data_delivery_receipt <- fs::path(dir_raw_data, "delivery-receipt")
+dir_raw_data_field_form <- fs::path(dir_raw_data, "field-form")
+dir_raw_data_medical_record <- fs::path(dir_raw_data, "medical-record")
+dir_raw_data_pilot_form <- fs::path(dir_raw_data, "pilot-form")
+dir_raw_data_pregnancy_booklet <- fs::path(dir_raw_data, "pregnancy-booklet")
+dir_raw_data_return_receipt <- fs::path(dir_raw_data, "return-receipt")
+dir_raw_data_sleep_diary <- fs::path(dir_raw_data, "sleep-diary")
 ```
 
 ```{r}
 #| eval: false
 
-dir_raw_actigraphy <- file.path(dir_raw_data, "actigraphy")
-dir_raw_consent <- file.path(dir_raw_data, "consent")
-dir_raw_control_form <- file.path(dir_raw_data, "control-form")
-dir_raw_delivery_receipt <- file.path(dir_raw_data, "delivery-receipt")
-dir_raw_field_form <- file.path(dir_raw_data, "field-form")
-dir_raw_medical_record <- file.path(dir_raw_data, "medical-record")
-dir_raw_pilot_form <- file.path(dir_raw_data, "pilot-form")
-dir_raw_pregnancy_booklet <- file.path(dir_raw_data, "pregnancy-booklet")
-dir_raw_return_receipt <- file.path(dir_raw_data, "return-receipt")
-dir_raw_sleep_diary <- file.path(dir_raw_data, "sleep-diary")
+dir_processed_data_actigraphy <- fs::path(dir_processed_data, "actigraphy")
+dir_processed_data_sleep_diary <- fs::path(dir_processed_data, "sleep-diary")
 ```
 
 ```{r}
 #| eval: false
 
-dir_processed_actigraphy <- file.path(dir_processed_data, "actigraphy")
-dir_processed_sleep_diary <- file.path(dir_processed_data, "sleep-diary")
-```
-
-```{r}
-#| eval: false
-
-file_pilot_form <- file.path(dir_raw_pilot_form, "raw.csv")
-file_field_form <- file.path(dir_raw_field_form, "raw.csv")
-file_sleep_diary <- file.path(dir_raw_sleep_diary, "raw.csv")
-file_control_form <- file.path(dir_raw_control_form, "raw.csv")
+file_pilot_form <- fs::path(dir_raw_data_pilot_form, "raw.csv")
+file_field_form <- fs::path(dir_raw_data_field_form, "raw.csv")
+file_sleep_diary <- fs::path(dir_raw_data_sleep_diary, "raw.csv")
+file_control_form <- fs::path(dir_raw_data_control_form, "raw.csv")
 ```
 
 ```{r}
 #| eval: false
 
 for (i in ls() |> stringr::str_subset("^dir_")) {
-  prettycheck:::assert_directory_exists(get(i))
+  if (!dir.exists(get(i))) {
+    dir.create(get(i), recursive = TRUE, showWarnings = FALSE)
+  }
 }
 ```
 
-```{r}
-#| eval: false
-
-for (i in ls() |> stringr::str_subset("^file_")) {
-  prettycheck:::assert_file_exists(get(i))
-}
-```
-
-## Get data from Google Sheets
+## Getting Data from Google Sheets
 
 ```{r}
 #| eval: false
@@ -229,24 +269,178 @@ raw_data_control_form
 raw_data_control_form |> readr::write_csv(file_control_form)
 ```
 
-## Get CPF & anonimyzed IDs
+## Getting Data from OSF
+
+### Assigning IDs
 
 ```{r}
 #| eval: false
 
-cpf_values <- c(
-  # raw_data_pilot_form,
-  # raw_data_field_form
-  "23710056810",
-  "38013021807",
-  "42849940852",
-  "09494930401"
+osf_pilot_data_id <- "tj5u2"
+osf_raw_data_id <- "7kg34"
+osf_processed_data_id <- "a2dsw"
+osf_tidy_data_id <- "npkjw"
+osf_bundles_id <- "fvh4u"
+```
+
+### Getting File Lists
+
+```{r}
+#| eval: false
+
+patterns <- c(
+  "pilot_data",
+  "raw_data",
+  "processed_data",
+  "tidy_data",
+  "bundles"
 )
 
-id_data <- dplyr::tibble(
-  id = anonymize_id(cpf_values, salt = salt),
-  cpf = cpf_values
-) |>
+for (i in patterns) {
+  assign(
+    paste0("osf_", i, "_files"),
+    get(paste0("osf_", i, "_id")) |>
+      osfr::osf_retrieve_node() |>
+      osfr::osf_ls_files(n_max = Inf),
+    envir = .GlobalEnv
+  )
+}
+```
+
+```{r}
+#| eval: false
+
+patterns <- c(
+  "actigraphy",
+  "consent",
+  "control-form",
+  "delivery-receipt",
+  "field-form",
+  "medical-record",
+  "pilot-form",
+  "pregnancy-booklet",
+  "return-receipt",
+  "sleep-diary"
+)
+
+for (i in patterns) {
+  normalized_i <- stringr::str_replace_all(i, "-", "_")
+
+  assign(
+    paste0("osf_raw_data_", normalized_i, "_files"),
+    osf_raw_data_files |>
+      dplyr::filter(name == i) |>
+      dplyr::pull(id) |>
+      osfr::osf_retrieve_file() |>
+      osfr::osf_ls_files(n_max = Inf),
+    envir = .GlobalEnv
+  )
+}
+```
+
+```{r}
+#| eval: false
+
+patterns <- c(
+  "actigraphy",
+  "sleep-diary"
+)
+
+for (i in patterns) {
+  normalized_i <- stringr::str_replace_all(i, "-", "_")
+
+  assign(
+    paste0("osf_processed_data_", normalized_i, "_files"),
+    osf_processed_data_files |>
+      dplyr::filter(name == i) |>
+      dplyr::pull(id) |>
+      osfr::osf_retrieve_file() |>
+      osfr::osf_ls_files(n_max = Inf),
+    envir = .GlobalEnv
+  )
+}
+```
+
+### Downloading Files
+
+```{r}
+#| eval: false
+
+patterns <- c(
+  "actigraphy",
+  "consent",
+  "delivery-receipt",
+  "medical-record",
+  "pregnancy-booklet",
+  "return-receipt"
+)
+
+for (i in patterns) {
+  normalized_i <- stringr::str_replace_all(i, "-", "_")
+  dir_i <- get(paste0("dir_raw_data_", normalized_i))
+
+  paste0("osf_raw_data_", normalized_i, "_files") |>
+    get() |>
+    dplyr::filter(stringr::str_detect(name, ids_pattern)) |>
+    osfr::osf_download(
+      path = dir_i,
+      conflicts = "overwrite",
+      progress = TRUE
+    )
+
+  dir_i |>
+    lockr::unlock_dir(
+      private_key = private_key_path,
+      password = password
+    )
+}
+```
+
+```{r}
+#| eval: false
+
+patterns <- c("actigraphy")
+
+for (i in patterns) {
+  normalized_i <- stringr::str_replace_all(i, "-", "_")
+  dir_i <- get(paste0("dir_processed_data_", normalized_i))
+
+  paste0("osf_processed_data_", normalized_i, "_files") |>
+    get() |>
+    dplyr::filter(stringr::str_detect(name, ids_pattern)) |>
+    osfr::osf_download(
+      path = dir_i,
+      conflicts = "overwrite",
+      progress = TRUE
+    )
+
+  dir_i |>
+    lockr::unlock_dir(
+      private_key = private_key_path,
+      password = password
+    )
+}
+```
+
+## Getting CPF Data
+
+```{r}
+#| eval: false
+
+id_data <-
+  dplyr::tibble(id = ids) |>
+  dplyr::left_join(
+    raw_data_control_form |>
+      dplyr::select(
+        `Qual é o CPF da gestante? 👩` , # col_index == 5
+        `Qual é o ID anonimizado da gestante? 👤` # col_index == 6
+      ) |>
+      dplyr::rename(
+        cpf = `Qual é o CPF da gestante? 👩`,
+        id = `Qual é o ID anonimizado da gestante? 👤`
+      ),
+    by = "id"
+  ) |>
   dplyr::distinct() |>
   dplyr::arrange(cpf)
 
@@ -256,16 +450,31 @@ id_data
 ```{r}
 #| eval: false
 
-test_cpf(id_data$cpf)
+id_data |> dplyr::pull(cpf) |> test_cpf()
 ```
 
-## Load, filter & write data
+## Load, Filter & Write Data
 
 ```{r}
 #| eval: false
 #| output: false
 
 for (i in split(id_data, seq(nrow(id_data)))) {
+  raw_data_control_form_i <-
+    raw_data_control_form |>
+    scaler:::filter_data(col_index = 6, value = i$id) |>
+    rutils:::shush()
+
+  if (!nrow(raw_data_control_form_i) == 0) {
+    raw_data_control_form_i |>
+      readr::write_csv(
+        fs::path(
+          dir_raw_data_control_form,
+          paste0(i$id, "_control-form", ".csv")
+        )
+      )
+  }
+
   raw_data_pilot_form_i <-
     raw_data_pilot_form |>
     scaler:::filter_data(col_index = 5, value = i$cpf) |>
@@ -280,9 +489,19 @@ for (i in split(id_data, seq(nrow(id_data)))) {
       !nrow(raw_data_pilot_form_i) == 0) {
     raw_data_pilot_form_i |>
       readr::write_csv(
-        file.path(
-          dir_raw_pilot_form,
+        fs::path(
+          dir_raw_data_pilot_form,
           paste0(i$id, "_pilot-form", ".csv")
+        )
+      )
+  }
+
+  if (!nrow(raw_data_field_form_i) == 0) {
+    raw_data_field_form_i |>
+      readr::write_csv(
+        fs::path(
+          dir_raw_data_field_form,
+          paste0(i$id, "_field-form", ".csv")
         )
       )
   }
@@ -290,16 +509,6 @@ for (i in split(id_data, seq(nrow(id_data)))) {
   raw_data_sleep_diary_i <-
     raw_data_sleep_diary |>
     scaler:::filter_data(col_index = 3, value = i$cpf)
-
-  if (!nrow(raw_data_field_form_i) == 0) {
-    raw_data_field_form_i |>
-      readr::write_csv(
-        file.path(
-          dir_raw_field_form,
-          paste0(i$id, "_field-form", ".csv")
-        )
-      )
-  }
 
   if (!nrow(raw_data_sleep_diary_i) == 0) {
     sleep_diary_type_of_day_i <-
@@ -312,36 +521,36 @@ for (i in split(id_data, seq(nrow(id_data)))) {
 
     raw_data_sleep_diary_i |>
       readr::write_csv(
-        file.path(
-          dir_raw_sleep_diary,
+        fs::path(
+          dir_raw_data_sleep_diary,
           paste0(i$id, "_sleep-diary", ".csv")
         )
       )
-  }
 
-  if (!nrow(sleep_diary_type_of_day_i) == 0) {
-    sleep_diary_type_of_day_i |>
-      readr::write_csv(
-        file.path(
-          dir_processed_sleep_diary,
-          paste0(i$id, "_sleep-diary-type-of-day", ".csv")
+    if (!nrow(sleep_diary_type_of_day_i) == 0) {
+      sleep_diary_type_of_day_i |>
+        readr::write_csv(
+          fs::path(
+            dir_processed_data_sleep_diary,
+            paste0(i$id, "_sleep-diary-type-of-day", ".csv")
+          )
         )
-      )
-  }
+    }
 
-  if (!nrow(sleep_diary_type_of_day_i) == 0) {
-    tidy_data_sleep_diary_i |>
-      scaler:::actstudio_sleep_diary(
-        file = file.path(
-          dir_processed_actigraphy,
-          paste0(i$id, "_actigraphy-sleep-diary", ".txt")
+    if (!nrow(sleep_diary_type_of_day_i) == 0) {
+      tidy_data_sleep_diary_i |>
+        scaler:::actstudio_sleep_diary(
+          file = fs::path(
+            dir_processed_data_actigraphy,
+            paste0(i$id, "_actigraphy-sleep-diary", ".txt")
+          )
         )
-      )
+    }
   }
 }
 ```
 
-## Creating bundles
+## Creating Bundles
 
 ```{r}
 #| eval: false
@@ -349,41 +558,44 @@ for (i in split(id_data, seq(nrow(id_data)))) {
 
 for (i in split(id_data, seq(nrow(id_data)))) {
   bundle_files <- c(
-    "actigraphy-raw-data" = file.path(
-      dir_raw_actigraphy, paste0(i$id, "_actigraphy-raw-data", ".txt")
+    "actigraphy-raw-data" = fs::path(
+      dir_raw_data_actigraphy, paste0(i$id, "_actigraphy-raw-data", ".txt")
     ),
-    "actigraphy-raw-data_report" = file.path(
-      dir_raw_actigraphy, paste0(i$id, "_actigraphy-raw-data-report", ".txt")
+    "actigraphy-raw-data_report" = fs::path(
+      dir_raw_data_actigraphy, paste0(i$id, "_actigraphy-raw-data-report", ".txt")
     ),
-    "actigraphy-processed-data" = file.path(
-      dir_processed_actigraphy, paste0(i$id, "_actigraphy-processed-data", ".txt")
+    "actigraphy-processed-data" = fs::path(
+      dir_processed_data_actigraphy, paste0(i$id, "_actigraphy-processed-data", ".txt")
     ),
-    "actigraphy-sleep-diary" = file.path(
-      dir_processed_actigraphy, paste0(i$id, "_actigraphy-sleep-diary", ".txt")
+    "actigraphy-sleep-diary" = fs::path(
+      dir_processed_data_actigraphy, paste0(i$id, "_actigraphy-sleep-diary", ".txt")
     ),
-    "consent" = file.path(
-      dir_raw_consent, paste0(i$id, "_consent", ".pdf")
+    "consent" = fs::path(
+      dir_raw_data_consent, paste0(i$id, "_consent", ".pdf")
     ),
-    "delivery-receipt" = file.path(
-      dir_raw_delivery_receipt, paste0(i$id, "_delivery-receipt", ".pdf")
+    "delivery-receipt" = fs::path(
+      dir_raw_data_delivery_receipt, paste0(i$id, "_delivery-receipt", ".pdf")
     ),
-    "field-form" = file.path(
-      dir_raw_field_form, paste0(i$id, "_field-form", ".csv")
+    "field-form" = fs::path(
+      dir_raw_data_control_form, paste0(i$id, "_control-form", ".csv")
     ),
-    "medical-record" = file.path(
-      dir_raw_medical_record, paste0(i$id, "_medical-record", ".pdf")
+    "field-form" = fs::path(
+      dir_raw_data_field_form, paste0(i$id, "_field-form", ".csv")
     ),
-    "pregnancy-booklet" = file.path(
-      dir_raw_pregnancy_booklet, paste0(i$id, "_pregnancy-booklet", ".pdf")
+    "medical-record" = fs::path(
+      dir_raw_data_medical_record, paste0(i$id, "_medical-record", ".pdf")
     ),
-    "return-receipt" = file.path(
-      dir_raw_return_receipt, paste0(i$id, "_return-receipt", ".pdf")
+    "pregnancy-booklet" = fs::path(
+      dir_raw_data_pregnancy_booklet, paste0(i$id, "_pregnancy-booklet", ".pdf")
     ),
-    "sleep-diary" = file.path(
-      dir_raw_sleep_diary, paste0(i$id, "_sleep-diary", ".csv")
+    "return-receipt" = fs::path(
+      dir_raw_data_return_receipt, paste0(i$id, "_return-receipt", ".pdf")
     ),
-    "sleep-diary-type-of-day" = file.path(
-      dir_processed_sleep_diary, paste0(i$id, "_sleep-diary-type-of-day", ".csv")
+    "sleep-diary" = fs::path(
+      dir_raw_data_sleep_diary, paste0(i$id, "_sleep-diary", ".csv")
+    ),
+    "sleep-diary-type-of-day" = fs::path(
+      dir_processed_data_sleep_diary, paste0(i$id, "_sleep-diary-type-of-day", ".csv")
     )
   )
 
@@ -400,6 +612,144 @@ for (i in split(id_data, seq(nrow(id_data)))) {
       flags = paste("--password", password),
       extras = "-j"
     )
+
+    # zip::zip(
+    #   zipfile = fs::path(dir_bundles, paste0(i$id, ".zip")),
+    #   files = bundle_files |> fs::path_rel(start = dir_temp),
+    #   root = dir_temp
+    # )
   }
 }
+```
+
+## Writing Data to OSF
+
+```{r}
+#| eval: false
+
+patterns <- c(
+  "control-form",
+  "field-form",
+  "pilot-form",
+  "sleep-diary"
+)
+
+for (i in patterns) {
+  normalized_i <- stringr::str_replace_all(i, "-", "_")
+
+  osf_dir_id <-
+    osf_raw_data_files |>
+    dplyr::filter(name == i) |>
+    dplyr::pull(id) |>
+    osfr::osf_retrieve_file()
+
+  dir_raw_data_i <-
+    paste0("dir_raw_data_", normalized_i) |>
+    get()
+
+  dir_raw_data_i |>
+    lockr::lock_dir(
+      public_key = public_key_path,
+      remove_file = FALSE
+    )
+
+  files_i <-
+    dir_raw_data_i |>
+    fs::dir_ls(type = "file") |>
+    stringr::str_subset("\\.lockr$")
+
+  # osf_files <-
+  #   paste0("osf_raw_data_", normalized_i, "_files") |>
+  #   get() |>
+  #   dplyr::pull(name)
+
+  # setdiff(
+  #   files_i |> basename() |> paste0(".lockr"),
+  #   osf_files
+  # )
+
+  osf_dir_id |>
+    osfr::osf_upload(
+      path = files_i,
+      conflicts = "overwrite",
+      progress = TRUE
+    )
+}
+```
+
+```{r}
+#| eval: false
+
+patterns <- c(
+  "actigraphy",
+  "sleep-diary"
+)
+
+for (i in patterns) {
+  normalized_i <- stringr::str_replace_all(i, "-", "_")
+
+  osf_dir_id <-
+    osf_processed_data_files |>
+    dplyr::filter(name == i) |>
+    dplyr::pull(id) |>
+    osfr::osf_retrieve_file()
+
+  dir_processed_data_i <-
+    paste0("dir_processed_data_", normalized_i) |>
+    get()
+
+  dir_processed_data_i |>
+    lockr::lock_dir(
+      public_key = public_key_path,
+      remove_file = FALSE
+    )
+
+  files_i <-
+    dir_processed_data_i |>
+    fs::dir_ls(type = "file") |>
+    stringr::str_subset("sleep-diary") |>
+    stringr::str_subset("\\.lockr$")
+
+  osf_dir_id |>
+    osfr::osf_upload(
+      path = files_i,
+      conflicts = "overwrite",
+      progress = TRUE
+    )
+}
+```
+
+```{r}
+#| eval: false
+
+dir_bundles |>
+  lockr::lock_dir(
+    public_key = public_key_path,
+    remove_file = FALSE
+  )
+
+files_i <-
+  dir_bundles |>
+  fs::dir_ls(type = "file") |>
+  stringr::str_subset("\\.lockr$")
+
+osf_bundles_id |>
+  osfr::osf_retrieve_node() |>
+  osfr::osf_upload(
+    path = files_i,
+    conflicts = "overwrite",
+    progress = TRUE
+  )
+```
+
+## Delete Files
+
+::: {.callout-caution}
+Only delete files after uploading them to OSF and the Cryptomator vault.
+:::
+
+```{r}
+#| eval: false
+
+fs::dir_delete(dir_temp)
 ```

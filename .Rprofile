@@ -103,7 +103,7 @@ rprofile_message <- function(
 
 # Activate `renv` -----
 
-source(here::here("renv", "activate.R"))
+# source(here::here("renv", "activate.R"))
 
 # Assert required packages -----
 
