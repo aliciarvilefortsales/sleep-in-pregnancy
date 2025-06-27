@@ -34,6 +34,7 @@ library(osfr)
 library(plotr) # github.com/danielvartan/plotr
 library(rutils) # github.com/danielvartan/rutils
 library(scaler) # github.com/danielvartan/scaler
+library(scales)
 library(sodium)
 library(stats)
 library(stringr)
@@ -364,17 +365,25 @@ medical_record_data <-
   medical_record_input |>
   dplyr::mutate(
     dplyr::across(
-      .cols = dplyr::matches("^baby_birth_timestamp$"),
+      .cols = dplyr::all_of(c("partograph_begin", "baby_birth")),
       .fns = ~ lubridate::ymd_hms(.x, tz = "America/Sao_Paulo")
     ),
     dplyr::across(
-      .cols = -dplyr::all_of(c("id", "baby_birth_timestamp")),
+      .cols = -dplyr::all_of(c("id", "partograph_begin", "baby_birth")),
       .fns = as.numeric
     ),
     dplyr::across(
-      .cols = dplyr::matches("^apgar_"),
+      .cols = dplyr::matches("^begin_dilation$|^apgar_"),
       .fns = as.integer
     )
+  ) |>
+  dplyr::mutate(
+    partogram_duration =
+      lubridate::interval(
+        start = partograph_begin,
+        end = baby_birth
+      ) |>
+        lubritime::int_duration()
   )
 
 medical_record_data
@@ -455,6 +464,35 @@ osf_processed_data_id |>
     path = data_dir,
     conflicts = "overwrite",
     progress = TRUE
+  )
+```
+
+```{r}
+osf_processed_data_id <- "7kg34"
+```
+
+```{r}
+osf_processed_data_id |>
+  osfr::osf_retrieve_node() |>
+  osfr::osf_ls_files(n_max = Inf) |>
+  dplyr::filter(name == "medical-record") |>
+  dplyr::pull(id) |>
+  osfr::osf_retrieve_file() |>
+  osfr::osf_ls_files(n_max = Inf) |>
+  dplyr::filter(stringr::str_detect(name, valid_cases_pattern)) |>
+  osfr::osf_download(
+    path = data_dir,
+    conflicts = "overwrite",
+    progress = TRUE
+  )
+```
+
+```{r}
+valid_cases |>
+  setdiff(
+    test |>
+    dplyr::pull(name) |>
+    stringr::str_extract(".*(?=_medical)")
   )
 ```
 
@@ -577,6 +615,92 @@ general_data |> plotr:::plot_dist(col = "bmi_current")
 
 ```{r}
 general_data |> plotr:::plot_box_plot(col = "bmi_current")
+```
+
+## Partogram Duration Model
+
+```{r}
+form <- formula(partogram_duration ~ begin_dilation + baby_head_perimeter + baby_abdominal_perimeter)
+
+# baby_weight
+# baby_length
+# baby_head_perimeter
+# baby_thoracic_perimeter
+# baby_abdominal_perimeter
+```
+
+```{r}
+model <-
+  parsnip::linear_reg() |>
+  parsnip::set_engine("lm")
+```
+
+```{r}
+fit <-
+  model |>
+  parsnip::fit(
+    formula = form,
+    data = medical_record_data
+  )
+```
+
+```{r}
+fit |>
+  broom::tidy() |>
+  print(n = Inf)
+```
+
+```{r}
+fit |>
+  broom::glance() |>
+  tidyr::pivot_longer(cols = dplyr::everything()) |>
+  print(n = Inf)
+```
+
+```{r}
+fit_augment <- fit |> broom::augment(new_data = medical_record_data)
+```
+
+```{r}
+fit_error <-
+  fit_augment |>
+  dplyr::transmute(
+    .pred = .pred,
+    .resid = .resid,
+    partogram_duration = partogram_duration |> as.numeric(),
+    error = .resid / partogram_duration
+  )
+```
+
+```{r}
+fit_augment <-
+  fit |>
+  broom::augment(
+    new_data = dplyr::tibble(
+      begin_dilation = 1
+    )
+  )
+```
+
+```{r}
+medical_record_data |>
+  ggplot2::ggplot(
+    ggplot2::aes(
+      x = partogram_duration,
+      y = begin_dilation
+    )
+  ) +
+  ggplot2::geom_point() +
+  ggplot2::geom_smooth(
+    method = "lm",
+    color = "#FC2913"
+  ) +
+  ggplot2::labs(
+    x = "Duração do partograma (h)",
+    y = "Dilat. do colo do útero (cm)"
+  ) +
+  ggplot2::scale_x_time()
+
 ```
 
 ### Correlation Matrices
@@ -702,6 +826,82 @@ actigraphy_data |>
     #   "dp" = "#DBD7D3"
     # )
   )
+```
+
+### Sleep Irregularity Index (SRI)
+
+```{r}
+sri_data <- actigraphy_data |> actverse::sri()
+
+sri_data
+```
+
+```{r}
+sri_data |>
+  rutils:::stats_summary("sri", threshold = NULL) |>
+  print(n = Inf)
+```
+
+```{r}
+sri_data |>
+  dplyr::filter(sri > 0) |>
+  rutils:::stats_summary("sri", threshold = NULL) |>
+  print(n = Inf)
+```
+
+```{r}
+if (min(sri_data$sri) < 0) {
+  y_scale <- \() ggplot2::scale_y_continuous(limits = c(NA, 100))
+} else {
+  y_scale <- \() ggplot2::scale_y_continuous(limits = c(0, 100))
+}
+
+y_scale
+
+sri_data |>
+  ggplot2::ggplot(ggplot2::aes(x = time, y = sri)) +
+  ggplot2::geom_smooth(color = "#FC2913") +
+  ggplot2::labs(
+    x = "Time of day (Hour)",
+    y = "Sleep Regularity Index (SRI)"
+  ) +
+  ggplot2::scale_x_time(
+    breaks = scales::breaks_width("6 hours"),
+    labels = scales::label_time("%-H") # Use "%#H" for Windows
+  ) +
+  y_scale()
+```
+
+### Percentage of Time Asleep
+
+```{r}
+sleep_prop_data <-
+  actigraphy_data |>
+  actverse::state_prop(state_values = 1)
+
+sleep_prop_data
+```
+
+```{r}
+sleep_prop_data |>
+  rutils:::stats_summary("prop", threshold = NULL) |>
+  print(n = Inf)
+```
+
+```{r}
+sleep_prop_data |>
+  dplyr::mutate(per = prop * 100) |>
+  ggplot2::ggplot(ggplot2::aes(x = time, y = per)) +
+  ggplot2::geom_smooth(color = "#FC2913") +
+  ggplot2::labs(
+    x = "Time of day (Hour)",
+    y = "Percentage of time asleep (%)",
+  ) +
+  ggplot2::scale_x_time(
+    breaks = scales::breaks_width("6 hours"),
+    labels = scales::label_time("%-H") # Use "%#H" for Windows
+  ) +
+  ggplot2::scale_y_continuous(limits = c(0, 100))
 ```
 
 ### Groups
