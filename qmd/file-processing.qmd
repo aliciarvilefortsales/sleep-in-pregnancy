@@ -438,13 +438,14 @@ id_data <-
   dplyr::tibble(id = ids) |>
   dplyr::left_join(
     raw_data_control_form |>
+    janitor::clean_names() |>
       dplyr::select(
-        `Qual é o CPF da gestante? 👩` , # col_index == 5
-        `Qual é o ID anonimizado da gestante? 👤` # col_index == 6
+        qual_cpf_da_gestante, # col_index == 5
+        qual_e_o_id_anonimizado_da_gestante # col_index == 6
       ) |>
       dplyr::rename(
-        cpf = `Qual é o CPF da gestante? 👩`,
-        id = `Qual é o ID anonimizado da gestante? 👤`
+        cpf = qual_cpf_da_gestante,
+        id = qual_e_o_id_anonimizado_da_gestante
       ),
     by = "id"
   ) |>
@@ -544,7 +545,7 @@ for (i in split(id_data, seq(nrow(id_data)))) {
         )
     }
 
-    if (!nrow(sleep_diary_type_of_day_i) == 0) {
+    if (!nrow(tidy_data_sleep_diary_i) == 0) {
       tidy_data_sleep_diary_i |>
         scaler:::actstudio_sleep_diary(
           file = fs::path(
