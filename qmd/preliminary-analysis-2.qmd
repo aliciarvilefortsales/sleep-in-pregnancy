@@ -1,0 +1,308 @@
+---
+execute:
+  eval: false
+---
+
+# Preliminary Analysis 2
+
+```{r}
+#| label: setup
+#| include: false
+
+source(here::here("R", "_setup.R"))
+```
+
+## Set the Environment
+
+```{r}
+library(actverse) # github.com/danielvartan/actverse
+library(askpass)
+library(checkmate)
+library(cli)
+library(dplyr)
+library(ggplot2)
+library(googlesheets4)
+library(here)
+library(hms)
+library(lockr) # github.com/danielvartan/lokcr
+library(lubridate)
+library(lubritime) # github.com/danielvartan/lubritime
+library(magrittr)
+library(orbis) # github.com/danielvartan/orbis
+library(osfr)
+library(plotr) # github.com/danielvartan/plotr
+library(readr)
+library(rutils) # github.com/danielvartan/rutils
+library(scaler) # github.com/danielvartan/scaler
+library(scales)
+library(sodium)
+library(stats)
+library(stringr)
+library(summarytools)
+library(tidyr)
+```
+
+```{r}
+source(here::here("R", "anonymize_id.R"))
+source(here::here("R", "ga.R"))
+```
+
+## Setting Parameters
+
+```{r}
+#| eval: false
+#| output: false
+
+prettycheck:::assert_interactive()
+
+googlesheets4::gs4_auth()
+```
+
+```{r}
+#| eval: false
+
+prettycheck:::assert_interactive()
+
+osf_auth()
+```
+
+```{r}
+private_key_path <- here::here("_ssh", "id_rsa")
+```
+
+```{r}
+#| eval: false
+
+password <- askpass::askpass()
+```
+
+```{r}
+#| eval: false
+
+salt <- askpass::askpass()
+```
+
+```{r}
+public_key_path <- here::here("_ssh", "id_rsa.pub")
+```
+
+## Get Data from Google Sheets
+
+```{r}
+#| output: false
+
+control_form <- googlesheets4::read_sheet(
+  ss = "13wtDr4fRD1wJSM-qdLOdGSchF8oXU1bG0Jtccu24GhY",
+  sheet = "Dataset",
+  col_types = "c"
+)
+```
+
+## Process the Google Sheets Data
+
+```{r}
+control_data <-
+  control_form |>
+  `names<-`(paste0("X", seq_along(control_form))) |>
+  dplyr::select(X5, X6, X12, X39, X40) |>
+  dplyr::rename(
+    cpf = X5,
+    id = X6,
+    birth_center_delivery = X12,
+    ultrasound_date = X40,
+    ultrasound_ga = X39
+  ) |>
+  dplyr::mutate(
+    birth_center_delivery = dplyr::case_when(
+      tolower(trimws(birth_center_delivery)) == "sim" ~ TRUE,
+      tolower(trimws(birth_center_delivery)) == "não" ~ FALSE,
+      TRUE ~ NA
+    ),
+    ultrasound_date = ymd(ultrasound_date),
+    ga_start = if_else(
+      is.na(ultrasound_ga),
+      as.Date(NA),
+      ga_start(
+        ultrasound = ultrasound_date,
+        ga =
+          str_extract(ultrasound_ga, "^\\d{1,2}") |>
+          as.integer() |>
+          weeks() |>
+          add(
+            str_extract(ultrasound_ga, "\\d(?= di)") |>
+            as.integer() |>
+            lubridate::days()
+          )
+      )
+    )
+  ) |>
+  select(cpf, id, birth_center_delivery, ga_start)
+
+control_data
+```
+
+## Getting Data from OSF
+
+```{r}
+data_dir <- here::here("data")
+```
+
+```{r}
+if (!dir.exists(data_dir)) dir.create(data_dir)
+```
+
+```{r}
+osf_processed_data_id <- "a2dsw"
+```
+
+```{r}
+osf_processed_data_id |>
+  osf_retrieve_node() |>
+  osf_ls_files(n_max = Inf) |>
+  filter(name == "actigraphy") |>
+  pull(id) |>
+  osf_retrieve_file() |>
+  osf_ls_files(n_max = Inf) |>
+  filter(stringr::str_detect(name, "actigraphy-processed-data")) |>
+  osf_download(
+    path = data_dir,
+    conflicts = "overwrite",
+    progress = TRUE
+  )
+```
+
+```{r}
+data_dir |>
+  unlock_dir(
+    private_key = private_key_path,
+    password = password
+  )
+```
+
+## Decrypt Data from OSF
+
+## Sample Characteristics
+
+## Power Analysis
+
+## Compute SRI
+
+```{r}
+files <- here("data") |> list.files(full.names = TRUE)
+```
+
+```{r}
+for (i in files) {
+  i |>
+    readr::read_lines() |>
+    iconv(to = "ASCII//TRANSLIT") |>
+    readr::write_lines(i)
+}
+```
+
+```{r}
+cli_progress_bar(total = length(files))
+
+for (i in files) {
+  i_id <- str_remove(basename(i), "_actigraphy-processed-data.txt")
+
+  i_ga_start <-
+    control_data |>
+    filter(id == i_id) |>
+    pull(ga_start)
+
+  i_data <-
+    i |>
+    read_acttrust(tz = "America/Sao_Paulo") |>
+    mutate(
+      ga =
+        ga_point(
+          i_ga_start,
+          timestamp
+        ) |>
+        as.numeric() |>
+        as.duration() |>
+        add(as_hms(timestamp) |> as.numeric() |> as.duration())
+    )
+
+  write_rds(paste0(id, "_actigraphy-processed-data.rds"))
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+
+Passos:
+
+1. Calcular a IG em cada ponto do dado actigráfico.
+2. Remover semanas com menos de 5 dias
+3. Calcular o SRI para cada semana (summarize)
+4. Transformar em NA SRIs com proporção de valores de concordâncias menores que `0.75`.
+5. Remover semanas com menos de 75% de disponibilidade de dados SRI.
+6. Tirar a média do SRI por semana (colunas: id, ig, sri)
+7. Juntar os dados de todas as gestantes.
+8. ANOVA do `sri` por grupos de IG
+
+```
+Ho: 36 >= 37 >= 38 >= 39 >= ...
+Ha: 36 < 37 < 38 < 39 < ...
+```
+
+- Fazer ANCOVA
+- Ver outros modelos
+
+## Other
+
+```{r}
+file <-
+  here::here("data") |>
+  list.files(full.names = TRUE) |>
+  sample(1)
+```
+
+```{r}
+# Adicionar no `actverse`
+
+file |>
+  readr::read_lines() |>
+  iconv(to = "ASCII//TRANSLIT") |>
+  readr::write_lines(file)
+```
+
+```{r}
+data <-
+  file |>
+  read_acttrust(tz = "America/Sao_Paulo")
+```
+
+```{r}
+#| eval: false
+
+data |> actogram(days = Inf)
+```
+
+```{r}
+sri_data <- data |> sri()
+```
+
+```{r}
+sri_data |>
+    ggplot(ggplot2::aes(x = time, y = sri)) +
+    # geom_line() +
+    geom_smooth(color = "#FC2913") +
+    labs(
+      x = "Time of day (Hour)",
+      y = "Sleep Regularity Index (SRI)"
+    ) +
+    scale_x_time(
+      breaks = breaks_width("6 hours"),
+      labels = label_time("%-H") # Use "%#H" for Windows
+    ) +
+    scale_y_continuous()
+```
+
+## Data Modeling
+
+## Hypothesis Testing

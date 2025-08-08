@@ -3,7 +3,7 @@ execute:
   eval: false
 ---
 
-# Extra – Anonymize and Process Files
+# Anonymize and Process Files
 
 ```{r}
 #| label: setup

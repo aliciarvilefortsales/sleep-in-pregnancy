@@ -3,7 +3,7 @@ execute:
   eval: false
 ---
 
-# Extra – Preliminary Analysis
+# Preliminary Analysis 1
 
 ```{r}
 #| label: setup
@@ -468,11 +468,11 @@ osf_processed_data_id |>
 ```
 
 ```{r}
-osf_processed_data_id <- "7kg34"
+osf_raw_data_id <- "7kg34"
 ```
 
 ```{r}
-osf_processed_data_id |>
+osf_raw_data_id |>
   osfr::osf_retrieve_node() |>
   osfr::osf_ls_files(n_max = Inf) |>
   dplyr::filter(name == "medical-record") |>

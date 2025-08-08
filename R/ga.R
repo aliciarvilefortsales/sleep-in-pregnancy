@@ -31,13 +31,13 @@
 #' #> [1] "2022-09-08"
 ga_start <- function(ultrasound, ga) {
   checkmate::assert_date(ultrasound)
-  rutils:::assert_period(ga, lower = lubridate::period(0))
-  rutils:::assert_identical(ultrasound, ga, type = "length")
+  prettycheck:::assert_period(ga, lower = lubridate::period(0))
+  prettycheck:::assert_identical(ultrasound, ga, type = "length")
 
   lubridate::as_date(ultrasound - ga)
 }
 
-ga_point <- function(ga_start, point, print = TRUE) {
+ga_point <- function(ga_start, point, print = FALSE) {
   checkmate::assert_date(ga_start)
   checkmate::assert_multi_class(point, c("Date", "POSIXt"))
   checkmate::assert_flag(print)
@@ -95,7 +95,7 @@ ga_week_int <- function(ga_start, week) {
 }
 
 ga_weeks <- function(ga) {
-  rutils:::assert_period(ga)
+  prettycheck:::assert_period(ga)
 
   ga <- ga |> lubridate::as.duration()
 
@@ -103,7 +103,7 @@ ga_weeks <- function(ga) {
 }
 
 ga_days <- function(ga) {
-  rutils:::assert_period(ga)
+  prettycheck:::assert_period(ga)
 
   ga <- ga |> lubridate::as.duration()
   weeks <- floor(ga / lubridate::dweeks())
@@ -112,7 +112,7 @@ ga_days <- function(ga) {
 }
 
 ga_weeks_days <- function(ga) {
-  rutils:::assert_period(ga)
+  prettycheck:::assert_period(ga)
 
   ga <- ga |> lubridate::as.duration()
   weeks <- floor(ga / lubridate::dweeks())

@@ -1,6 +1,6 @@
-# library(checkmate, quietly = TRUE)
-# library(sodium, quietly = TRUE)
-# library(stringr, quietly = TRUE)
+# library(checkmate)
+# library(sodium)
+# library(stringr)
 
 anonymize_id <- function(x, salt) {
   checkmate::assert_atomic(x)

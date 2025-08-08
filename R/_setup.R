@@ -20,14 +20,12 @@ library(xml2)
 # Set general options -----
 
 options(
-  dplyr.print_min = 6,
-  dplyr.print_max = 6,
+  pillar.bold = TRUE,
   pillar.max_footer_lines = 2,
   pillar.min_chars = 15,
   scipen = 10,
   digits = 10,
   stringr.view_n = 6,
-  pillar.bold = TRUE,
   width = 77 # 80 - 3 for #> comment
 )
 
@@ -58,9 +56,9 @@ brandr_options <- list(
   "BRANDR_COLOR_DIVERGING" =
     brandr::get_brand_color(c("primary", "white", "secondary")),
   "BRANDR_COLOR_QUALITATIVE" = c(
-    brandr::get_brand_color("primary"),
-    brandr::get_brand_color("secondary"),
-    brandr::get_brand_color("tertiary")
+      brandr::get_brand_color("primary"),
+      brandr::get_brand_color("secondary"),
+      brandr::get_brand_color("tertiary")
     )
   )
 

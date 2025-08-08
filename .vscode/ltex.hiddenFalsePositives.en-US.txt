@@ -1,0 +1,3 @@
+{"rule":"COPYRIGHT","sentence":"^\\QCopyright (C) 2007 Free Software Foundation, Inc. \\E(?:Dummy|Ina|Jimmy-)[0-9]+$"}
+{"rule":"PASSIVE_VOICE","sentence":"^\\QEveryone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qsource(here::here(\"R\", \"_setup.\\E$"}
