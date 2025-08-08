@@ -17,13 +17,17 @@ source(here::here("R", "_setup.R"))
 ```{r}
 library(actverse) # github.com/danielvartan/actverse
 library(askpass)
+library(broom)
 library(checkmate)
 library(cli)
 library(dplyr)
+library(effectsize)
+library(fs)
 library(ggplot2)
 library(googlesheets4)
 library(here)
 library(hms)
+library(infer)
 library(lockr) # github.com/danielvartan/lokcr
 library(lubridate)
 library(lubritime) # github.com/danielvartan/lubritime
@@ -31,6 +35,7 @@ library(magrittr)
 library(orbis) # github.com/danielvartan/orbis
 library(osfr)
 library(plotr) # github.com/danielvartan/plotr
+library(pwr)
 library(readr)
 library(rutils) # github.com/danielvartan/rutils
 library(scaler) # github.com/danielvartan/scaler
@@ -40,6 +45,7 @@ library(stats)
 library(stringr)
 library(summarytools)
 library(tidyr)
+library(tsibble)
 ```
 
 ```{r}
@@ -156,6 +162,8 @@ osf_processed_data_id <- "a2dsw"
 ```
 
 ```{r}
+#| eval: false
+
 osf_processed_data_id |>
   osf_retrieve_node() |>
   osf_ls_files(n_max = Inf) |>
@@ -171,6 +179,8 @@ osf_processed_data_id |>
   )
 ```
 
+## Decrypt Data from OSF
+
 ```{r}
 data_dir |>
   unlock_dir(
@@ -179,29 +189,24 @@ data_dir |>
   )
 ```
 
-## Decrypt Data from OSF
-
 ## Sample Characteristics
 
-## Power Analysis
-
-## Compute SRI
+## Import and Transform the Data
 
 ```{r}
-files <- here("data") |> list.files(full.names = TRUE)
+files <-
+  dir_ls(
+    path = here("data"),
+    type = "file",
+    regexp = ".txt$"
+  )
 ```
 
 ```{r}
-for (i in files) {
-  i |>
-    readr::read_lines() |>
-    iconv(to = "ASCII//TRANSLIT") |>
-    readr::write_lines(i)
-}
-```
-
-```{r}
-cli_progress_bar(total = length(files))
+cli_progress_bar(
+  total = length(files),
+  clear = FALSE
+)
 
 for (i in files) {
   i_id <- str_remove(basename(i), "_actigraphy-processed-data.txt")
@@ -214,6 +219,7 @@ for (i in files) {
   i_data <-
     i |>
     read_acttrust(tz = "America/Sao_Paulo") |>
+    shush() |>
     mutate(
       ga =
         ga_point(
@@ -222,10 +228,15 @@ for (i in files) {
         ) |>
         as.numeric() |>
         as.duration() |>
-        add(as_hms(timestamp) |> as.numeric() |> as.duration())
+        add(as_hms(timestamp) |> as.numeric() |> as.duration()),
+      ga_week =
+        ga |>
+        as.numeric() |>
+        divide_by(as.numeric(ddays(7))) |>
+        as.integer()
     )
 
-  write_rds(paste0(id, "_actigraphy-processed-data.rds"))
+  i_sri_data |> write_rds(here("data", paste0(i_id, "_sri-data.rds")))
 
   cli_progress_update()
 }
@@ -233,6 +244,12 @@ for (i in files) {
 cli_progress_done()
 ```
 
+## Compute SRI
+
+Critérios de exclusão:
+
+- Semanas com menos de 5 dias
+- Semanas com menos de 75% de disponibilidade de dados SRI
 
 Passos:
 
@@ -245,13 +262,390 @@ Passos:
 7. Juntar os dados de todas as gestantes.
 8. ANOVA do `sri` por grupos de IG
 
+```{r}
+files <-
+  dir_ls(
+    path = here("data"),
+    type = "file",
+    regexp = ".txt$"
+  )
+```
+
+```{r}
+cli_progress_bar(
+  total = length(files),
+  clear = FALSE
+)
+
+for (i in files) {
+  i_id <- str_remove(basename(i), "_actigraphy-processed-data.txt")
+
+  i_ga_start <-
+    control_data |>
+    filter(id == i_id) |>
+    pull(ga_start)
+
+  i_data <-
+    i |>
+    read_acttrust(tz = "America/Sao_Paulo") |>
+    shush() |>
+    mutate(
+      ga =
+        ga_point(
+          i_ga_start,
+          timestamp
+        ) |>
+        as.numeric() |>
+        as.duration() |>
+        add(as_hms(timestamp) |> as.numeric() |> as.duration()),
+      ga_week =
+        ga |>
+        as.numeric() |>
+        divide_by(as.numeric(ddays(7))) |>
+        as.integer()
+    ) |>
+    as_tibble() |>
+    group_by(ga_week) |>
+    mutate(
+      ga_week_available_days = (n() * 60) / as.numeric(ddays(1))
+    ) |>
+    ungroup(ga_week) |>
+    filter(ga_week_available_days >= 5) |>
+    as_tsibble(index = timestamp)
+
+  if (nrow(i_data) == 0) {
+    cli_alert_info(
+      paste0(
+        "{.strong {col_red(i_id)}} was dropped because it has no gestational ",
+        "week with at least 5 days of data."
+      )
+    )
+
+    next
+
+    cli_progress_update()
+  }
+
+  i_sri_data <- tibble()
+
+  for (j in unique(i_data$ga_week)) {
+    j_data <- i_data |> filter(ga_week == j)
+    j_data_first_index <- which(i_data$ga_week == j)[1]
+
+    if (j_data_first_index > 1) {
+      j_data <-
+        i_data |>
+        slice(seq(j_data_first_index - 1440, j_data_first_index - 1)) |>
+        as_tibble() |>
+        bind_rows(j_data |> as_tibble()) |>
+        as_tsibble(index = timestamp)
+    }
+
+    i_sri_data <-
+      i_sri_data |>
+      bind_rows(
+        j_data |>
+          sri(
+            sleeping_states = c(1, 2),
+            awake_states = 0,
+            min_data = 0.75
+          ) |>
+          mutate(ga_week = j) |>
+          as_tibble()
+      )
+  }
+
+  i_sri_data <-
+    i_sri_data |>
+    drop_na(sri) |>
+    group_by(ga_week) |>
+    mutate(dummy = n() >= (1440 * 0.75)) |> # 1080
+    ungroup() |>
+    filter(dummy)
+
+  if (nrow(i_sri_data) == 0) {
+    cli_alert_info(
+      paste0(
+        "{.strong {col_red(i_id)}} was dropped because it has no gestational ",
+        "week with at least 75% of SRI data."
+      )
+    )
+
+    next
+
+    cli_progress_update()
+  }
+
+  i_sri_data <-
+    i_sri_data |>
+    group_by(ga_week) |>
+    summarize(sri = mean(sri, na.rm = TRUE)) |>
+    mutate(id = i_id) |>
+    select(id, ga_week, sri)
+
+  i_sri_data |> write_rds(here("data", paste0(i_id, "_sri-data.rds")))
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+```{r}
+read_rds(here("data", paste0(i_id, "_sri-data.rds")))
+```
+
+## Group SRI Data
+
+```{r}
+files <-
+  dir_ls(
+    path = here("data"),
+    type = "file",
+    regexp = ".rds$"
+  )
+```
+
+```{r}
+sri_data <- tibble()
+
+for (i in files) {
+  sri_data <-
+    i |>
+    read_rds(i) |>
+    bind_rows(sri_data)
+}
+
+sri_data <-
+  sri_data |>
+  mutate(ga_week = as.factor(ga_week)) |>
+  arrange(ga_week)
+```
+
+```{r}
+sri_data
+```
+
+## Compute State Proportions
+
+```{r}
+files <-
+  dir_ls(
+    path = here("data"),
+    type = "file",
+    regexp = ".txt$"
+  )
+```
+
+```{r}
+cli_progress_bar(
+  total = length(files),
+  clear = FALSE
+)
+
+for (i in files) {
+  i_id <- str_remove(basename(i), "_actigraphy-processed-data.txt")
+
+  i_data <-
+    i |>
+    read_acttrust(tz = "America/Sao_Paulo") |>
+    shush() |>
+    state_prop() |>
+    mutate(id = i_id)
+
+  i_data |> write_rds(here("data", paste0(i_id, "_state-prop-data.rds")))
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+## Explore Model Data
+
+### SRI by Gestational Age Week
+
+```{r}
+sri_data |>
+  ggplot(aes(x = sri, fill = ga_week)) +
+  geom_boxplot() +
+  coord_flip() +
+  labs(
+    x = "Sleep Regularity Index (SRI)",
+    y = "Gestational Age Week"
+  )
+```
+
+```{r}
+sri_data |>
+  ggplot(aes(x = sri, y = ga_week, color = ga_week)) +
+  geom_point() +
+  geom_jitter(width = 0.1, height = 0) +
+  labs(
+    x = "Sleep Regularity Index (SRI)",
+    y = "Gestational Age Week"
+  )
+```
+
+## SRI Over Time
+
+(all sample combined)
+
+### State Proportions
+
+```{r}
+i_data |>
+  mutate(per = prop * 100) |>
+  ggplot(ggplot2::aes(x = time, y = per)) +
+  geom_smooth(color = "#FC2913") +
+  labs(
+    x = "Time of day (Hour)",
+    y = "Percentage of time asleep (%)",
+  ) +
+  scale_x_time(
+    breaks = breaks_width("6 hours"),
+    labels = label_time("%-H") # Use "%#H" for Windows
+  ) +
+  scale_y_continuous(limits = c(NA, 100))
+```
+
+## Prepare Model Data for ANOVA
+
+Critério de exclusão:
+
+- Grupos de semanas gestacioanis com menos de 5 gestantes
+
 ```
 Ho: 36 >= 37 >= 38 >= 39 >= ...
 Ha: 36 < 37 < 38 < 39 < ...
 ```
-
 - Fazer ANCOVA
 - Ver outros modelos
+
+```{r}
+model_data <-
+  sri_data |>
+  group_by(ga_week) |>
+  mutate(dummy = n() >= 5) |>
+  ungroup(ga_week) |>
+  filter(dummy) |>
+  arrange(ga_week) |>
+  select(-dummy)
+```
+
+```{r}
+model_data |> summarize(n = n(), .by = ga_week)
+```
+
+## *A Prioi* Power Analysis
+
+```{r}
+pwr_analysis <- pwr.anova.test(
+  k = model_data |> pull(ga_week) |> unique() |> length(),
+  f = 0.25, # Cohen's f for medium effect sizes
+  sig.level = 0.05,
+  power = 0.8
+)
+```
+
+```{r}
+pwr_analysis
+```
+
+```{r}
+pwr_analysis |>
+  plot.power.htest(
+    xlab = "Sample size per group",
+    ylab = "Power (1 - Beta)",
+    main = NULL
+  )
+```
+
+## Model Data
+
+```{r}
+observed_statistic <-
+  model_data |>
+  specify(sri ~ ga_week) |>
+  hypothesize(null = "independence") |>
+  calculate(stat = "F")
+
+observed_statistic
+```
+
+```{r}
+null_dist <-
+  model_data |>
+  specify(sri ~ ga_week) |>
+  hypothesize(null = "independence") |>
+  generate(reps = 1000, type = "permute") |>
+  calculate(stat = "F")
+
+null_dist
+```
+
+```{r}
+null_dist |>
+  visualize(method = "both") +
+  shade_p_value(
+    obs_stat = observed_statistic,
+    direction = "greater"
+  ) +
+  labs(
+    title = NULL,
+    x = "F-statistic",
+    y = "Frequency"
+  )
+```
+
+```{r}
+null_dist |>
+  get_p_value(
+    obs_stat = observed_statistic,
+    direction = "right"
+  )
+```
+
+```{r}
+aov(sri ~ ga_week, data = model_data) |>
+  TukeyHSD(conf.level = 0.95) |>
+  tidy()
+```
+
+## Effect Size
+
+```{r}
+effect_size <-
+  aov(sri ~ ga_week, data = model_data) |>
+  cohens_f()
+
+effect_size
+```
+
+```{r}
+effect_size[[2]] |>
+  f_to_eta2() |>
+  interpret_eta_squared(rules = "cohen1992")
+```
+
+## *A Posteriori* Power Analysis
+
+```{r}
+groups_n <-
+  model_data |>
+  summarize(n = n(), .by = ga_week)
+
+groups_n
+```
+
+```{r}
+pwr.anova.test(
+  k = nrow(groups_n),
+  n = min(groups_n$n),
+  f = effect_size[[2]],
+  sig.level = 0.05
+)
+```
 
 ## Other
 

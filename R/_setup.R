@@ -13,7 +13,6 @@ library(ragg)
 # library(rutils) # github.com/danielvartan/rutils
 library(showtext)
 library(sysfonts)
-library(vscDebugger) # github.com/ManuelHentschel/vscDebugger
 library(xml2)
 # library(yaml)
 
