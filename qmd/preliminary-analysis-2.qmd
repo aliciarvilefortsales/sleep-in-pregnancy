@@ -20,7 +20,6 @@ library(askpass)
 library(broom)
 library(checkmate)
 library(cli)
-library(dplyr)
 library(effectsize)
 library(fs)
 library(ggplot2)
@@ -28,14 +27,18 @@ library(googlesheets4)
 library(here)
 library(hms)
 library(infer)
+library(janitor)
 library(lockr) # github.com/danielvartan/lokcr
 library(lubridate)
 library(lubritime) # github.com/danielvartan/lubritime
 library(magrittr)
 library(orbis) # github.com/danielvartan/orbis
 library(osfr)
+library(parsnip)
 library(plotr) # github.com/danielvartan/plotr
+library(psychometric)
 library(pwr)
+library(pwrss)
 library(readr)
 library(rutils) # github.com/danielvartan/rutils
 library(scaler) # github.com/danielvartan/scaler
@@ -46,6 +49,10 @@ library(stringr)
 library(summarytools)
 library(tidyr)
 library(tsibble)
+```
+
+```{r}
+library(dplyr)
 ```
 
 ```{r}
@@ -142,7 +149,7 @@ control_data <-
       )
     )
   ) |>
-  select(cpf, id, birth_center_delivery, ga_start)
+  dplyr::select(cpf, id, birth_center_delivery, ga_start)
 
 control_data
 ```
@@ -203,10 +210,7 @@ files <-
 ```
 
 ```{r}
-cli_progress_bar(
-  total = length(files),
-  clear = FALSE
-)
+cli_progress_bar(total = length(files), clear = FALSE)
 
 for (i in files) {
   i_id <- str_remove(basename(i), "_actigraphy-processed-data.txt")
@@ -236,7 +240,10 @@ for (i in files) {
         as.integer()
     )
 
-  i_sri_data |> write_rds(here("data", paste0(i_id, "_sri-data.rds")))
+  i_data |>
+    write_rds(
+      here("data", paste0(i_id, "_actigraphy-processed-data.rds"))
+    )
 
   cli_progress_update()
 }
@@ -244,7 +251,7 @@ for (i in files) {
 cli_progress_done()
 ```
 
-## Compute SRI
+## Compute SRI By Gestational Week
 
 Critérios de exclusão:
 
@@ -267,43 +274,19 @@ files <-
   dir_ls(
     path = here("data"),
     type = "file",
-    regexp = ".txt$"
+    regexp = "_actigraphy-processed-data.rds$"
   )
 ```
 
 ```{r}
-cli_progress_bar(
-  total = length(files),
-  clear = FALSE
-)
+cli_progress_bar(total = length(files), clear = FALSE)
 
 for (i in files) {
-  i_id <- str_remove(basename(i), "_actigraphy-processed-data.txt")
-
-  i_ga_start <-
-    control_data |>
-    filter(id == i_id) |>
-    pull(ga_start)
+  i_id <- str_remove(basename(i), "_actigraphy-processed-data.rds")
 
   i_data <-
     i |>
-    read_acttrust(tz = "America/Sao_Paulo") |>
-    shush() |>
-    mutate(
-      ga =
-        ga_point(
-          i_ga_start,
-          timestamp
-        ) |>
-        as.numeric() |>
-        as.duration() |>
-        add(as_hms(timestamp) |> as.numeric() |> as.duration()),
-      ga_week =
-        ga |>
-        as.numeric() |>
-        divide_by(as.numeric(ddays(7))) |>
-        as.integer()
-    ) |>
+    read_rds() |>
     as_tibble() |>
     group_by(ga_week) |>
     mutate(
@@ -321,9 +304,9 @@ for (i in files) {
       )
     )
 
-    next
-
     cli_progress_update()
+
+    next
   }
 
   i_sri_data <- tibble()
@@ -350,7 +333,10 @@ for (i in files) {
             awake_states = 0,
             min_data = 0.75
           ) |>
-          mutate(ga_week = j) |>
+          mutate(
+            id = i_id,
+            ga_week = j
+          ) |>
           as_tibble()
       )
   }
@@ -361,7 +347,8 @@ for (i in files) {
     group_by(ga_week) |>
     mutate(dummy = n() >= (1440 * 0.75)) |> # 1080
     ungroup() |>
-    filter(dummy)
+    filter(dummy) |>
+    dplyr::select(-dummy)
 
   if (nrow(i_sri_data) == 0) {
     cli_alert_info(
@@ -371,17 +358,10 @@ for (i in files) {
       )
     )
 
-    next
-
     cli_progress_update()
-  }
 
-  i_sri_data <-
-    i_sri_data |>
-    group_by(ga_week) |>
-    summarize(sri = mean(sri, na.rm = TRUE)) |>
-    mutate(id = i_id) |>
-    select(id, ga_week, sri)
+    next
+  }
 
   i_sri_data |> write_rds(here("data", paste0(i_id, "_sri-data.rds")))
 
@@ -391,10 +371,6 @@ for (i in files) {
 cli_progress_done()
 ```
 
-```{r}
-read_rds(here("data", paste0(i_id, "_sri-data.rds")))
-```
-
 ## Group SRI Data
 
 ```{r}
@@ -402,7 +378,7 @@ files <-
   dir_ls(
     path = here("data"),
     type = "file",
-    regexp = ".rds$"
+    regexp = "_sri-data.rds$"
   )
 ```
 
@@ -412,7 +388,17 @@ sri_data <- tibble()
 for (i in files) {
   sri_data <-
     i |>
-    read_rds(i) |>
+    read_rds() |>
+    mutate(
+      time =
+        time |>
+        as.numeric() |>
+        divide_by(60) |>
+        as.integer() |>
+        dminutes() |>
+        as.numeric() |>
+        as_hms()
+    ) |>
     bind_rows(sri_data)
 }
 
@@ -426,6 +412,65 @@ sri_data <-
 sri_data
 ```
 
+## Compute SRI Means By Gestational Week
+
+```{r}
+files <-
+  dir_ls(
+    path = here("data"),
+    type = "file",
+    regexp = "_sri-data.rds$"
+  )
+```
+
+```{r}
+for (i in files) {
+  i_id <- str_remove(basename(i), "_sri-data.rds")
+
+  i_data <-
+    i |>
+    read_rds() |>
+    as_tibble() |>
+    group_by(ga_week) |>
+    summarize(sri = mean(sri, na.rm = TRUE)) |>
+    mutate(id = i_id) |>
+    dplyr::select(id, ga_week, sri)
+
+  i_data |> write_rds(here("data", paste0(i_id, "_sri-mean-data.rds")))
+}
+```
+
+## Group SRI Mean Data
+
+```{r}
+files <-
+  dir_ls(
+    path = here("data"),
+    type = "file",
+    regexp = "_sri-mean-data.rds$"
+  )
+```
+
+```{r}
+sri_mean_data <- tibble()
+
+for (i in files) {
+  sri_mean_data <-
+    i |>
+    read_rds(i) |>
+    bind_rows(sri_mean_data)
+}
+
+sri_mean_data <-
+  sri_mean_data |>
+  mutate(ga_week = as.factor(ga_week)) |>
+  arrange(ga_week)
+```
+
+```{r}
+sri_mean_data
+```
+
 ## Compute State Proportions
 
 ```{r}
@@ -433,7 +478,7 @@ files <-
   dir_ls(
     path = here("data"),
     type = "file",
-    regexp = ".txt$"
+    regexp = "_actigraphy-processed-data.rds$"
   )
 ```
 
@@ -459,6 +504,22 @@ for (i in files) {
 }
 
 cli_progress_done()
+```
+
+```{r}
+i_data |>
+  mutate(per = prop * 100) |>
+  ggplot(ggplot2::aes(x = time, y = per)) +
+  geom_smooth(color = "#FC2913") +
+  labs(
+    x = "Time of day (Hour)",
+    y = "Percentage of time asleep (%)",
+  ) +
+  scale_x_time(
+    breaks = breaks_width("6 hours"),
+    labels = label_time("%-H") # Use "%#H" for Windows
+  ) +
+  scale_y_continuous(limits = c(NA, 100))
 ```
 
 ## Explore Model Data
@@ -491,25 +552,348 @@ sri_data |>
 
 (all sample combined)
 
-### State Proportions
+## Regression Model 1 (`time + ga_week`)
+
+### Model Data
 
 ```{r}
-i_data |>
-  mutate(per = prop * 100) |>
-  ggplot(ggplot2::aes(x = time, y = per)) +
-  geom_smooth(color = "#FC2913") +
-  labs(
-    x = "Time of day (Hour)",
-    y = "Percentage of time asleep (%)",
-  ) +
-  scale_x_time(
-    breaks = breaks_width("6 hours"),
-    labels = label_time("%-H") # Use "%#H" for Windows
-  ) +
-  scale_y_continuous(limits = c(NA, 100))
+model_data <-
+  sri_data |>
+  mutate(time = as.numeric(time) / 60)
 ```
 
-## Prepare Model Data for ANOVA
+```{r}
+model_data |> summarize(n = unique(id) |> length(), .by = ga_week)
+```
+
+```{r}
+model_data <-
+  model_data |>
+  mutate(
+    ga_week =
+      ga_week |>
+      as.character() |>
+      as.numeric()
+  ) |>
+  filter(between(ga_week, 36, 39)) |>
+  mutate(
+    ga_week = as.factor(ga_week)
+  )
+```
+
+### *A Priori* Power Analysis
+
+```{r}
+pwrss.f.reg(
+  r2 = 0.02, # Cohen's f^2 for small effect sizes
+  k = 2,
+  power = 0.8,
+  alpha = 0.05
+)
+```
+
+### SRI x Predictor
+
+#### `time`
+
+```{r}
+model_data |>
+  ggplot(
+    aes(
+      x = time,
+      y = sri,
+      color = ga_week,
+      shape = ga_week
+    )
+  ) +
+  geom_smooth(
+    inherit.aes = FALSE,
+    mapping = aes(x = time, y = sri),
+    method = "lm",
+    formula = y ~ x,
+    se = FALSE,
+    color = "black"
+  ) +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
+  labs(
+    x = "Time",
+    y = "Sleep Regularity Index (SRI)",
+    color = "Gestational Age Week",
+    shape = "Gestational Age Week"
+  )
+```
+
+#### `ga_week`
+
+```{r}
+model_data |>
+  dplyr::select(ga_week, sri) |>
+  mutate(
+    ga_week =
+      ga_week |>
+      as.character() |>
+      as.numeric()
+  ) |>
+  ggplot(aes(x = ga_week, y = sri)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
+  labs(
+    x = "Gestational Age Week",
+    y = "Sleep Regularity Index (SRI)"
+  )
+```
+
+### Model
+
+#### Restricted
+
+```{r}
+model <-
+  linear_reg() |>
+  set_engine("lm")
+```
+
+```{r}
+fit_restricted <-
+  model |>
+  fit(sri ~ time, data = model_data)
+```
+
+```{r}
+fit_restricted |> tidy() |> adorn_rounding(5)
+```
+
+```{r}
+fit_restricted_stats <- fit_restricted |> glance()
+```
+
+```{r}
+fit_restricted_stats |>
+  tidyr::pivot_longer(cols = dplyr::everything()) |>
+  adorn_rounding(5)
+```
+
+#### Complete
+
+```{r}
+model <-
+  linear_reg() |>
+  set_engine("lm")
+```
+
+```{r}
+fit_full <-
+  model |>
+  fit(sri ~ time + ga_week, data = model_data)
+```
+
+```{r}
+fit_full |> tidy() |> adorn_rounding(5)
+```
+
+```{r}
+fit_full_stats <- fit_full |> glance()
+```
+
+```{r}
+fit_full_stats |>
+  tidyr::pivot_longer(cols = dplyr::everything()) |>
+  adorn_rounding(5)
+```
+
+### Anova
+
+```{r}
+anova(fit_restricted$fit, fit_full$fit) |>
+  tidy() |>
+  adorn_rounding(5)
+```
+
+### Effect Size
+
+```{r}
+fit_restricted_stats$adj.r.squared
+```
+
+```{r}
+fit_restricted_stats$adj.r.squared |> interpret_r2(rules = "cohen1988")
+```
+
+```{r}
+fit_full_stats$adj.r.squared
+```
+
+```{r}
+fit_full_stats$adj.r.squared |> interpret_r2(rules = "cohen1988")
+```
+
+```{r}
+delta <- fit_full_stats$adj.r.squared - fit_restricted_stats$adj.r.squared
+
+delta
+```
+
+```{r}
+CI.Rsq(
+  rsq = delta,
+  n = model_data |> nrow(),
+  k = 2
+)
+```
+
+```{r}
+delta |> interpret_r2(rules = "cohen1988")
+```
+
+### *A Posteriori* Power Analysis
+
+```{r}
+pwrss.f.reg(
+  r2 = fit_full_stats$adj.r.squared,
+  k = 2,
+  n = model_data |> nrow(),
+  power = NULL,
+  alpha = 0.05
+)
+```
+
+## Regression Model 2 (`ga_week`)
+
+### Model Data
+
+```{r}
+sri_mean_data |> summarize(n = unique(id) |> length(), .by = ga_week)
+```
+
+```{r}
+model_data <-
+  sri_mean_data |>
+  mutate(
+    ga_week =
+      ga_week |>
+      as.character() |>
+      as.numeric()
+  ) |>
+  filter(between(ga_week, 36, 39)) |>
+  mutate(
+    ga_week = as.factor(ga_week)
+  )
+```
+
+```{r}
+model_data |> summarize(n = unique(id) |> length(), .by = ga_week)
+```
+
+### *A Priori* Power Analysis
+
+```{r}
+pwrss.f.reg(
+  r2 = 0.02, # Cohen's f^2 for small effect sizes
+  k = 1,
+  power = 0.8,
+  alpha = 0.05
+)
+```
+
+### SRI x Predictor
+
+#### `ga_week`
+
+```{r}
+model_data |>
+  dplyr::select(ga_week, sri) |>
+  mutate(
+    ga_week =
+      ga_week |>
+      as.character() |>
+      as.numeric()
+  ) |>
+  ggplot(aes(x = ga_week, y = sri)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
+  labs(
+    x = "Gestational Age Week",
+    y = "Sleep Regularity Index (SRI)"
+  )
+```
+
+### Model
+
+```{r}
+model <-
+  linear_reg() |>
+  set_engine("lm")
+```
+
+```{r}
+model_fit <-
+  model |>
+  fit(sri ~ ga_week, data = model_data)
+```
+
+```{r}
+model_fit |> tidy() |> adorn_rounding(5)
+```
+
+```{r}
+model_fit <- fit_full |> glance()
+```
+
+```{r}
+model_fit |>
+  tidyr::pivot_longer(cols = dplyr::everything()) |>
+  adorn_rounding(5)
+```
+
+### Effect Size
+
+```{r}
+model_fit$adj.r.squared
+```
+
+```{r}
+model_fit$adj.r.squared |> interpret_r2(rules = "cohen1988")
+```
+
+```{r}
+model_fit$adj.r.squared
+```
+
+```{r}
+model_fit$adj.r.squared |> interpret_r2(rules = "cohen1988")
+```
+
+```{r}
+delta <- model_fit$adj.r.squared - fit_restricted_stats$adj.r.squared
+
+delta
+```
+
+```{r}
+CI.Rsq(
+  rsq = delta,
+  n = model_data |> nrow(),
+  k = 2
+)
+```
+
+```{r}
+delta |> interpret_r2(rules = "cohen1988")
+```
+
+### *A Posteriori* Power Analysis
+
+```{r}
+pwrss.f.reg(
+  r2 = model_fit$adj.r.squared,
+  k = 2,
+  n = model_data |> nrow(),
+  power = NULL,
+  alpha = 0.05
+)
+```
+
+## ANOVA Model
 
 Critério de exclusão:
 
@@ -530,14 +914,14 @@ model_data <-
   ungroup(ga_week) |>
   filter(dummy) |>
   arrange(ga_week) |>
-  select(-dummy)
+  dplyr::select(-dummy)
 ```
 
 ```{r}
 model_data |> summarize(n = n(), .by = ga_week)
 ```
 
-## *A Prioi* Power Analysis
+### *A Prioi* Power Analysis
 
 ```{r}
 pwr_analysis <- pwr.anova.test(
@@ -561,7 +945,7 @@ pwr_analysis |>
   )
 ```
 
-## Model Data
+### Model Data
 
 ```{r}
 observed_statistic <-
@@ -612,7 +996,7 @@ aov(sri ~ ga_week, data = model_data) |>
   tidy()
 ```
 
-## Effect Size
+### Effect Size
 
 ```{r}
 effect_size <-
@@ -628,7 +1012,7 @@ effect_size[[2]] |>
   interpret_eta_squared(rules = "cohen1992")
 ```
 
-## *A Posteriori* Power Analysis
+### *A Posteriori* Power Analysis
 
 ```{r}
 groups_n <-
@@ -646,57 +1030,3 @@ pwr.anova.test(
   sig.level = 0.05
 )
 ```
-
-## Other
-
-```{r}
-file <-
-  here::here("data") |>
-  list.files(full.names = TRUE) |>
-  sample(1)
-```
-
-```{r}
-# Adicionar no `actverse`
-
-file |>
-  readr::read_lines() |>
-  iconv(to = "ASCII//TRANSLIT") |>
-  readr::write_lines(file)
-```
-
-```{r}
-data <-
-  file |>
-  read_acttrust(tz = "America/Sao_Paulo")
-```
-
-```{r}
-#| eval: false
-
-data |> actogram(days = Inf)
-```
-
-```{r}
-sri_data <- data |> sri()
-```
-
-```{r}
-sri_data |>
-    ggplot(ggplot2::aes(x = time, y = sri)) +
-    # geom_line() +
-    geom_smooth(color = "#FC2913") +
-    labs(
-      x = "Time of day (Hour)",
-      y = "Sleep Regularity Index (SRI)"
-    ) +
-    scale_x_time(
-      breaks = breaks_width("6 hours"),
-      labels = label_time("%-H") # Use "%#H" for Windows
-    ) +
-    scale_y_continuous()
-```
-
-## Data Modeling
-
-## Hypothesis Testing
