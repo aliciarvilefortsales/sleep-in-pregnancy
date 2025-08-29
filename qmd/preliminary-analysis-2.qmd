@@ -15,6 +15,8 @@ source(here::here("R", "_setup.R"))
 ## Set the Environment
 
 ```{r}
+#| output: false
+
 library(actverse) # github.com/danielvartan/actverse
 library(askpass)
 library(broom)
@@ -49,10 +51,6 @@ library(stringr)
 library(summarytools)
 library(tidyr)
 library(tsibble)
-```
-
-```{r}
-library(dplyr)
 ```
 
 ```{r}
@@ -111,6 +109,16 @@ control_form <- googlesheets4::read_sheet(
 )
 ```
 
+```{r}
+#| output: false
+
+field_form <- googlesheets4::read_sheet(
+  ss = "1tY_TT0nPXFsErYQS2VED0-hqTzgHudA9BfhRhYG19fw",
+  sheet = "Dataset",
+  col_types = "c"
+)
+```
+
 ## Process the Google Sheets Data
 
 ```{r}
@@ -152,6 +160,127 @@ control_data <-
   dplyr::select(cpf, id, birth_center_delivery, ga_start)
 
 control_data
+```
+
+```{r}
+field_form_data <-
+  field_form |>
+  `names<-`(paste0("X", seq_along(field_form))) |>
+  dplyr::select(
+    X1, X4, X5, X11, X91, X92, X95, X96, X97, X99, X101, X102, X106, X119,
+    X118, X125, X126
+  ) |>
+  dplyr::rename(
+    timestamp = X1,
+    birth_date = X4,
+    cpf = X5,
+    weight_before = X96,
+    weight_current = X95,
+    height = X97,
+    ethnicity = X106,
+    education = X118,
+    family_income = X99,
+    health_plan = X101,
+    solo = X102,
+    exercise = X119,
+    work = X92,
+    study = X91,
+    gestations = X11,
+    deliveries = X125,
+    abortions = X126
+  ) |>
+  dplyr::mutate(
+    id = anonymize_id(cpf, salt),
+    timestamp = lubridate::mdy_hms(timestamp),
+    birth_date = lubridate::dmy(birth_date),
+    age = scaler:::age(birth_date, timestamp),
+    ethnicity = factor(
+      ethnicity,
+      levels = c(
+        "Indígena",
+        "Preta",
+        "Parda",
+        "Amarela",
+        "Branca"
+      ),
+      ordered = TRUE
+    ),
+    education = factor(
+      education,
+      levels = c(
+        "Não frequentou a escola",
+        "Fundamental incompleto",
+        "Fundamental completo",
+        "Ensino médio incompleto",
+        "Ensino médio completo",
+        "Ensino superior incompleto",
+        "Ensino superior completo",
+        "Mestrado incompleto",
+        "Mestrado completo",
+        "Doutorado incompleto",
+        "Doutorado completo",
+        "Pós-doutorado incompleto",
+        "Pós-doutorado completo"
+      ),
+      ordered = TRUE
+    ),
+    gestations = dplyr::case_match(
+      gestations,
+      c("Sim", "0") ~ "1",
+      "Não" ~ "0",
+      .default = gestations
+    ),
+    deliveries = dplyr::case_when(
+      is.na(deliveries) ~ "0",
+      TRUE ~ deliveries
+    ),
+    abortions = dplyr::case_when(
+      is.na(abortions) ~ "0",
+      TRUE ~ abortions
+    )
+  ) |>
+  dplyr::mutate(
+    dplyr::across(
+      .cols = dplyr::all_of(
+        c(
+          "weight_before", "weight_current", "height",
+          "family_income", "gestations", "deliveries",
+          "abortions"
+        )
+      ),
+      .fns = as.numeric
+    )
+  ) |>
+  dplyr::mutate(
+    dplyr::across(
+      .cols = dplyr::all_of(
+        c("health_plan", "solo", "exercise", "work", "study")
+      ),
+      .fns = function(x) {
+        dplyr::case_match(
+          x,
+          "Sim" ~ TRUE,
+          "Não" ~ FALSE
+        )
+      }
+    )
+  ) |>
+  dplyr::mutate(
+    gestations = dplyr::case_when(
+      id == "ae5fc5cd" ~ 3,
+      TRUE ~ gestations
+    ),
+  ) |>
+  dplyr::mutate(
+    bmi_before = weight_before / ((height / 100)^2),
+    bmi_current = weight_current / ((height / 100)^2)
+  ) |>
+  dplyr::select(-cpf) |>
+  dplyr::relocate(
+    id, timestamp, birth_date, age, weight_before, weight_current, height, bmi_before, bmi_current, family_income
+  )
+
+field_form_data
 ```
 
 ## Getting Data from OSF
@@ -276,6 +405,36 @@ files <-
     type = "file",
     regexp = "_actigraphy-processed-data.rds$"
   )
+
+old_files <-
+  dir_ls(
+    path = here("data"),
+    type = "file",
+    regexp = "sri"
+  )
+
+if (length(old_files) > 0) file_delete(old_files)
+```
+
+Exclusion criteria:
+
+(2025-08-28) n = 40
+
+- 5 days (drops 6) + 75% (drops 12): 22
+- 5 days (drops 6) + 62.5% (drops 4): 30
+- 4 days (drops 3) + 50% (drops 1): 36
+- 4 days (drops 3) + 50% (drops 1): 36
+- 3 days (drops 3) + 50% (drops 1): 36
+
++ Sample potential
+
+- With the voluntaries: 2
+- Not read: 1 (Mariana) + 2 (Casa Angela): 3
+- Not processed: 2
+
+```{r}
+min_days <- 4
+min_valid_data <- 0.5 # By gestational age
 ```
 
 ```{r}
@@ -293,14 +452,14 @@ for (i in files) {
       ga_week_available_days = (n() * 60) / as.numeric(ddays(1))
     ) |>
     ungroup(ga_week) |>
-    filter(ga_week_available_days >= 5) |>
+    filter(ga_week_available_days >= min_days) |>
     as_tsibble(index = timestamp)
 
   if (nrow(i_data) == 0) {
     cli_alert_info(
       paste0(
         "{.strong {col_red(i_id)}} was dropped because it has no gestational ",
-        "week with at least 5 days of data."
+        "week with at least {min_days} days of data."
       )
     )
 
@@ -331,7 +490,7 @@ for (i in files) {
           sri(
             sleeping_states = c(1, 2),
             awake_states = 0,
-            min_data = 0.75
+            min_data = min_valid_data
           ) |>
           mutate(
             id = i_id,
@@ -345,7 +504,7 @@ for (i in files) {
     i_sri_data |>
     drop_na(sri) |>
     group_by(ga_week) |>
-    mutate(dummy = n() >= (1440 * 0.75)) |> # 1080
+    mutate(dummy = n() >= (1440 * min_valid_data)) |> # 1080
     ungroup() |>
     filter(dummy) |>
     dplyr::select(-dummy)
@@ -354,7 +513,7 @@ for (i in files) {
     cli_alert_info(
       paste0(
         "{.strong {col_red(i_id)}} was dropped because it has no gestational ",
-        "week with at least 75% of SRI data."
+        "week with at least {round(min_valid_data * 100, 2)}% of SRI data."
       )
     )
 
@@ -552,217 +711,26 @@ sri_data |>
 
 (all sample combined)
 
-## Regression Model 1 (`time + ga_week`)
+## Models
 
-### Model Data
-
-```{r}
-model_data <-
-  sri_data |>
-  mutate(time = as.numeric(time) / 60)
-```
-
-```{r}
-model_data |> summarize(n = unique(id) |> length(), .by = ga_week)
-```
-
-```{r}
-model_data <-
-  model_data |>
-  mutate(
-    ga_week =
-      ga_week |>
-      as.character() |>
-      as.numeric()
-  ) |>
-  filter(between(ga_week, 36, 39)) |>
-  mutate(
-    ga_week = as.factor(ga_week)
-  )
-```
-
-### *A Priori* Power Analysis
-
-```{r}
-pwrss.f.reg(
-  r2 = 0.02, # Cohen's f^2 for small effect sizes
-  k = 2,
-  power = 0.8,
-  alpha = 0.05
-)
-```
-
-### SRI x Predictor
-
-#### `time`
-
-```{r}
-model_data |>
-  ggplot(
-    aes(
-      x = time,
-      y = sri,
-      color = ga_week,
-      shape = ga_week
-    )
-  ) +
-  geom_smooth(
-    inherit.aes = FALSE,
-    mapping = aes(x = time, y = sri),
-    method = "lm",
-    formula = y ~ x,
-    se = FALSE,
-    color = "black"
-  ) +
-  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
-  labs(
-    x = "Time",
-    y = "Sleep Regularity Index (SRI)",
-    color = "Gestational Age Week",
-    shape = "Gestational Age Week"
-  )
-```
-
-#### `ga_week`
-
-```{r}
-model_data |>
-  dplyr::select(ga_week, sri) |>
-  mutate(
-    ga_week =
-      ga_week |>
-      as.character() |>
-      as.numeric()
-  ) |>
-  ggplot(aes(x = ga_week, y = sri)) +
-  geom_point() +
-  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
-  labs(
-    x = "Gestational Age Week",
-    y = "Sleep Regularity Index (SRI)"
-  )
-```
-
-### Model
-
-#### Restricted
-
-```{r}
-model <-
-  linear_reg() |>
-  set_engine("lm")
-```
-
-```{r}
-fit_restricted <-
-  model |>
-  fit(sri ~ time, data = model_data)
-```
-
-```{r}
-fit_restricted |> tidy() |> adorn_rounding(5)
-```
-
-```{r}
-fit_restricted_stats <- fit_restricted |> glance()
-```
-
-```{r}
-fit_restricted_stats |>
-  tidyr::pivot_longer(cols = dplyr::everything()) |>
-  adorn_rounding(5)
-```
-
-#### Complete
-
-```{r}
-model <-
-  linear_reg() |>
-  set_engine("lm")
-```
-
-```{r}
-fit_full <-
-  model |>
-  fit(sri ~ time + ga_week, data = model_data)
-```
-
-```{r}
-fit_full |> tidy() |> adorn_rounding(5)
-```
-
-```{r}
-fit_full_stats <- fit_full |> glance()
-```
-
-```{r}
-fit_full_stats |>
-  tidyr::pivot_longer(cols = dplyr::everything()) |>
-  adorn_rounding(5)
-```
-
-### Anova
-
-```{r}
-anova(fit_restricted$fit, fit_full$fit) |>
-  tidy() |>
-  adorn_rounding(5)
-```
-
-### Effect Size
-
-```{r}
-fit_restricted_stats$adj.r.squared
-```
-
-```{r}
-fit_restricted_stats$adj.r.squared |> interpret_r2(rules = "cohen1988")
-```
-
-```{r}
-fit_full_stats$adj.r.squared
-```
-
-```{r}
-fit_full_stats$adj.r.squared |> interpret_r2(rules = "cohen1988")
-```
-
-```{r}
-delta <- fit_full_stats$adj.r.squared - fit_restricted_stats$adj.r.squared
-
-delta
-```
-
-```{r}
-CI.Rsq(
-  rsq = delta,
-  n = model_data |> nrow(),
-  k = 2
-)
-```
-
-```{r}
-delta |> interpret_r2(rules = "cohen1988")
-```
-
-### *A Posteriori* Power Analysis
-
-```{r}
-pwrss.f.reg(
-  r2 = fit_full_stats$adj.r.squared,
-  k = 2,
-  n = model_data |> nrow(),
-  power = NULL,
-  alpha = 0.05
-)
-```
-
-## Regression Model 2 (`ga_week`)
-
-### Model Data
+$$
+\begin{cases}
+  \text{H}_{0}: \rho \geq 0 \\
+  \text{H}_{a}: \rho < 0
+\end{cases}
+$$
 
 ```{r}
 sri_mean_data |> summarize(n = unique(id) |> length(), .by = ga_week)
+```
+
+```{r}
+ga_lim <- c(36, 39)
+
+# ga_week_num <- sri_mean_data$ga_week |> as.character() |> as.integer()
+# ga_lim <- c(min(ga_week_num),  max(ga_week_num))
+
+ga_lim
 ```
 
 ```{r}
@@ -772,77 +740,397 @@ model_data <-
     ga_week =
       ga_week |>
       as.character() |>
-      as.numeric()
+      as.numeric(),
+    ga_week_centered =
+      ga_week |>
+      scale(center = TRUE, scale = FALSE)
   ) |>
-  filter(between(ga_week, 36, 39)) |>
-  mutate(
-    ga_week = as.factor(ga_week)
+  filter(between(ga_week, ga_lim[1], ga_lim[2])) |>
+  group_by(ga_week) |>
+  mutate(n = n()) |>
+  ungroup() |>
+  left_join(
+    field_form_data |> dplyr::select(-timestamp),
+    by = "id"
   )
 ```
 
 ```{r}
-model_data |> summarize(n = unique(id) |> length(), .by = ga_week)
+model_data |> nrow()
 ```
 
-### *A Priori* Power Analysis
+```{r}
+model_data |> pull(id) |> unique() |> length()
+```
 
 ```{r}
-pwrss.f.reg(
-  r2 = 0.02, # Cohen's f^2 for small effect sizes
-  k = 1,
-  power = 0.8,
-  alpha = 0.05
+model_data_weeks <-
+  model_data |>
+  pull(ga_week) |>
+  unique() |>
+  length()
+
+model_data_weeks
+```
+
+```{r}
+model_data |> summarize(n = n(), .by = id) |> arrange(n)
+```
+
+```{r}
+model_data
+```
+
+### Pearson Correlation
+
+```{r}
+cor.test(
+  x = model_data$ga_week_centered,
+  y = model_data$sri,
+  alternative = "less"
 )
 ```
 
-### SRI x Predictor
+### Weighted Pearson Correlation
 
-#### `ga_week`
+```{r}
+#| output: false
+
+library(weights)
+```
+
+```{r}
+model_wtd_cor <- wtd.cor(
+  x = model_data$ga_week_centered,
+  y = model_data$sri,
+  weight = model_data$n
+)
+
+model_wtd_cor
+```
+
+```{r}
+t_obs <- model_wtd_cor[, 3]
+df <- length(model_data) - 1
+
+pt(t_obs, df)
+```
+
+### Generalized Estimating Equations (GEE)
+
+```{r}
+#| output: false
+
+library(geepack)
+library(glmtoolbox)
+library(performance)
+```
+
+```{r}
+model_data_gee <-
+  model_data |> 
+  mutate(id = id |> as.factor() |> as.numeric()) |>
+  arrange(id, ga_week)
+```
+
+```{r}
+model_data_gee |> summarize(n = n(), .by = id) |> arrange(n)
+```
+
+```{r}
+model_gee <- geeglm(
+  sri ~ ga_week_centered, 
+  family = gaussian,
+  id = id, # ga_week,
+  weights = n,
+  data = model_data_gee,
+  corstr = "exchangeable"
+)
+
+model_gee
+```
+
+```{r}
+summary(model_gee)
+```
+
+```{r}
+coefs <- summary(model_gee)$coefficients
+beta  <- coefs["ga_week_centered", "Estimate"]
+se    <- coefs["ga_week_centered", "Std.err"]
+
+z     <- beta / se
+
+p_one_sided <- pnorm(z)
+
+p_one_sided
+```
+
+```{r}
+library(plotr) # github.com/danielvartan/plotr
+
+tibble(x = residuals(model_gee)[, 1]) |> 
+  plotr:::plot_qq("x")
+```
+
+```{r}
+library(rutils) # github.com/danielvartan/rutils
+
+tibble(x = residuals(model_gee)[, 1]) |> rutils:::normality_summary("x")
+```
+
+```{r}
+check_model(model_gee)
+```
+
+#### Effect Size by Week
+
+$$
+d_{Total} = \cfrac{\beta}{\text{SD}(Y)}
+$$
+
+```{r}
+beta <- coef(model_gee)["ga_week_centered"]
+sd_y <- model_data |> pull(sri) |> sd()
+
+d_by_week <- beta / sd_y
+
+d_by_week
+```
+
+```{r}
+se_beta <- summary(model_gee)$coefficients["ga_week_centered", "Std.err"]
+
+ci_lower <- (beta - (1.96 * se_beta)) / sd_y
+ci_upper <- (beta + (1.96 * se_beta)) / sd_y
+
+c(ci_lower, ci_upper)
+```
+
+```{r}
+library(effectsize)
+
+interpret_cohens_d(d_total)
+```
+
+#### Effect Size for Delta Week
+
+$$
+d_{Total} = \cfrac{\beta \times \Delta\text{Weeks}}{\text{SD}(Y)}
+$$
+
+```{r}
+weeek_min <- min(model_data$ga_week)
+week_max <- max(model_data$ga_week)
+
+c(weeek_min, week_max)
+```
+
+```{r}
+beta <- coef(model_gee)["ga_week_centered"]
+delta_weeks <- week_max - weeek_min
+sd_y <- model_data |> pull(sri) |> sd()
+
+
+d_total <- (beta * delta_weeks) / sd_y
+
+d_total
+```
+
+```{r}
+se_beta <- summary(model_gee)$coefficients["ga_week_centered", "Std.err"]
+se_total <- se_beta * delta_weeks
+
+ci_lower <- ((beta * delta_weeks) - 1.96 * se_total) / sd_y
+ci_upper <- ((beta * delta_weeks) + 1.96 * se_total) / sd_y
+
+c(ci_lower, ci_upper)
+```
+
+```{r}
+library(effectsize)
+
+interpret_cohens_d(d_total)
+```
+
+#### *A Posteriori* Power Analysis: **ESTIMATE**
+
+> Fazer análise de poder por simulação!!!
+
+```{r}
+library(pwr)
+```
+
+```{r}
+n_clusters <- model_data_gee |> pull(id) |> unique() |> length()
+
+n_clusters
+```
+
+```{r}
+pwr.t.test(
+  n = n_clusters,
+  d = d_total,
+  sig.level = 0.05,
+  power = NULL,
+  type = "paired",
+  alternative = "less"
+)
+```
+
+### Linear Model (LM)
+
+```{r}
+model_lm <- lm(
+  sri ~ ga_week_centered,
+  data = model_data,
+  weights = n
+)
+```
+
+```{r}
+sm <- summary(model_lm)
+
+sm
+```
+
+```{r}
+t_obs <- sm$coefficients["ga_week_centered", "t value"]
+df <- length(model_data) - 1
+
+pt(t_obs, df)
+```
+
+## Linear Model (LM) with Model Selection
+
+```{r}
+#| output: false
+
+library(MuMIn)
+```
+
+```{r}
+model_data_mumin <-
+  model_data |>
+    dplyr::select(-education) |>
+    drop_na(bmi_current, family_income)
+```
+
+```{r}
+model_lm_full <- lm(
+  sri ~ ga_week_centered + age + weight_current + bmi_current + family_income +
+  ethnicity + gestations + deliveries + abortions + solo + work,
+  data = model_data_mumin,
+  na.action = na.fail
+)
+```
+
+```{r}
+model_lm_full <- lm(
+  sri ~ ga_week_centered + age + weight_current + bmi_current + family_income +
+  ethnicity + gestations + deliveries + abortions + solo + work,
+  data = model_data_mumin,
+  na.action = na.fail
+)
+```
+
+```{r}
+sm <- summary(model_lm_full)
+
+sm
+```
+
+```{r}
+x <- dredge(model_lm_full)
+```
+
+### Linear Mixed Model (LMM)
+
+```{r}
+library(lme4)
+library(lmerTest)
+library(emmeans)
+library(pbkrtest)
+library(performance)
+library(see)
+```
+
+```{r}
+m_lmm <- lmer(
+  sri ~ ga_week_centered + (1 | id),
+  data = model_data
+)
+```
+
+```{r}
+sm <- summary(m_lmm)
+
+sm
+```
+
+```{r}
+t_obs <- sm$coefficients["ga_week_centered", "t value"]
+df <- sm$coefficients["ga_week_centered", "df"]
+
+pt(t_obs, df)
+```
+
+```{r}
+check_model(m_lmm)
+```
+
+```{r}
+emm <- emmeans(
+  m_lmm, ~ ga_week_centered,
+  at = list(ga_week_centered = 33:40)
+)
+```
+
+```{r}
+plot(emm, xlim = c(0, 100))
+```
+
+```{r}
+pred <- emm |> as_tibble()
+```
 
 ```{r}
 model_data |>
-  dplyr::select(ga_week, sri) |>
-  mutate(
-    ga_week =
-      ga_week |>
-      as.character() |>
-      as.numeric()
-  ) |>
-  ggplot(aes(x = ga_week, y = sri)) +
-  geom_point() +
-  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
+  ggplot(aes(x = ga_week, y = sri, color = id)) +
+  # geom_line(alpha = 0.3) +
+  geom_point(alpha = 0.3) +
+  # geom_line(
+  #   data = pred,
+  #   mapping = aes(x = ga_week_centered, y = emmean),
+  #   color = "blue",
+  #   size = 1.2
+  # ) +
+  # geom_ribbon(
+  #   data = pred,
+  #   mapping = aes(ymin = lower.CL, ymax = upper.CL),
+  #   alpha = 0.2,
+  #   fill = "blue"
+  # ) +
   labs(
-    x = "Gestational Age Week",
-    y = "Sleep Regularity Index (SRI)"
+    x = "Semana gestacional",
+    y = "SRI (%)",
+    title =
+    "Tendência do Índice de Regularidade do Sono (SRI)"
   )
 ```
 
-### Model
-
 ```{r}
-model <-
-  linear_reg() |>
-  set_engine("lm")
+model_data |>
+  ggplot(aes(x = ga_week, y = sri)) +
+  geom_smooth(alpha = 0.3, method = "gam") +
+  geom_point(alpha = 0.3)
 ```
 
 ```{r}
-model_fit <-
-  model |>
-  fit(sri ~ ga_week, data = model_data)
-```
-
-```{r}
-model_fit |> tidy() |> adorn_rounding(5)
-```
-
-```{r}
-model_fit <- fit_full |> glance()
-```
-
-```{r}
-model_fit |>
-  tidyr::pivot_longer(cols = dplyr::everything()) |>
-  adorn_rounding(5)
+model_data |>
+  ggplot(aes(x = ga_week, y = sri)) +
+  geom_smooth(alpha = 0.3) +
+  geom_point(alpha = 0.3)
 ```
 
 ### Effect Size

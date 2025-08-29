@@ -18,5 +18,13 @@
     "titleBar.inactiveBackground": "#89634c99",
     "titleBar.inactiveForeground": "#e7e7e799"
   },
-  "peacock.color": "#89634C"
+  "peacock.color": "#89634C",
+  "cSpell.words": [
+    "actverse",
+    "askpass",
+    "danielvartan",
+    "effectsize",
+    "ggplot",
+    "rutils"
+  ]
 }
