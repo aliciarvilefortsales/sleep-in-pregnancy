@@ -103,6 +103,8 @@ theme_set(
       ),
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
+      axis.text.x = element_text(margin = margin(0,0,10,0)),
+      axis.text.y = element_text(margin = margin(0,0,0,20)),
       legend.background = element_rect(fill = "transparent"),
       legend.box.background = element_rect(
         fill = "transparent", color = NA

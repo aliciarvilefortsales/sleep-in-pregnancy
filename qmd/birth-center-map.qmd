@@ -38,7 +38,7 @@ library(sf)
 
 ```{r}
 data_dir <- here("data", "geosampa")
-images_dir <- here("images")
+plots_dir <- here("plots")
 ```
 
 ```{r}
@@ -80,64 +80,27 @@ Source: <https://geosampa.prefeitura.sp.gov.br/PaginasPublicas/_SBC.aspx>
 subprefecture_shapes <-
   here(data_dir, "geoportal_subprefeitura_v2.gpkg") |>
   st_read() |>
-  select(nm_subprefeitura, ge_poligono) |>
+  dplyr::select(nm_subprefeitura, ge_poligono) |>
   rename(name_subprefecture = nm_subprefeitura, geom = ge_poligono)
-```
-
-## Download and Import Municipality Districts Shapes
-
-```{r}
-districts_shapes <-
-  read_neighborhood(year = 2010) |>
-  filter(code_muni == municipality) |>
-  select(name_district, geom)
 ```
 
 ## Plot Birth Center Map
 
-```{r}
-ggsave_mode <- TRUE
-
-if (isTRUE(ggsave_mode)) {
-  plot_params <- list(
-    geom_sf_shape_size = 0.1,
-    geom_sf_text_size_1 = 5,
-    geom_sf_text_size_2 = 6,
-    geom_sf_point_size = 1.5,
-    position_y_nudge = 2000
-  )
-} else {
-  plot_params <- list(
-    geom_sf_shape_size = 0.3,
-    geom_sf_text_size_1 = 2,
-    geom_sf_text_size_2 = 3,
-    geom_sf_point_size = 3,
-    position_y_nudge = 2500
-  )
-}
-
-dev.off()
-```
+::: {.callout-note}
+Use Positron save tool to save the map as PNG.
+:::
 
 ```{r}
-gplot() +
+ggplot() +
   geom_sf(
     data = subprefecture_shapes,
     fill = "gray90",
     color = "gray75",
-    size = plot_params$geom_sf_shape_size
+    size = 0.3
   ) +
   geom_sf_text(
     data =
       subprefecture_shapes |>
-      # filter(
-      #   case_when(
-      #     as.numeric(st_area(geom)) < 50000000 &
-      #       nchar(name_subprefecture) < 12 ~ TRUE,
-      #     as.numeric(st_area(geom)) >= 100000000 &
-      #       nchar(name_subprefecture) < 15 ~ TRUE,
-      #     TRUE ~ FALSE
-      #   ),
       mutate(
         name_subprefecture =
           name_subprefecture |>
@@ -202,50 +165,23 @@ gplot() +
           )
       ),
     aes(label = name_subprefecture),
-    size = plot_params$geom_sf_text_size_1,
+    size = 2.5,
     color = "gray50"
   ) +
   geom_sf(
     data = birth_center_coordinates,
     color = "red",
-    size = plot_params$geom_sf_point_size,
+    size = 3.5,
   ) +
   geom_sf_label(
     data = birth_center_coordinates ,
     aes(label = name),
-    size = plot_params$geom_sf_text_size_2,
+    size = 3.5,
     fontface = "bold",
-    position = position_nudge(y = plot_params$position_y_nudge),
+    position = position_nudge(y = 2500),
     border.color = NA,
     text.color = "black"
   ) +
   coord_sf(datum = NA) +
   theme_void()
-```
-
-## Save Plot
-
-```{r}
-image_file <- here(images_dir, "birth-center-map-figure.png")
-```
-
-```{r}
-image_file |>
-  ggsave(
-    plot = plot,
-    device = agg_png(),
-    width = 7,
-    height = 10,
-    units = "cm",
-    dpi = 300,
-    bg = "white",
-    scale = 1
-  )
-```
-
-```{r}
-image_file |>
-  image_read() |>
-  image_trim() |>
-  image_write(image_file)
 ```

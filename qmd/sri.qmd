@@ -1174,11 +1174,14 @@ irregular_sri_ids <-
 #### Mean SRI by Pregnant Women
 
 ```{r}
-sri_data |>
+sri_mean_data_by_id <-
+  sri_data |>
   summarize(
     sri = mean(sri, na.rm = TRUE),
     .by = id
   )
+
+sri_mean_data_by_id
 ```
 
 #### Mean Global SRI
@@ -1217,6 +1220,8 @@ sri_data |>
 
 #### By Gestational Age Week
 
+##### Scatter Plot with Linear Trend
+
 ```{r}
 sri_mean_data |>
   mutate(ga_week = ga_week |> as.character() |> as.numeric()) |>
@@ -1229,28 +1234,44 @@ sri_mean_data |>
     color = "red"
   ) +
   labs(
-    x = "Semana gestacional", # Gestational Age Week
+    x = "Semana Gestacional", # Gestational Age Week
     y = "Índice de Regularidade do Sono (SRI)", # Sleep Regularity Index (SRI)
   )
   theme(legend.position = "none")
 ```
+
+##### Boxplots
 
 ```{r}
 sri_mean_data |>
   mutate(ga_week = ga_week |> as.character() |> as.numeric()) |>
   filter(between(ga_week, 36, 39)) |>
   mutate(ga_week = factor(ga_week)) |>
-  ggplot(aes(x = sri, y = ga_week, fill = ga_week)) +
+  ggplot(aes(x = sri, y = ga_week)) +
   geom_boxplot() +
+  stat_summary(
+    fun = mean,
+    geom = "point",
+    size = 4,
+    color = "red",
+    shape = 18
+  ) +
+  geom_point(
+    position = position_jitter(height = 0.1, width = 0),
+    size = 2,
+    alpha = 0.25,
+    color = "blue"
+  ) +
   coord_flip() +
-  # scale_y_discrete(limits = rev) +
   labs(
     x = "Índice de Regularidade do Sono (SRI)", # Sleep Regularity Index (SRI)
-    y = "Semana gestacional", # Gestational Age Week
+    y = "Semana Gestacional", # Gestational Age Week
   ) +
   scale_color_viridis_d() +
   theme(legend.position = "none")
 ```
+
+##### Linear Trends by ID
 
 ```{r}
 sri_mean_data |>
@@ -1264,14 +1285,18 @@ sri_mean_data |>
     method = "lm",
     formula = y ~ x,
     se = FALSE,
-    color = "black"
+    color = "red"
+  ) +
+  scale_colour_grey(
+    start = 0.7,
+    end = 0.9
   ) +
   labs(
     x = "Gestational Age Week",
     y = "Sleep Regularity Index (SRI)",
     color = NULL
-  )
-  # theme(legend.position = "none")
+  ) +
+  theme(legend.position = "none")
 ```
 
 #### By Gestational Age Week & Time of Day
@@ -1297,7 +1322,7 @@ sri_plot_global <-
     end = 0.9
   ) +
   labs(
-    x = "Hora do dia", # Time of day (Hour)
+    x = "Hora do Dia", # Time of day (Hour)
     y = "Índice de Regularidade do Sono (SRI)", # Sleep Regularity Index (SRI)
   ) +
   scale_x_time(
@@ -1332,7 +1357,7 @@ sri_plot_regular <-
     end = 0.9
   ) +
   labs(
-    x = "Hora do dia", # Time of day (Hour)
+    x = "Hora do Dia", # Time of day (Hour)
     y = "Índice de Regularidade do Sono (SRI)", # Sleep Regularity Index (SRI)
   ) +
   scale_x_time(
@@ -1367,7 +1392,7 @@ sri_plot_others <-
     end = 0.9
   ) +
   labs(
-    x = "Hora do dia", # Time of day (Hour)
+    x = "Hora do Dia", # Time of day (Hour)
     y = "Índice de Regularidade do Sono (SRI)", # Sleep Regularity Index (SRI)
   ) +
   scale_x_time(
@@ -1402,7 +1427,7 @@ sri_plot_irregular <-
     end = 0.9
   ) +
   labs(
-    x = "Hora do dia", # Time of day (Hour)
+    x = "Hora do Dia", # Time of day (Hour)
     y = "Índice de Regularidade do Sono (SRI)", # Sleep Regularity Index (SRI)
   ) +
   scale_x_time(
@@ -1420,7 +1445,8 @@ sri_plot_irregular
 #### Mean Sleep Proportions by Pregnant Women
 
 ```{r}
-sleep_prop_data |>
+sleep_prop_mean_by_id_data <-
+  sleep_prop_data |>
   summarize(
     prop = mean(prop, na.rm = TRUE),
     .by = id
@@ -1433,6 +1459,8 @@ sleep_prop_data |>
       multiply_by(60) |>
       as_hms()
   )
+
+sleep_prop_mean_by_id_data
 ```
 
 #### Mean Global Sleep Proportion
@@ -1489,6 +1517,8 @@ sleep_prop_data |>
 
 #### By Gestational Age Week
 
+##### Scatter Plot with Linear Trend
+
 ```{r}
 sleep_prop_mean_data |>
   mutate(
@@ -1509,11 +1539,13 @@ sleep_prop_mean_data |>
     color = "red"
   ) +
   labs(
-    x = "Semana gestacional", # Gestational Age Week
-    y = "Tempo Total de Sono", # Total Sleep Time
+    x = "Semana Gestacional", # Gestational Age Week
+    y = "Tempo Total de Sono (TTS)", # Total Sleep Time
   ) +
   theme(legend.position = "none")
 ```
+
+##### Boxplots
 
 ```{r}
 sleep_prop_mean_data |>
@@ -1528,47 +1560,31 @@ sleep_prop_mean_data |>
   mutate(ga_week = ga_week |> as.character() |> as.numeric()) |>
   filter(between(ga_week, 36, 39)) |>
   mutate(ga_week = factor(ga_week)) |>
-  ggplot(aes(x = prop_hours, y = ga_week, fill = ga_week)) +
+  ggplot(aes(x = prop_hours, y = ga_week)) +
   geom_boxplot() +
+  stat_summary(
+    fun = mean,
+    geom = "point",
+    size = 4,
+    color = "red",
+    shape = 18
+  ) +
+  geom_point(
+    position = position_jitter(height = 0.1, width = 0),
+    size = 2,
+    alpha = 0.25,
+    color = "blue"
+  ) +
   coord_flip() +
-  # scale_y_discrete(limits = rev) +
   labs(
-    x = "Tempo Total de Sono", # Total Sleep Time
-    y = "Semana gestacional", # Gestational Age Week
+    x = "Tempo Total de Sono (TTS)", # Total Sleep Time
+    y = "Semana Gestacional", # Gestational Age Week
   ) +
   scale_color_viridis_d() +
   theme(legend.position = "none")
 ```
 
-```{r}
-sleep_prop_mean_data |>
-  mutate(
-    prop_hours =
-      prop |>
-      multiply_by(24) |>
-      multiply_by(60) |>
-      multiply_by(60) |>
-      as_hms()
-  ) |>
-  mutate(ga_week = ga_week |> as.character() |> as.numeric()) |>
-  filter(between(ga_week, 36, 39)) |>
-  slice_sample(prop = 0.25) |>
-  ggplot(aes(x = ga_week, y = prop_hours, color = id)) +
-  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
-  geom_smooth(
-    mapping = aes(x = ga_week, y = prop_hours),
-    method = "lm",
-    formula = y ~ x,
-    se = FALSE,
-    color = "black"
-  ) +
-  labs(
-    x = "Semana gestacional", # Gestational Age Week
-    y = "Tempo Total de Sono", # Total Sleep Time
-    color = NULL
-  )
-  # theme(legend.position = "none")
-```
+##### Linear Trends by ID
 
 ```{r}
 sleep_prop_mean_data |>
@@ -1582,6 +1598,7 @@ sleep_prop_mean_data |>
   ) |>
   mutate(ga_week = ga_week |> as.character() |> as.numeric()) |>
   filter(between(ga_week, 36, 39)) |>
+  slice_sample(prop = 0.5) |>
   ggplot(aes(x = ga_week, y = prop_hours, color = id)) +
   geom_smooth(
     method = "lm",
@@ -1600,8 +1617,8 @@ sleep_prop_mean_data |>
     end = 0.9
   ) +
   labs(
-    x = "Semana gestacional", # Gestational Age Week
-    y = "Tempo Total de Sono", # Total Sleep Time
+    x = "Semana Gestacional", # Gestational Age Week
+    y = "Tempo Total de Sono (TTS)", # Total Sleep Time
   ) +
   theme(legend.position = "none")
 ```
@@ -1630,7 +1647,7 @@ sleep_prop_plot_global <-
     end = 0.9
   ) +
   labs(
-    x = "Hora do dia", # Time of day (Hour)
+    x = "Hora do Dia", # Time of day (Hour)
     y = "Proporção do Sono (%)", # Sleep Proportion (%)
   ) +
   scale_x_time(
@@ -1666,7 +1683,7 @@ sleep_prop_plot_regular <-
     end = 0.9
   ) +
   labs(
-    x = "Hora do dia", # Time of day (Hour)
+    x = "Hora do Dia", # Time of day (Hour)
     y = "Proporção do Sono (%)", # Sleep Proportion (%)
   ) +
   scale_x_time(
@@ -1702,7 +1719,7 @@ sleep_prop_plot_others <-
     end = 0.9
   ) +
   labs(
-    x = "Hora do dia", # Time of day (Hour)
+    x = "Hora do Dia", # Time of day (Hour)
     y = "Proporção do Sono (%)", # Sleep Proportion (%)
   ) +
   scale_x_time(
@@ -1738,7 +1755,7 @@ sleep_prop_plot_irregular <-
     end = 0.9
   ) +
   labs(
-    x = "Hora do dia", # Time of day (Hour)
+    x = "Hora do Dia", # Time of day (Hour)
     y = "Proporção do Sono (%)", # Sleep Proportion (%)
   ) +
   scale_x_time(
@@ -1753,7 +1770,9 @@ sleep_prop_plot_irregular
 
 ### Luminance
 
-#### Mean Luminance by Pregnant Women
+#### Statistics
+
+##### Mean Luminance by Pregnant Women
 
 ```{r}
 lux_data |>
@@ -1763,9 +1782,9 @@ lux_data |>
   )
 ```
 
-#### Mean Global Luminance
+##### Mean Global Luminance
 
-##### Using All Data
+###### Using All Data
 
 ::: {.callout-note}
 Mean SRI considering all the SRI data points across all pregnant women.
@@ -1775,7 +1794,7 @@ Mean SRI considering all the SRI data points across all pregnant women.
 lux_data |> pull(lux) |> mean(na.rm = TRUE)
 ```
 
-##### Using the Means by Pregnant Women
+###### Using the Means by Pregnant Women
 
 ```{r}
 lux_data |>
@@ -1787,7 +1806,7 @@ lux_data |>
   mean(na.rm = TRUE)
 ```
 
-#### Mean Luminance by Gestational Age Week
+##### Mean Luminance by Gestational Age Week
 
 ```{r}
 lux_data |>
@@ -1798,6 +1817,8 @@ lux_data |>
 ```
 
 #### By Gestational Age Week
+
+##### Scatter Plot with Linear Trend
 
 ```{r}
 lux_mean_data |>
@@ -1811,28 +1832,45 @@ lux_mean_data |>
     color = "red"
   ) +
   labs(
-    x = "Semana gestacional", # Gestational Age Week
+    x = "Semana Gestacional", # Gestational Age Week
     y = "Índice de Luminância (Lux)", # Luminance Index (Lux)
   ) +
   theme(legend.position = "none")
 ```
+
+##### Boxplots
 
 ```{r}
 lux_mean_data |>
   mutate(ga_week = ga_week |> as.character() |> as.numeric()) |>
   filter(between(ga_week, 36, 39)) |>
   mutate(ga_week = factor(ga_week)) |>
-  ggplot(aes(x = lux, y = ga_week, fill = ga_week)) +
-  geom_boxplot() +
+  ggplot(aes(x = lux, y = ga_week)) +
+    geom_boxplot() +
+  stat_summary(
+    fun = mean,
+    geom = "point",
+    size = 4,
+    color = "red",
+    shape = 18
+  ) +
+  geom_point(
+    position = position_jitter(height = 0.1, width = 0),
+    size = 2,
+    alpha = 0.25,
+    color = "blue"
+  ) +
   coord_flip() +
   # scale_y_discrete(limits = rev) +
   labs(
     x = "Índice de Luminância (Lux)", # Luminance Index (Lux)
-    y = "Semana gestacional", # Gestational Age Week
+    y = "Semana Gestacional", # Gestational Age Week
   ) +
   scale_color_viridis_d() +
   theme(legend.position = "none")
 ```
+
+##### Linear Trends by ID
 
 ```{r}
 lux_mean_data |>
@@ -1840,19 +1878,27 @@ lux_mean_data |>
   filter(between(ga_week, 36, 39)) |>
   slice_sample(prop = 0.5) |>
   ggplot(aes(x = ga_week, y = lux, color = id)) +
-  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
+  geom_smooth(
+    method = "lm",
+    formula = y ~ x,
+    se = FALSE
+  ) +
   geom_smooth(
     mapping = aes(x = ga_week, y = lux),
     method = "lm",
     formula = y ~ x,
     se = FALSE,
-    color = "black"
+    color = "red"
+  ) +
+  scale_colour_grey(
+    start = 0.7,
+    end = 0.9
   ) +
   labs(
-    x = "Gestational Age Week",
-    y = "Sleep Regularity Index (SRI)",
-    color = NULL
-  )
+    x = "Semana Gestacional", # Gestational Age Week
+    y = "Tempo Total de Sono", # Total Sleep Time
+  ) +
+  theme(legend.position = "none")
 ```
 
 #### By Gestational Age Week & Time of Day
@@ -1878,7 +1924,7 @@ lux_plot_global <-
     end = 0.9
   ) +
   labs(
-    x = "Hora do dia", # Time of day (Hour)
+    x = "Hora do Dia", # Time of day (Hour)
     y = "Índice de Luminância (Lux)", # Luminance Index (Lux)
   ) +
   scale_x_time(
@@ -1916,7 +1962,7 @@ lux_plot_regular <-
     end = 0.9
   ) +
   labs(
-    x = "Hora do dia", # Time of day (Hour)
+    x = "Hora do Dia", # Time of day (Hour)
     y = "Índice de Luminância (Lux)", # Luminance Index (Lux)
   ) +
   scale_x_time(
@@ -1954,7 +2000,7 @@ lux_plot_others <-
     end = 0.9
   ) +
   labs(
-    x = "Hora do dia", # Time of day (Hour)
+    x = "Hora do Dia", # Time of day (Hour)
     y = "Índice de Luminância (Lux)", # Luminance Index (Lux)
   ) +
   scale_x_time(
@@ -1992,7 +2038,7 @@ lux_plot_irregular <-
     end = 0.9
   ) +
   labs(
-    x = "Hora do dia", # Time of day (Hour)
+    x = "Hora do Dia", # Time of day (Hour)
     y = "Índice de Luminância (Lux)", # Luminance Index (Lux)
   ) +
   scale_x_time(
@@ -2013,15 +2059,25 @@ lux_plot_irregular
 ```{r}
 wrap_plots(
   A = sri_plot_regular,
+  X = ggplot() + theme_void(),
   C = lux_plot_regular,
   B = sri_plot_irregular,
+  Y = ggplot() + theme_void(),
   D = lux_plot_irregular,
-  ncol = 2,
+  ncol = 3,
   nrow = 2,
-  widths = c(0.5, 0.5),
+  widths = c(0.4875, 0.025, 0.4875),
   axes = "collect",
   tag_level = "new"
 )
+  # plot_annotation(tag_levels = 'A') &
+  # theme(
+  #   plot.tag = element_text(
+  #     size = 14,
+  #     face = "bold",
+  #     margin = margin(0, 20, 0, 0)
+  #   )
+  # )
 ```
 
 ### Sleep Proportion *versus* Luminance
@@ -2029,17 +2085,122 @@ wrap_plots(
 ```{r}
 wrap_plots(
   A = sleep_prop_plot_regular,
+  X = ggplot() + theme_void(),
   C = lux_plot_regular,
   B = sleep_prop_plot_irregular,
+  Y = ggplot() + theme_void(),
   D = lux_plot_irregular,
-  ncol = 2,
+  ncol = 3,
   nrow = 2,
-  widths = c(0.5, 0.5),
+  widths = c(0.4875, 0.025, 0.4875),
   axes = "collect",
   tag_level = "new"
 )
   # plot_annotation(tag_levels = "A") +
   # theme(plot.tag = element_text(size = 14))
+```
+
+### SRI *versus* Sleep Duration
+
+```{r}
+plot_data <-
+  sri_mean_data_by_id |>
+  left_join(
+    sleep_prop_mean_by_id_data,
+    by = "id"
+  ) |>
+  mutate(
+    group = case_when(
+      id %in% regular_sri_ids ~ "Regular",
+      id %in% irregular_sri_ids ~ "Irregular",
+      TRUE ~ "Outros"
+    )
+  )
+```
+
+```{r}
+plot_data_se <-
+  plot_data |>
+  summarize(
+    x = mean(sri, na.rm = TRUE),
+    y =
+      prop_hours |>
+      as.numeric() |>
+      mean(na.rm = TRUE) |>
+      as_hms(),
+    x_se =
+      sri |>
+      sd(na.rm = TRUE) |>
+      divide_by(sqrt(n())),
+    y_se =
+      prop_hours |>
+      as.numeric() |>
+      sd(na.rm = TRUE) |>
+      divide_by(sqrt(n())) |>
+      as_hms(),
+    .by = group
+  ) |>
+    filter(!group == "Outros")
+```
+
+```{r}
+plot_data |>
+  ggplot(
+    aes(x = sri, y = prop_hours, color = group, shape = group)
+  ) +
+  geom_point(
+    size = 4
+  ) +
+  geom_crossbar(
+    data = plot_data_se,
+    aes(x = x, y = y, ymin = y - y_se, ymax = y + y_se, color = group),
+    width = 0,
+    inherit.aes = FALSE
+  ) +
+  geom_errorbarh(
+    data = plot_data_se,
+    aes(x = x, y = y, xmin = x - x_se, xmax = x + x_se, color = group),
+    height = 0,
+    inherit.aes = FALSE
+  ) +
+  scale_shape_manual(
+    values = c(
+      "Regular" = 15,
+      "Irregular" = 16,
+      "Outros" = 6
+    )
+  ) +
+  scale_color_manual(
+    values = c(
+      "Regular" = "blue",
+      "Irregular" = "red",
+      "Outros" = "black"
+    )
+  ) +
+  scale_y_time(
+    limits = c(as_hms("04:30:00"), as_hms("08:45:00")),
+    breaks = "1 hour",
+    labels = function(x) {
+      x |>
+        as.POSIXct() |>
+        format("%H:%M")
+    }
+  ) +
+  scale_x_continuous(
+    limits = c(42.5, 85),
+    breaks = seq(40, 100, by = 10)
+  ) +
+  labs(
+    # Sleep Regularity Index (SRI)
+    x = "Índice de Regularidade do Sono (SRI)",
+    # Average Daily Total Sleep Time (TST)
+    y = "Média do Tempo Total de Sono (TTS)",
+    color = NULL,
+    shape = NULL
+  ) +
+  guides(
+    color = guide_legend(override.aes = list(linetype = 0))
+  )
 ```
 
 ## Compute an *A Priori* Power Analysis
