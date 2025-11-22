@@ -1,122 +1,124 @@
-# library(checkmatem, quietly = TRUE)
-# library(cli, quietly = TRUE)
-# library(lubridate, quietly = TRUE)
-# library(rutils, quietly = TRUE)
+library(checkmate)
+library(cli)
+library(lubridate)
+library(prettycheck)
+library(rutils)
 
 #' Computes the gestational age start date
 #'
-#' This function computes the gestational age __start__ date given the
-#' ultrasound date and the __actual__ gestational age.
+#' `ga_start()` computes the gestational age **start** date given the
+#' ultrasound date and the **actual** gestational age.
 #'
 #' @param ultrasound A [`Date`][base::as.Date()] object representing the
 #'  ultrasound date.
-#' @param ga A [`Period`][lubridate::period] object representing the
-#'   gestational age.
+#' @param ga A [`Period`][period] object representing the gestational age.
 #'
 #' @return A [`Date`][base::as.Date()] object representing the gestational age
 #'  start date.
+#'
 #' @export
+#' @noRd
 #'
 #' @examples
 #' ga_start(
-#'   ultrasound = lubridate::dmy("18/10/2022"),
-#'   ga = lubridate::weeks(6) + lubridate::days(3)
+#'   ultrasound = dmy("18/10/2022"),
+#'   ga = weeks(6) + days(3)
 #' )
-#' #> [1] "2022-09-03"
+#' #> [1] "2022-09-03" # Expected
 #'
 #' ga_start(
-#'   ultrasound = lubridate::dmy("18/10/2022"),
-#'   ga = lubridate::period(1, "month") + lubridate::days(10)
+#'   ultrasound = dmy("18/10/2022"),
+#'   ga = period(1, "month") + days(10)
 #' )
-#' #> [1] "2022-09-08"
+#' #> [1] "2022-09-08" # Expected
 ga_start <- function(ultrasound, ga) {
-  checkmate::assert_date(ultrasound)
-  prettycheck:::assert_period(ga, lower = lubridate::period(0))
-  prettycheck:::assert_identical(ultrasound, ga, type = "length")
+  assert_date(ultrasound)
+  assert_period(ga, lower = period(0))
+  assert_identical(ultrasound, ga, type = "length")
 
-  lubridate::as_date(ultrasound - ga)
+  as_date(ultrasound - ga)
 }
 
 ga_point <- function(ga_start, point, print = FALSE) {
-  checkmate::assert_date(ga_start)
-  checkmate::assert_multi_class(point, c("Date", "POSIXt"))
-  checkmate::assert_flag(print)
+  assert_date(ga_start)
+  assert_multi_class(point, c("Date", "POSIXt"))
+  assert_flag(print)
 
   for (i in seq_along(ga_start)) {
     for (j in seq_along(point)) {
       if (point[i] < ga_start[i]) {
-        cli::cli_abort(paste(
-          "{.strong {cli::col_red('point')}} must be equal or greater than",
-          "{.strong {cli::col_blue('ga_start')}}."
+        cli_abort(paste(
+          "{.strong {col_red('point')}} must be equal or greater than",
+          "{.strong {col_blue('ga_start')}}."
         ))
       }
     }
   }
 
-  ga_start <- ga_start |> lubridate::as_date()
-  point <- point |> lubridate::as_date()
+  ga_start <- ga_start
+  point <- point |> as_date()
 
   out <-
     lubridate::interval(ga_start, point, tzone ="UTC") |>
     as.numeric() %>%
-    `/`(as.numeric(lubridate::ddays())) %>%
-    lubridate::days()
+    `/`(as.numeric(ddays())) %>%
+    days()
 
   if (isTRUE(print)) {
-    out_duration <- out |> lubridate::as.duration()
+    out_duration <- out |> as.duration()
 
-    weeks <- floor(out_duration / lubridate::dweeks())
-    days <- out_duration %% lubridate::dweeks() / lubridate::ddays()
+    weeks <- floor(out_duration / dweeks())
+    days <- out_duration %% dweeks() / ddays()
 
-    cli::cli_alert_info(paste(
+    cli_alert_info(paste(
       "{.strong",
-      "{weeks} {.strong {cli::col_red('week(s)')}}",
-      "{days} {.strong {cli::col_red('day(s)')}}",
+      "{weeks} {.strong {col_red('week(s)')}}",
+      "{days} {.strong {col_red('day(s)')}}",
       "}"
     ))
   }
 
-  invisible(out)
+  out
 }
 
 ga_week_int <- function(ga_start, week) {
-  checkmate::assert_date(ga_start, len = 1)
-  checkmate::assert_number(week, lower = 0)
+  assert_date(ga_start, len = 1)
+  assert_number(week, lower = 0)
 
   week_start <-
-    (ga_start + lubridate::dweeks(week)) |>
-    lubridate::as_date()
+    (ga_start + dweeks(week)) |>
+    as_date()
 
   week_end <-
-    (week_start + lubridate::dweeks(1) - lubridate::dseconds(1)) |>
-    lubridate::as_date()
+    (week_start + dweeks(1) - dseconds(1)) |>
+    as_date()
 
-  lubridate::interval(week_start, week_end)
+  interval(week_start, week_end)
 }
 
 ga_weeks <- function(ga) {
-  prettycheck:::assert_period(ga)
+  assert_period(ga)
 
-  ga <- ga |> lubridate::as.duration()
+  ga <- ga |> as.duration()
 
-  floor(ga / lubridate::dweeks())
+  floor(ga / dweeks())
 }
 
 ga_days <- function(ga) {
-  prettycheck:::assert_period(ga)
+  assert_period(ga)
 
-  ga <- ga |> lubridate::as.duration()
-  weeks <- floor(ga / lubridate::dweeks())
+  ga <- ga |> as.duration()
+  weeks <- floor(ga / dweeks())
 
-  ga %% lubridate::dweeks() / lubridate::ddays()
+  ga %% dweeks() / ddays()
 }
 
 ga_weeks_days <- function(ga) {
-  prettycheck:::assert_period(ga)
+  assert_period(ga)
 
-  ga <- ga |> lubridate::as.duration()
-  weeks <- floor(ga / lubridate::dweeks())
-  days <- ga %% lubridate::dweeks() / lubridate::ddays()
+  ga <- ga |> as.duration()
+  weeks <- floor(ga / dweeks())
+  days <- ga %% dweeks() / ddays()
 
   paste0(weeks, "/", days)
 }

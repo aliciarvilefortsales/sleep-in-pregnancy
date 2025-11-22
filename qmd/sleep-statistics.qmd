@@ -3,7 +3,7 @@ execute:
   eval: false
 ---
 
-# Extra – Mean stats for actigraphy data
+# Sleep Statistics
 
 ```{r}
 #| label: setup
@@ -16,34 +16,34 @@ source(here::here("R", "_setup.R"))
 
 This notebook aims to help compute mean statistics for actigraphy data.
 
-## Setup
+## Set the Environment
 
-```{r}
-#| eval: false
-
-library(astroFns, quietly = TRUE)
-library(checkmate, quietly = TRUE)
-library(cli, quietly = TRUE)
-library(circular, quietly = TRUE)
-library(here, quietly = TRUE)
-library(hms, quietly = TRUE)
-library(lubritime, quietly = TRUE) # github.com/danielvartan/lubritime
-library(rutils, quietly = TRUE) # github.com/danielvartan/rutils
-```
-
-```{r}
-#| includes: false
-
-library(magrittr)
-```
-
-## Importing data
+### Load Packages
 
 ```{r}
 #| output: false
 
-googlesheets4::gs4_auth()
+library(astroFns)
+library(checkmate)
+library(cli)
+library(circular)
+library(here)
+library(hms)
+library(lubritime) # github.com/danielvartan/lubritime
+library(magrittr)
+library(rutils) # github.com/danielvartan/rutils
 ```
+
+### Set Keys
+
+```{r}
+#| eval: false
+#| output: false
+
+gs4_auth(cache = ".secrets")
+```
+
+## Importing Data
 
 ```{r}
 #| output: false
@@ -53,7 +53,7 @@ ss <- "1iqjhdSiWYr9RYSvIvJQfFw35DR31YA_oj2SW8iR5WPw"
 raw_data <- ss |> googlesheets4::read_sheet(sheet = "Dataset")
 ```
 
-## Tidying data
+## Tidy data
 
 ```{r}
 parse_hms_as_duration <- function(x) {
@@ -254,13 +254,13 @@ aggregate_sd_data <-
 aggregate_sd_data
 ```
 
-## Comparing methods
+## Compare Methods
 
 ```{r}
 circular_vector <- data |> magrittr::extract2("his_max")
 ```
 
-### A primitive way for doing circular statistics
+### A Primitive Way for Doing Circular Statistics
 
 ```{r}
 x <- circular_vector |> hms_to_decimal_hours()
@@ -279,7 +279,7 @@ x |>
   hms::round_hms(secs = 1)
 ```
 
-### Using `lubritime:::link_to_timeline()` with mid-day as threshold
+### Using `link_to_timeline()` with Mid-Day as Threshold
 
 ```{r}
 circular_vector |> alt_circular_time_stat(fun = mean)
@@ -289,7 +289,7 @@ circular_vector |> alt_circular_time_stat(fun = mean)
 circular_vector |> alt_circular_time_stat(fun = stats::sd)
 ```
 
-### How much we lost by transformig the `hms` vector to decimal hours?
+### How Much We Lost By Transforming The `hms` Vector to Decimal Hours?
 
 ```{r}
 dplyr::tibble(
@@ -300,7 +300,7 @@ dplyr::tibble(
 )
 ```
 
-### Circular statistics using the `circular` package
+### Circular Statistics Using the `circular` Package
 
 ```{r}
 circular_vector |> hms_to_circular()

@@ -1,12 +1,15 @@
-# library(beepr)
-# library(groomr) # github.com/danielvartan/groomr
+# Load Packages -----
 
-# Remove empty lines from `README.md` -----
+library(beepr)
+library(groomr) # github.com/danielvartan/groomr
+library(here)
 
-groomr::remove_blank_line_dups(here::here("README.md"))
+# Remove Empty Lines from `README.md` -----
 
-# Check if the script ran successfully -----
+here("README.md") |> remove_blank_line_dups()
 
-beepr::beep(1)
+# Check If the Script Ran Successfully -----
+
+beep(1)
 
 Sys.sleep(3)

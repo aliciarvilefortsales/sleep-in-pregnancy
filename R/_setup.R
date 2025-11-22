@@ -1,30 +1,28 @@
 # Load Packages -----
 
 library(brandr)
-library(rlang)
 library(downlit)
 library(ggplot2)
 library(here)
-library(httpgd)
 library(knitr)
-library(lubridate)
 library(magrittr)
+library(quartor) # github.com/danielvartan/quartor
 library(ragg)
-library(rutils) # github.com/danielvartan/rutils
 library(showtext)
 library(sysfonts)
 library(xml2)
-library(yaml)
 
 # Set General Options -----
 
 options(
-  pillar.bold = TRUE,
+  dplyr.print_min = 6,
+  dplyr.print_max = 6,
   pillar.max_footer_lines = 2,
   pillar.min_chars = 15,
   scipen = 10,
   digits = 10,
   stringr.view_n = 6,
+  pillar.bold = TRUE,
   width = 77 # 80 - 3 for #> comment
 )
 
@@ -34,7 +32,7 @@ set.seed(2025)
 
 # Set `knitr`` -----
 
-clean_cache() |> shush()
+clean_cache() |> suppressWarnings()
 
 opts_chunk$set(
   comment = "#>",
@@ -70,11 +68,11 @@ for (i in seq_along(brandr_options)) {
 font_paths(here("ttf"))
 
 font_add(
-  family = "open-sans",
-  regular = here("ttf", "opensans-regular.ttf"),
-  bold = here("ttf", "opensans-bold.ttf"),
-  italic = here("ttf", "opensans-italic.ttf"),
-  bolditalic = here("ttf", "opensans-bolditalic.ttf"),
+  family = "arimo",
+  regular = here("ttf", "arimo-regular.ttf"),
+  bold = here("ttf", "arimo-bold.ttf"),
+  italic = here("ttf", "arimo-italic.ttf"),
+  bolditalic = here("ttf", "arimo-bolditalic.ttf"),
   symbol = NULL
 )
 
@@ -94,11 +92,11 @@ showtext_auto()
 theme_set(
   theme_bw() +
     theme(
-      # text = element_text(
-      #   color = get_brand_color("black"),
-      #   family = "open-sans",
-      #   face = "plain"
-      # ),
+      text = element_text(
+        color = "black",
+        family = "arimo",
+        face = "plain"
+      ),
       panel.background = element_rect(fill = "transparent"),
       plot.background = element_rect(
         fill = "transparent", color = NA

@@ -25,8 +25,7 @@ logo:
       path: images/og-image.png
       alt: "Open Graph Image"
 
-# # See
-#
+# See
 # - https://www.pantone.com/skintone
 # - Pantone SkinTone Hex Color Codes: https://bit.ly/4iWW5jJ
 
@@ -53,15 +52,14 @@ color:
 
 typography:
   fonts:
-    - family: Open Sans
+    - family: Arimo
       source: google
-      weight: [300, 400, 500, 600]
     - family: Source Code Pro
       source: google
   base:
-    family: Open Sans
+    family: Arimo
   headings:
-    family: Open Sans
+    family: Arimo
     color: black
     weight: bold
   monospace: Source Code Pro

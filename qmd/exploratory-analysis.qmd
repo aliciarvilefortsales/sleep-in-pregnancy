@@ -3,19 +3,23 @@ execute:
   eval: false
 ---
 
-# Preliminary Analysis 1
+# Exploratory Analysis
 
 ```{r}
 #| label: setup
 #| include: false
 
-source(here::here("R", "_setup.R"))
+library(here)
+
+source(here("R", "_setup.R"))
 ```
 
-## Setting the Environment
+## Set the Environment
+
+### Load Packages
 
 ```{r}
-#| eval: false
+#| output: false
 
 library(actverse) # github.com/danielvartan/actverse
 library(askpass)
@@ -42,16 +46,12 @@ library(summarytools)
 library(tidyr)
 ```
 
-```{r}
-#| echo: false
-
-library(magrittr)
-library(ggplot2)
-```
+### Load Custom Functions
 
 ```{r}
 source(here::here("R", "anonymize_id.R"))
 ```
+
 
 ```{r}
 get_n <- function(data, group) {
@@ -93,6 +93,15 @@ f_unb <- function(k, n_total, f_test) {
   `*`(((n_total - k - 2) / (n_total - k)) * (f_test - 1)) |>
   sqrt()
 }
+```
+
+### Set Keys
+
+```{r}
+#| eval: false
+#| output: false
+
+gs4_auth(cache = ".secrets")
 ```
 
 ## Setting Parameters
