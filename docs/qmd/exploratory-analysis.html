@@ -286,12 +286,13 @@ window.Quarto = {
 <li><a href="#correlation-matrices" id="toc-correlation-matrices" class="nav-link" data-scroll-target="#correlation-matrices"><span class="header-section-number">1.8.1</span> Correlation Matrices</a></li>
   <li><a href="#actograms" id="toc-actograms" class="nav-link" data-scroll-target="#actograms"><span class="header-section-number">1.8.2</span> Actograms</a></li>
   <li><a href="#sleep-irregularity-index-sri" id="toc-sleep-irregularity-index-sri" class="nav-link" data-scroll-target="#sleep-irregularity-index-sri"><span class="header-section-number">1.8.3</span> Sleep Irregularity Index (SRI)</a></li>
-  <li><a href="#percentage-of-time-asleep" id="toc-percentage-of-time-asleep" class="nav-link" data-scroll-target="#percentage-of-time-asleep"><span class="header-section-number">1.8.4</span> Percentage of Time Asleep</a></li>
-  <li><a href="#groups" id="toc-groups" class="nav-link" data-scroll-target="#groups"><span class="header-section-number">1.8.5</span> Groups</a></li>
+  <li><a href="#sleep-proportions" id="toc-sleep-proportions" class="nav-link" data-scroll-target="#sleep-proportions"><span class="header-section-number">1.8.4</span> Sleep Proportions</a></li>
+  <li><a href="#illuminance-levels" id="toc-illuminance-levels" class="nav-link" data-scroll-target="#illuminance-levels"><span class="header-section-number">1.8.5</span> Illuminance Levels</a></li>
+  <li><a href="#groups" id="toc-groups" class="nav-link" data-scroll-target="#groups"><span class="header-section-number">1.8.6</span> Groups</a></li>
   </ul>
 </li>
   <li>
-<a href="#hypothesis-testing" id="toc-hypothesis-testing" class="nav-link" data-scroll-target="#hypothesis-testing"><span class="header-section-number">1.9</span> Hypothesis Testing</a>
+<a href="#hypothesis-testing-sleep-and-labor-duration" id="toc-hypothesis-testing-sleep-and-labor-duration" class="nav-link" data-scroll-target="#hypothesis-testing-sleep-and-labor-duration"><span class="header-section-number">1.9</span> Hypothesis Testing (Sleep and Labor Duration)</a>
   <ul class="collapse">
 <li><a href="#fps-fase-principal-do-sono-main-sleep-phase" id="toc-fps-fase-principal-do-sono-main-sleep-phase" class="nav-link" data-scroll-target="#fps-fase-principal-do-sono-main-sleep-phase"><span class="header-section-number">1.9.1</span> FPS (Fase Principal do Sono) (Main Sleep Phase)</a></li>
   <li><a href="#waso-wake-after-sleep-onset" id="toc-waso-wake-after-sleep-onset" class="nav-link" data-scroll-target="#waso-wake-after-sleep-onset"><span class="header-section-number">1.9.2</span> WASO (Wake After Sleep Onset)</a></li>
@@ -363,8 +364,8 @@ window.Quarto = {
 <span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkChoice.html">assert_choice</a></span><span class="op">(</span><span class="va">group</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Poor"</span>, <span class="st">"Good"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">data</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>.group <span class="op">=</span> <span class="va">group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">.group</span> <span class="op">==</span> <span class="va">group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>.group <span class="op">=</span> <span class="va">group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">.group</span> <span class="op">==</span> <span class="va">group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -377,9 +378,9 @@ window.Quarto = {
 <span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkChoice.html">assert_choice</a></span><span class="op">(</span><span class="va">group</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Poor"</span>, <span class="st">"Good"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">data</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>.group <span class="op">=</span> <span class="va">group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">.group</span> <span class="op">==</span> <span class="va">group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">labor_duration</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>.group <span class="op">=</span> <span class="va">group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">.group</span> <span class="op">==</span> <span class="va">group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">labor_duration</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
@@ -478,7 +479,7 @@ window.Quarto = {
 <span>  <span class="va">control_form</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">`names&lt;-`</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span><span class="op">(</span><span class="va">control_form</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">X5</span>, <span class="va">X6</span>, <span class="va">X7</span>, <span class="va">X12</span>, <span class="va">X13</span>, <span class="va">X14</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span></span>
 <span>    cpf <span class="op">=</span> <span class="va">X5</span>,</span>
 <span>    id <span class="op">=</span> <span class="va">X6</span>,</span>
 <span>    name <span class="op">=</span> <span class="va">X7</span>,</span>
@@ -486,8 +487,8 @@ window.Quarto = {
 <span>    birth <span class="op">=</span> <span class="va">X13</span>,</span>
 <span>    labor_start <span class="op">=</span> <span class="va">X14</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
-<span>    birth_center_delivery <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    birth_center_delivery <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/chartr.html">tolower</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/trimws.html">trimws</a></span><span class="op">(</span><span class="va">birth_center_delivery</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="st">"sim"</span> <span class="op">~</span> <span class="cn">TRUE</span>,</span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/chartr.html">tolower</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/trimws.html">trimws</a></span><span class="op">(</span><span class="va">birth_center_delivery</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="st">"não"</span> <span class="op">~</span> <span class="cn">FALSE</span>,</span>
 <span>      <span class="cn">TRUE</span> <span class="op">~</span> <span class="cn">NA</span></span>
@@ -495,7 +496,7 @@ window.Quarto = {
 <span>    birth <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/as_date.html">as_datetime</a></span><span class="op">(</span><span class="va">birth</span><span class="op">)</span>,</span>
 <span>    labor_start <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/as_date.html">as_datetime</a></span><span class="op">(</span><span class="va">labor_start</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    labor_duration <span class="op">=</span></span>
 <span>      <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/interval.html">interval</a></span><span class="op">(</span></span>
 <span>        start <span class="op">=</span> <span class="va">labor_start</span>,</span>
@@ -503,7 +504,7 @@ window.Quarto = {
 <span>      <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>        <span class="fu">lubritime</span><span class="fu">::</span><span class="fu"><a href="https://danielvartan.github.io/lubritime/reference/int_duration.html">int_duration</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">labor_duration</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">labor_duration</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">birth_center_delivery</span>, <span class="va">labor_start</span>, <span class="va">labor_duration</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">control_data</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -517,7 +518,7 @@ window.Quarto = {
 <span>    <span class="va">X1</span>, <span class="va">X4</span>, <span class="va">X5</span>, <span class="va">X11</span>, <span class="va">X91</span>, <span class="va">X92</span>, <span class="va">X95</span>, <span class="va">X96</span>, <span class="va">X97</span>, <span class="va">X99</span>, <span class="va">X101</span>, <span class="va">X102</span>, <span class="va">X106</span>, <span class="va">X119</span>,</span>
 <span>    <span class="va">X118</span>, <span class="va">X125</span>, <span class="va">X126</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span></span>
 <span>    timestamp <span class="op">=</span> <span class="va">X1</span>,</span>
 <span>    birth_date <span class="op">=</span> <span class="va">X4</span>,</span>
 <span>    cpf <span class="op">=</span> <span class="va">X5</span>,</span>
@@ -536,7 +537,7 @@ window.Quarto = {
 <span>    deliveries <span class="op">=</span> <span class="va">X125</span>,</span>
 <span>    abortions <span class="op">=</span> <span class="va">X126</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    id <span class="op">=</span> <span class="fu">anonymize_id</span><span class="op">(</span><span class="va">cpf</span>, <span class="va">salt</span><span class="op">)</span>,</span>
 <span>    timestamp <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html">mdy_hms</a></span><span class="op">(</span><span class="va">timestamp</span><span class="op">)</span>,</span>
 <span>    birth_date <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd.html">dmy</a></span><span class="op">(</span><span class="va">birth_date</span><span class="op">)</span>,</span>
@@ -571,24 +572,24 @@ window.Quarto = {
 <span>      <span class="op">)</span>,</span>
 <span>      ordered <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>    <span class="op">)</span>,</span>
-<span>    gestations <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_match.html">case_match</a></span><span class="op">(</span></span>
+<span>    gestations <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_match.html">case_match</a></span><span class="op">(</span></span>
 <span>      <span class="va">gestations</span>,</span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Sim"</span>, <span class="st">"0"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"1"</span>,</span>
 <span>      <span class="st">"Não"</span> <span class="op">~</span> <span class="st">"0"</span>,</span>
 <span>      .default <span class="op">=</span> <span class="va">gestations</span></span>
 <span>    <span class="op">)</span>,</span>
-<span>    deliveries <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
+<span>    deliveries <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">deliveries</span><span class="op">)</span> <span class="op">~</span> <span class="st">"0"</span>,</span>
 <span>      <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">deliveries</span></span>
 <span>    <span class="op">)</span>,</span>
-<span>    abortions <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
+<span>    abortions <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">abortions</span><span class="op">)</span> <span class="op">~</span> <span class="st">"0"</span>,</span>
 <span>      <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">abortions</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span></span>
-<span>      .cols <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html">all_of</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span></span>
+<span>      .cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html">all_of</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
 <span>          <span class="st">"weight_before"</span>, <span class="st">"weight_current"</span>, <span class="st">"height"</span>,</span>
 <span>          <span class="st">"family_income"</span>, <span class="st">"gestations"</span>, <span class="st">"deliveries"</span>,</span>
@@ -598,13 +599,13 @@ window.Quarto = {
 <span>      .fns <span class="op">=</span> <span class="va">as.numeric</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span></span>
-<span>      .cols <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html">all_of</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span></span>
+<span>      .cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html">all_of</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"health_plan"</span>, <span class="st">"solo"</span>, <span class="st">"exercise"</span>, <span class="st">"work"</span>, <span class="st">"study"</span><span class="op">)</span></span>
 <span>      <span class="op">)</span>,</span>
 <span>      .fns <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_match.html">case_match</a></span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_match.html">case_match</a></span><span class="op">(</span></span>
 <span>          <span class="va">x</span>,</span>
 <span>          <span class="st">"Sim"</span> <span class="op">~</span> <span class="cn">TRUE</span>,</span>
 <span>          <span class="st">"Não"</span> <span class="op">~</span> <span class="cn">FALSE</span></span>
@@ -612,18 +613,18 @@ window.Quarto = {
 <span>      <span class="op">}</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
-<span>    gestations <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    gestations <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
 <span>      <span class="va">id</span> <span class="op">==</span> <span class="st">"ae5fc5cd"</span> <span class="op">~</span> <span class="fl">3</span>,</span>
 <span>      <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">gestations</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    bmi_before <span class="op">=</span> <span class="va">weight_before</span> <span class="op">/</span> <span class="op">(</span><span class="op">(</span><span class="va">height</span> <span class="op">/</span> <span class="fl">100</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>,</span>
 <span>    bmi_current <span class="op">=</span> <span class="va">weight_current</span> <span class="op">/</span> <span class="op">(</span><span class="op">(</span><span class="va">height</span> <span class="op">/</span> <span class="fl">100</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">cpf</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate</a></span><span class="op">(</span></span>
 <span>    <span class="va">id</span>, <span class="va">timestamp</span>, <span class="va">birth_date</span>, <span class="va">age</span>, <span class="va">weight_before</span>, <span class="va">weight_current</span>, <span class="va">height</span>, <span class="va">bmi_before</span>, <span class="va">bmi_current</span>, <span class="va">family_income</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
@@ -633,13 +634,13 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sleep_data</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">sleep_input</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span></span>
-<span>      .cols <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">matches</a></span><span class="op">(</span><span class="st">"^his_|^hfs_|^fps_|^tts_m|^tts_sd|^waso_"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span></span>
+<span>      .cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">matches</a></span><span class="op">(</span><span class="st">"^his_|^hfs_|^fps_|^tts_m|^tts_sd|^waso_"</span><span class="op">)</span>,</span>
 <span>      .fns <span class="op">=</span> <span class="fu">hms</span><span class="fu">::</span><span class="va"><a href="https://hms.tidyverse.org/reference/parse_hms.html">parse_hms</a></span></span>
 <span>    <span class="op">)</span>,</span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span></span>
-<span>      .cols <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">matches</a></span><span class="op">(</span><span class="st">"^tts_fps_|^awakenings_"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span></span>
+<span>      .cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">matches</a></span><span class="op">(</span><span class="st">"^tts_fps_|^awakenings_"</span><span class="op">)</span>,</span>
 <span>      .fns <span class="op">=</span> <span class="va">as.numeric</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
@@ -650,21 +651,21 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">medical_record_data</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">medical_record_input</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span></span>
-<span>      .cols <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"partograph_begin"</span>, <span class="st">"baby_birth"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span></span>
+<span>      .cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"partograph_begin"</span>, <span class="st">"baby_birth"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>      .fns <span class="op">=</span> <span class="op">~</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html">ymd_hms</a></span><span class="op">(</span><span class="va">.x</span>, tz <span class="op">=</span> <span class="st">"America/Sao_Paulo"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span></span>
-<span>      .cols <span class="op">=</span> <span class="op">-</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"partograph_begin"</span>, <span class="st">"baby_birth"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span></span>
+<span>      .cols <span class="op">=</span> <span class="op">-</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"partograph_begin"</span>, <span class="st">"baby_birth"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>      .fns <span class="op">=</span> <span class="va">as.numeric</span></span>
 <span>    <span class="op">)</span>,</span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span></span>
-<span>      .cols <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">matches</a></span><span class="op">(</span><span class="st">"^begin_dilation$|^apgar_"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span></span>
+<span>      .cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">matches</a></span><span class="op">(</span><span class="st">"^begin_dilation$|^apgar_"</span><span class="op">)</span>,</span>
 <span>      .fns <span class="op">=</span> <span class="va">as.integer</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    partogram_duration <span class="op">=</span></span>
 <span>      <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/interval.html">interval</a></span><span class="op">(</span></span>
 <span>        start <span class="op">=</span> <span class="va">partograph_begin</span>,</span>
@@ -679,21 +680,21 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">valid_cases</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">field_form_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
 <span>    <span class="va">control_data</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"id"</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
 <span>    <span class="va">sleep_data</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"id"</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
 <span>    <span class="va">medical_record_data</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"id"</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">birth_center_delivery</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="va">labor_duration</span>, <span class="va">baby_weight</span>, <span class="va">fps_mean</span>, <span class="va">waso_mean</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">birth_center_delivery</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://danielvartan.github.io/rutils/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="va">labor_duration</span>, <span class="va">baby_weight</span>, <span class="va">fps_mean</span>, <span class="va">waso_mean</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">valid_cases</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -701,22 +702,22 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">control_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
 <span>    <span class="va">sleep_data</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"id"</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
 <span>    <span class="va">medical_record_data</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"id"</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
 <span>    <span class="va">field_form_data</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"id"</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    waso_prop <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">waso_mean</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">fps_mean</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">valid_cases</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">valid_cases</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="getting-data-from-osf" class="level2" data-number="1.5"><h2 data-number="1.5" class="anchored" data-anchor-id="getting-data-from-osf">
@@ -741,12 +742,12 @@ window.Quarto = {
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">osf_processed_data_id</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">osfr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/osfr/reference/osf_retrieve.html">osf_retrieve_node</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">osfr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/osfr/reference/osf_ls_files.html">osf_ls_files</a></span><span class="op">(</span>n_max <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"actigraphy"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"actigraphy"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">osfr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/osfr/reference/osf_retrieve.html">osf_retrieve_file</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">osfr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/osfr/reference/osf_ls_files.html">osf_ls_files</a></span><span class="op">(</span>n_max <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">valid_cases_pattern</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"actigraphy-processed-data"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">valid_cases_pattern</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"actigraphy-processed-data"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">osfr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/osfr/reference/osf_download.html">osf_download</a></span><span class="op">(</span></span>
 <span>    path <span class="op">=</span> <span class="va">data_dir</span>,</span>
 <span>    conflicts <span class="op">=</span> <span class="st">"overwrite"</span>,</span>
@@ -762,11 +763,11 @@ window.Quarto = {
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">osf_raw_data_id</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">osfr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/osfr/reference/osf_retrieve.html">osf_retrieve_node</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">osfr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/osfr/reference/osf_ls_files.html">osf_ls_files</a></span><span class="op">(</span>n_max <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"medical-record"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"medical-record"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">osfr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/osfr/reference/osf_retrieve.html">osf_retrieve_file</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">osfr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/osfr/reference/osf_ls_files.html">osf_ls_files</a></span><span class="op">(</span>n_max <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">valid_cases_pattern</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">valid_cases_pattern</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">osfr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/osfr/reference/osf_download.html">osf_download</a></span><span class="op">(</span></span>
 <span>    path <span class="op">=</span> <span class="va">data_dir</span>,</span>
 <span>    conflicts <span class="op">=</span> <span class="st">"overwrite"</span>,</span>
@@ -778,7 +779,7 @@ window.Quarto = {
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">valid_cases</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html">setdiff</a></span><span class="op">(</span></span>
 <span>    <span class="va">test</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_extract.html">str_extract</a></span><span class="op">(</span><span class="st">".*(?=_medical)"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -793,7 +794,7 @@ window.Quarto = {
 </div>
 <p>The actogram presented in the article was created using the <a href="https://condorinst.com/en/actstudio-software/">ActStudio</a> software.</p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="qualitative-variables" class="level2" data-number="1.6"><h2 data-number="1.6" class="anchored" data-anchor-id="qualitative-variables">
@@ -884,7 +885,7 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/glance.html">glance</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
@@ -895,7 +896,7 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit_error</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">fit_augment</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/transmute.html">transmute</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/transmute.html">transmute</a></span><span class="op">(</span></span>
 <span>    .pred <span class="op">=</span> <span class="va">.pred</span>,</span>
 <span>    .resid <span class="op">=</span> <span class="va">.resid</span>,</span>
 <span>    partogram_duration <span class="op">=</span> <span class="va">partogram_duration</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -907,7 +908,7 @@ window.Quarto = {
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit_augment</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">fit</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span></span>
-<span>    new_data <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
+<span>    new_data <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
 <span>      begin_dilation <span class="op">=</span> <span class="fl">1</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -984,7 +985,7 @@ window.Quarto = {
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    his_mean <span class="op">=</span> <span class="va">his_mean</span> <span class="op">|&gt;</span> <span class="fu">lubritime</span><span class="fu">::</span><span class="fu"><a href="https://danielvartan.github.io/lubritime/reference/link_to_timeline.html">link_to_timeline</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    hfs_mean <span class="op">=</span> <span class="va">hfs_mean</span> <span class="op">|&gt;</span> <span class="fu">lubritime</span><span class="fu">::</span><span class="fu"><a href="https://danielvartan.github.io/lubritime/reference/link_to_timeline.html">link_to_timeline</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -1056,142 +1057,102 @@ window.Quarto = {
 </div>
 </section><section id="sleep-irregularity-index-sri" class="level3" data-number="1.8.3"><h3 data-number="1.8.3" class="anchored" data-anchor-id="sleep-irregularity-index-sri">
 <span class="header-section-number">1.8.3</span> Sleep Irregularity Index (SRI)</h3>
-<div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sri_data</span> <span class="op">&lt;-</span> <span class="va">actigraphy_data</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://danielvartan.github.io/actverse/reference/sri.html">sri</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">sri_data</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sri_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">rutils</span><span class="fu">:::</span><span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span><span class="st">"sri"</span>, threshold <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
+<div class="callout-body-container">
+<p>See the <em>SRI Analysis Report</em> for statistics and visualizations related to Sleep Irregularity Index (SRI).</p>
 </div>
-<div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sri_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">sri</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">rutils</span><span class="fu">:::</span><span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span><span class="st">"sri"</span>, threshold <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
 </div>
-<div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">sri_data</span><span class="op">$</span><span class="va">sri</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">y_scale</span> <span class="op">&lt;-</span> \<span class="op">(</span><span class="op">)</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>  <span class="va">y_scale</span> <span class="op">&lt;-</span> \<span class="op">(</span><span class="op">)</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">y_scale</span></span>
-<span></span>
-<span><span class="va">sri_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span>, y <span class="op">=</span> <span class="va">sri</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"#FC2913"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="st">"Time of day (Hour)"</span>,</span>
-<span>    y <span class="op">=</span> <span class="st">"Sleep Regularity Index (SRI)"</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html">scale_x_time</a></span><span class="op">(</span></span>
-<span>    breaks <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/breaks_width.html">breaks_width</a></span><span class="op">(</span><span class="st">"6 hours"</span><span class="op">)</span>,</span>
-<span>    labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_date.html">label_time</a></span><span class="op">(</span><span class="st">"%-H"</span><span class="op">)</span> <span class="co"># Use "%#H" for Windows</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">y_scale</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
 </div>
-</section><section id="percentage-of-time-asleep" class="level3" data-number="1.8.4"><h3 data-number="1.8.4" class="anchored" data-anchor-id="percentage-of-time-asleep">
-<span class="header-section-number">1.8.4</span> Percentage of Time Asleep</h3>
-<div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sleep_prop_data</span> <span class="op">&lt;-</span></span>
-<span>  <span class="va">actigraphy_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://danielvartan.github.io/actverse/reference/state_prop.html">state_prop</a></span><span class="op">(</span>state_values <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">sleep_prop_data</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
+</section><section id="sleep-proportions" class="level3" data-number="1.8.4"><h3 data-number="1.8.4" class="anchored" data-anchor-id="sleep-proportions">
+<span class="header-section-number">1.8.4</span> Sleep Proportions</h3>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sleep_prop_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">rutils</span><span class="fu">:::</span><span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span><span class="st">"prop"</span>, threshold <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
+<div class="callout-body-container">
+<p>See the <em>SRI Analysis Report</em> for statistics and visualizations related to Sleep Proportions.</p>
 </div>
-<div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb66"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sleep_prop_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>per <span class="op">=</span> <span class="va">prop</span> <span class="op">*</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span>, y <span class="op">=</span> <span class="va">per</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"#FC2913"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="st">"Time of day (Hour)"</span>,</span>
-<span>    y <span class="op">=</span> <span class="st">"Percentage of time asleep (%)"</span>,</span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html">scale_x_time</a></span><span class="op">(</span></span>
-<span>    breaks <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/breaks_width.html">breaks_width</a></span><span class="op">(</span><span class="st">"6 hours"</span><span class="op">)</span>,</span>
-<span>    labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_date.html">label_time</a></span><span class="op">(</span><span class="st">"%-H"</span><span class="op">)</span> <span class="co"># Use "%#H" for Windows</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
 </div>
-</section><section id="groups" class="level3" data-number="1.8.5"><h3 data-number="1.8.5" class="anchored" data-anchor-id="groups">
-<span class="header-section-number">1.8.5</span> Groups</h3>
+</div>
+</section><section id="illuminance-levels" class="level3" data-number="1.8.5"><h3 data-number="1.8.5" class="anchored" data-anchor-id="illuminance-levels">
+<span class="header-section-number">1.8.5</span> Illuminance Levels</h3>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>See the <em>SRI Analysis Report</em> for statistics and visualizations related to Illuminance Levels.</p>
+</div>
+</div>
+</div>
+</section><section id="groups" class="level3" data-number="1.8.6"><h3 data-number="1.8.6" class="anchored" data-anchor-id="groups">
+<span class="header-section-number">1.8.6</span> Groups</h3>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb67"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">&lt;-</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">control_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
 <span>    <span class="va">sleep_data</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"id"</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
 <span>    <span class="va">medical_record_data</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"id"</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">valid_cases</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">valid_cases</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">labor_duration</span>, <span class="va">fps_mean</span>, <span class="va">waso_mean</span>, <span class="va">baby_weight</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://danielvartan.github.io/rutils/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    waso_prop <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">waso_mean</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">fps_mean</span><span class="op">)</span>,</span>
 <span>    group_fps <span class="op">=</span></span>
-<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
 <span>        <span class="va">fps_mean</span> <span class="op">&lt;</span> <span class="fu">hms</span><span class="fu">::</span><span class="fu"><a href="https://hms.tidyverse.org/reference/parse_hms.html">parse_hm</a></span><span class="op">(</span><span class="st">"07:00"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"&lt;7h (Poor)"</span>,</span>
 <span>        <span class="va">fps_mean</span> <span class="op">&gt;=</span> <span class="fu">hms</span><span class="fu">::</span><span class="fu"><a href="https://hms.tidyverse.org/reference/parse_hms.html">parse_hm</a></span><span class="op">(</span><span class="st">"07:00"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"&gt;7h (Good)"</span></span>
 <span>      <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span>levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"&lt;7h (Poor)"</span>, <span class="st">"&gt;7h (Good)"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    group_waso <span class="op">=</span></span>
-<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
 <span>        <span class="va">waso_prop</span> <span class="op">&gt;</span> <span class="fl">0.1</span> <span class="op">~</span> <span class="st">"&gt;10% (Poor)"</span>,</span>
 <span>        <span class="va">waso_prop</span> <span class="op">&lt;</span> <span class="fl">0.1</span> <span class="op">~</span> <span class="st">"&lt;10% (Good)"</span></span>
 <span>      <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span>levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"&gt;10% (Poor)"</span>, <span class="st">"&lt;10% (Good)"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span>  <span class="fu"><a href="https://danielvartan.github.io/rutils/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb68"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">row_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">row_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"group_waso"</span>, <span class="st">"&gt;10% (Poor)"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"group_waso"</span>, <span class="st">"&lt;10% (Good)"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"group_fps"</span>, <span class="st">"&lt;7h (Poor)"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"group_fps"</span>, <span class="st">"&gt;7h (Good)"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="va">row_list</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">out</span> <span class="op">&lt;-</span></span>
 <span>    <span class="va">out</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html">bind_rows</a></span><span class="op">(</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html">bind_rows</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
 <span>      n <span class="op">=</span></span>
 <span>        <span class="va">group_data</span> <span class="op">|&gt;</span></span>
-<span>        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/name.html">as.symbol</a></span><span class="op">(</span><span class="va">i</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">==</span> <span class="va">i</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/name.html">as.symbol</a></span><span class="op">(</span><span class="va">i</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">==</span> <span class="va">i</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>      mean <span class="op">=</span></span>
 <span>        <span class="va">group_data</span> <span class="op">|&gt;</span></span>
-<span>        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/name.html">as.symbol</a></span><span class="op">(</span><span class="va">i</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">==</span> <span class="va">i</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">labor_duration</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/name.html">as.symbol</a></span><span class="op">(</span><span class="va">i</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">==</span> <span class="va">i</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">labor_duration</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span>na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>      sd <span class="op">=</span></span>
 <span>        <span class="va">group_data</span> <span class="op">|&gt;</span></span>
-<span>        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/name.html">as.symbol</a></span><span class="op">(</span><span class="va">i</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">==</span> <span class="va">i</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">labor_duration</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/name.html">as.symbol</a></span><span class="op">(</span><span class="va">i</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">==</span> <span class="va">i</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">labor_duration</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>        <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span>na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>      labor_duration <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span></span>
@@ -1206,7 +1167,7 @@ window.Quarto = {
 <span>          <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>      <span class="op">)</span></span>
 <span>    <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>group <span class="op">=</span> <span class="va">i</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>group <span class="op">=</span> <span class="va">i</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">group</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -1230,23 +1191,23 @@ Table&nbsp;1.1: <span class="legend">Source: Created by the author</span>
 </div>
 </figure>
 </div>
-<section id="fsp" class="level4" data-number="1.8.5.1"><h4 data-number="1.8.5.1" class="anchored" data-anchor-id="fsp">
-<span class="header-section-number">1.8.5.1</span> FSP</h4>
+<section id="fsp" class="level4" data-number="1.8.6.1"><h4 data-number="1.8.6.1" class="anchored" data-anchor-id="fsp">
+<span class="header-section-number">1.8.6.1</span> FSP</h4>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb69"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">plot_ggally</span><span class="op">(</span></span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"labor_duration"</span>, <span class="st">"baby_weight"</span>, <span class="st">"fps_mean"</span>, <span class="st">"group_fps"</span><span class="op">)</span>,</span>
 <span>    mapping <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">group_fps</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    labor_duration <span class="op">=</span></span>
 <span>      <span class="va">labor_duration</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu">hms</span><span class="fu">::</span><span class="fu"><a href="https://hms.tidyverse.org/reference/hms.html">as_hms</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    group_fps <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_match.html">case_match</a></span><span class="op">(</span></span>
+<span>    group_fps <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_match.html">case_match</a></span><span class="op">(</span></span>
 <span>      <span class="va">group_fps</span>,</span>
 <span>      <span class="st">"&lt;7h (Poor)"</span> <span class="op">~</span> <span class="st">"&lt;7h (Ruim)"</span>,</span>
 <span>      <span class="st">"&gt;7h (Good)"</span> <span class="op">~</span> <span class="st">"&gt;7h (Bom)"</span></span>
@@ -1276,23 +1237,23 @@ Figure&nbsp;1.1: <span class="legend">Fonte: Elaborado pela autora.</span>
 </div>
 </figure>
 </div>
-</section><section id="waso" class="level4" data-number="1.8.5.2"><h4 data-number="1.8.5.2" class="anchored" data-anchor-id="waso">
-<span class="header-section-number">1.8.5.2</span> WASO</h4>
+</section><section id="waso" class="level4" data-number="1.8.6.2"><h4 data-number="1.8.6.2" class="anchored" data-anchor-id="waso">
+<span class="header-section-number">1.8.6.2</span> WASO</h4>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">plot_ggally</span><span class="op">(</span></span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"labor_duration"</span>, <span class="st">"baby_weight"</span>, <span class="st">"waso_prop"</span>, <span class="st">"group_waso"</span><span class="op">)</span>,</span>
 <span>    mapping <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">group_waso</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb72"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    labor_duration <span class="op">=</span></span>
 <span>      <span class="va">labor_duration</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu">hms</span><span class="fu">::</span><span class="fu"><a href="https://hms.tidyverse.org/reference/hms.html">as_hms</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    group_waso <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_match.html">case_match</a></span><span class="op">(</span></span>
+<span>    group_waso <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_match.html">case_match</a></span><span class="op">(</span></span>
 <span>      <span class="va">group_waso</span>,</span>
 <span>      <span class="st">"&gt;10% (Poor)"</span> <span class="op">~</span> <span class="st">"&gt;10% (Ruim)"</span>,</span>
 <span>      <span class="st">"&lt;10% (Good)"</span> <span class="op">~</span> <span class="st">"&lt;10% (Bom)"</span></span>
@@ -1323,8 +1284,8 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </div>
 </figure>
 </div>
-</section></section></section><section id="hypothesis-testing" class="level2" data-number="1.9"><h2 data-number="1.9" class="anchored" data-anchor-id="hypothesis-testing">
-<span class="header-section-number">1.9</span> Hypothesis Testing</h2>
+</section></section></section><section id="hypothesis-testing-sleep-and-labor-duration" class="level2" data-number="1.9"><h2 data-number="1.9" class="anchored" data-anchor-id="hypothesis-testing-sleep-and-labor-duration">
+<span class="header-section-number">1.9</span> Hypothesis Testing (Sleep and Labor Duration)</h2>
 <blockquote class="blockquote">
 <p>Variável dependente: <code>labor_duration</code></p>
 </blockquote>
@@ -1341,19 +1302,19 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 \text{g de Hedges} = \cfrac{\overline{\text{X}}_{\text{Ruim}} - \overline{\text{X}}_{\text{Bom}}}{\text{SD}_{\text{pooled}}}
 \]</span></p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb73"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data</span> <span class="op">&lt;-</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb66"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">control_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
 <span>    <span class="va">sleep_data</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"id"</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
 <span>    <span class="va">medical_record_data</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"id"</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">valid_cases</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">valid_cases</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">labor_duration</span>, <span class="va">fps_mean</span>, <span class="va">waso_mean</span>, <span class="va">baby_weight</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://danielvartan.github.io/rutils/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">model_data</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -1380,29 +1341,29 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </div>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb74"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data_fps</span> <span class="op">&lt;-</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb67"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data_fps</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">model_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">labor_duration</span>, <span class="va">fps_mean</span>, <span class="va">baby_weight</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    group <span class="op">=</span></span>
-<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
 <span>        <span class="va">fps_mean</span> <span class="op">&lt;</span> <span class="fu">hms</span><span class="fu">::</span><span class="fu"><a href="https://hms.tidyverse.org/reference/parse_hms.html">parse_hm</a></span><span class="op">(</span><span class="st">"07:00"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Poor"</span>,</span>
 <span>        <span class="va">fps_mean</span> <span class="op">&gt;=</span> <span class="fu">hms</span><span class="fu">::</span><span class="fu"><a href="https://hms.tidyverse.org/reference/parse_hms.html">parse_hm</a></span><span class="op">(</span><span class="st">"07:00"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Good"</span></span>
 <span>      <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span>levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Poor"</span>, <span class="st">"Good"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    labor_duration <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">labor_duration</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">group</span>, <span class="va">labor_duration</span>, <span class="va">baby_weight</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://danielvartan.github.io/rutils/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">model_data_fps</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb75"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data_fps</span> <span class="op">|&gt;</span> <span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb68"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data_fps</span> <span class="op">|&gt;</span> <span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <section id="welchs-t-test" class="level4" data-number="1.9.1.1"><h4 data-number="1.9.1.1" class="anchored" data-anchor-id="welchs-t-test">
@@ -1414,7 +1375,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </div>
 <p>Desired power: <span class="math inline">\((1 - \beta) \geq 0.8\)</span></p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb76"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># A posteriori</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb69"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># A posteriori</span></span>
 <span></span>
 <span><span class="va">pwr_analysis_fps_anconva</span> <span class="op">&lt;-</span> <span class="fu">pwrss</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pwrss/man/means.student.welch.html">pwrss.t.2means</a></span><span class="op">(</span></span>
 <span>  mu1 <span class="op">=</span> <span class="va">model_data_fps</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Poor"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span>na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
@@ -1435,7 +1396,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </section><section id="test" class="level5" data-number="1.9.1.1.2"><h5 data-number="1.9.1.1.2" class="anchored" data-anchor-id="test">
 <span class="header-section-number">1.9.1.1.2</span> Test</h5>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb77"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_t_test_fps</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_t_test_fps</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">model_data_fps</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Poor"</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="va">model_data_fps</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Good"</span><span class="op">)</span>,</span>
 <span>  alternative <span class="op">=</span> <span class="st">"greater"</span></span>
@@ -1445,13 +1406,13 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb78"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="va">model_t_test_fps</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="va">model_t_test_fps</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="effect-size" class="level5" data-number="1.9.1.1.3"><h5 data-number="1.9.1.1.3" class="anchored" data-anchor-id="effect-size">
 <span class="header-section-number">1.9.1.1.3</span> Effect Size</h5>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb79"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb72"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
 <span>  fps_mean_poor <span class="op">=</span></span>
 <span>    <span class="va">model_data_fps</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Poor"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -1467,7 +1428,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb80"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/cohens_d.html">cohens_d</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb73"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/cohens_d.html">cohens_d</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">model_data_fps</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Poor"</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="va">model_data_fps</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Good"</span><span class="op">)</span>,</span>
 <span>  pooled_sd <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -1489,7 +1450,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 <section id="test-1" class="level5" data-number="1.9.1.2.1"><h5 data-number="1.9.1.2.1" class="anchored" data-anchor-id="test-1">
 <span class="header-section-number">1.9.1.2.1</span> Test</h5>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb81"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_fps</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/aov.html">aov</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb74"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_fps</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/aov.html">aov</a></span><span class="op">(</span></span>
 <span>  formula <span class="op">=</span> <span class="va">labor_duration</span> <span class="op">~</span> <span class="va">baby_weight</span> <span class="op">*</span> <span class="va">group</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">model_data_fps</span></span>
 <span><span class="op">)</span></span>
@@ -1498,11 +1459,11 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb82"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_fps</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb75"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_fps</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb83"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_fps</span> <span class="op">|&gt;</span> <span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb76"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_fps</span> <span class="op">|&gt;</span> <span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="effect-size-1" class="level5" data-number="1.9.1.2.2"><h5 data-number="1.9.1.2.2" class="anchored" data-anchor-id="effect-size-1">
@@ -1510,7 +1471,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 <p>Veja <span class="citation" data-cites="cohen1992">(<a href="references.html#ref-cohen1992" role="doc-biblioref"><strong>cohen1992?</strong></a>)</span> para saber mais.</p>
 <p>Tamanho de efeito para duraçõa do parto e FSP encontrado por <span class="citation" data-cites="lee2004a">(<a href="references.html#ref-lee2004a" role="doc-biblioref"><strong>lee2004a?</strong></a>)</span>:</p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb84"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb77"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
 <span><span class="va">num_df</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
 <span><span class="va">den_df</span> <span class="op">&lt;-</span> <span class="fl">125</span></span>
 <span><span class="va">n_total_tst</span> <span class="op">&lt;-</span> <span class="va">den_df</span> <span class="op">+</span> <span class="va">k</span></span>
@@ -1523,7 +1484,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </div>
 <p>Tamanho de efeito <em>a posteriori</em>:</p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb85"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">effect_size_aov_fps</span> <span class="op">&lt;-</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb78"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">effect_size_aov_fps</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">model_aov_fps</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/eta_squared.html">cohens_f</a></span><span class="op">(</span></span>
 <span>    partial <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -1546,7 +1507,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </div>
 <p>Poder desejado: <span class="math inline">\((1 - \beta) \geq 0.8\)</span></p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb86"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># A posteriori</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb79"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># A posteriori</span></span>
 <span></span>
 <span><span class="va">pwr_analysis_fps_anconva</span> <span class="op">&lt;-</span> <span class="fu">pwrss</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pwrss/man/ancova.html">pwrss.f.ancova</a></span><span class="op">(</span></span>
 <span>  f2 <span class="op">=</span> <span class="va">effect_size_aov_fps</span><span class="op">$</span><span class="va">Cohens_f</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">^</span><span class="fl">2</span>,</span>
@@ -1571,32 +1532,34 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 <p>As an estimate of sleep disruption, WASO is reported as the percentage of minutes awake divided by minutes in bed after falling asleep. During a typical 7- to 8-hour sleep period, WASO of 15% represents more than an hour of wake time after falling asleep. WASO between 5% and 10% is typical in healthy, nonpregnant women5 and greater than 15% was considered severe sleep disruption for this study.<span class="citation" data-cites="lee2004a">(<a href="references.html#ref-lee2004a" role="doc-biblioref"><strong>lee2004a?</strong></a>[p.&nbsp;2042])</span>.</p>
 </blockquote>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb87"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data_waso</span> <span class="op">&lt;-</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb80"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data_waso</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">model_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">labor_duration</span>, <span class="va">waso_mean</span>, <span class="va">fps_mean</span>, <span class="va">baby_weight</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    waso_prop <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">waso_mean</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">fps_mean</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    group <span class="op">=</span></span>
-<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
 <span>        <span class="va">waso_prop</span> <span class="op">&gt;</span> <span class="fl">0.1</span> <span class="op">~</span> <span class="st">"Poor"</span>,</span>
 <span>        <span class="va">waso_prop</span> <span class="op">&lt;</span> <span class="fl">0.1</span> <span class="op">~</span> <span class="st">"Good"</span></span>
 <span>      <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span>levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Poor"</span>, <span class="st">"Good"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    labor_duration <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">labor_duration</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">group</span>, <span class="va">labor_duration</span>, <span class="va">baby_weight</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">model_data_waso</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span>  <span class="fu"><a href="https://danielvartan.github.io/rutils/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb88"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data_waso</span> <span class="op">|&gt;</span> <span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb81"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data_waso</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb82"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data_waso</span> <span class="op">|&gt;</span> <span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <section id="welchs-t-test-1" class="level4" data-number="1.9.2.1"><h4 data-number="1.9.2.1" class="anchored" data-anchor-id="welchs-t-test-1">
@@ -1608,9 +1571,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </div>
 <p>Desired power: <span class="math inline">\((1 - \beta) \geq 0.8\)</span></p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb89"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># A posteriori</span></span>
-<span></span>
-<span><span class="va">pwr_analysis_waso_t_test</span> <span class="op">&lt;-</span> <span class="fu">pwrss</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pwrss/man/means.student.welch.html">pwrss.t.2means</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb83"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pwr_analysis_waso_t_test</span> <span class="op">&lt;-</span> <span class="fu">pwrss</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pwrss/man/means.student.welch.html">pwrss.t.2means</a></span><span class="op">(</span></span>
 <span>  mu1 <span class="op">=</span> <span class="va">model_data_waso</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Poor"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span>na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
@@ -1637,7 +1598,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </section><section id="test-2" class="level5" data-number="1.9.2.1.2"><h5 data-number="1.9.2.1.2" class="anchored" data-anchor-id="test-2">
 <span class="header-section-number">1.9.2.1.2</span> Test</h5>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb90"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_t_test_waso</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb84"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_t_test_waso</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">model_data_waso</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Poor"</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="va">model_data_waso</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Good"</span><span class="op">)</span>,</span>
 <span>  alternative <span class="op">=</span> <span class="st">"greater"</span></span>
@@ -1647,13 +1608,13 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb91"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="va">model_t_test_waso</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb85"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="va">model_t_test_waso</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="effect-size-2" class="level5" data-number="1.9.2.1.3"><h5 data-number="1.9.2.1.3" class="anchored" data-anchor-id="effect-size-2">
 <span class="header-section-number">1.9.2.1.3</span> Effect Size</h5>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb92"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb86"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
 <span>  waso_mean_poor <span class="op">=</span></span>
 <span>    <span class="va">model_data_waso</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Poor"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -1669,7 +1630,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb93"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/cohens_d.html">cohens_d</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb87"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/cohens_d.html">cohens_d</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">model_data_waso</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Poor"</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="va">model_data_waso</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Good"</span><span class="op">)</span>,</span>
 <span>  pooled_sd <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -1688,7 +1649,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 <section id="test-3" class="level5" data-number="1.9.2.2.1"><h5 data-number="1.9.2.2.1" class="anchored" data-anchor-id="test-3">
 <span class="header-section-number">1.9.2.2.1</span> Test</h5>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb94"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_waso</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/aov.html">aov</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb88"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_waso</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/aov.html">aov</a></span><span class="op">(</span></span>
 <span>  formula <span class="op">=</span> <span class="va">labor_duration</span> <span class="op">~</span> <span class="va">baby_weight</span> <span class="op">*</span> <span class="va">group</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">model_data_waso</span></span>
 <span><span class="op">)</span></span>
@@ -1697,19 +1658,19 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb95"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_waso</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb89"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_waso</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb96"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_waso</span> <span class="op">|&gt;</span> <span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb90"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_waso</span> <span class="op">|&gt;</span> <span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="effect-size-3" class="level5" data-number="1.9.2.2.2"><h5 data-number="1.9.2.2.2" class="anchored" data-anchor-id="effect-size-3">
 <span class="header-section-number">1.9.2.2.2</span> Effect Size</h5>
-<p>Veja <span class="citation" data-cites="cohen1992">(<a href="references.html#ref-cohen1992" role="doc-biblioref"><strong>cohen1992?</strong></a>)</span> para saber mais.</p>
-<p>Tamanho de efeito para duração do parto e WASO encontrado por <span class="citation" data-cites="lee2004a">(<a href="references.html#ref-lee2004a" role="doc-biblioref"><strong>lee2004a?</strong></a>)</span>:</p>
+<p>See <span class="citation" data-cites="cohen1992">(<a href="references.html#ref-cohen1992" role="doc-biblioref"><strong>cohen1992?</strong></a>)</span> to learn more.</p>
+<p>Effect size for labor duration and WASO found by <span class="citation" data-cites="lee2004a">(<a href="references.html#ref-lee2004a" role="doc-biblioref"><strong>lee2004a?</strong></a>)</span>:</p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb97"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb91"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
 <span><span class="va">num_df</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
 <span><span class="va">den_df</span> <span class="op">&lt;-</span> <span class="fl">125</span></span>
 <span><span class="va">n_total_waso</span> <span class="op">&lt;-</span> <span class="va">den_df</span> <span class="op">+</span> <span class="va">k</span></span>
@@ -1722,7 +1683,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </div>
 <p>Tamanho de efeito <em>a posteriori</em>:</p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb98"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">effect_size_aov_waso</span> <span class="op">&lt;-</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb92"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">effect_size_aov_waso</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">model_aov_waso</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/eta_squared.html">cohens_f</a></span><span class="op">(</span></span>
 <span>    partial <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -1744,7 +1705,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </div>
 <p>Poder desejado: <span class="math inline">\((1 - \beta) \geq 0.8\)</span></p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb99"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pwr_analysis_waso_ancova</span> <span class="op">&lt;-</span> <span class="fu">pwrss</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pwrss/man/ancova.html">pwrss.f.ancova</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb93"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pwr_analysis_waso_ancova</span> <span class="op">&lt;-</span> <span class="fu">pwrss</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pwrss/man/ancova.html">pwrss.f.ancova</a></span><span class="op">(</span></span>
 <span>  f2 <span class="op">=</span> <span class="va">effect_size_aov_waso</span><span class="op">$</span><span class="va">Cohens_f</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">^</span><span class="fl">2</span>,</span>
 <span>  n.way <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  n.levels <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -1795,7 +1756,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </dl></section><section id="locking-the-data-directory" class="level2" data-number="1.11"><h2 data-number="1.11" class="anchored" data-anchor-id="locking-the-data-directory">
 <span class="header-section-number">1.11</span> Locking the Data Directory</h2>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb100"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_dir</span> <span class="op">|&gt;</span> <span class="fu">lockr</span><span class="fu">::</span><span class="fu"><a href="https://danielvartan.github.io/lockr/reference/lock_dir.html">lock_dir</a></span><span class="op">(</span>public_key <span class="op">=</span> <span class="va">public_key_path</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb94"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_dir</span> <span class="op">|&gt;</span> <span class="fu">lockr</span><span class="fu">::</span><span class="fu"><a href="https://danielvartan.github.io/lockr/reference/lock_dir.html">lock_dir</a></span><span class="op">(</span>public_key <span class="op">=</span> <span class="va">public_key_path</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 
