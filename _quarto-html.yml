@@ -10,6 +10,11 @@ book:
   date-format: "long"
   reader-mode: true
   repo-actions: [edit, issue]
+  open-graph:
+    image: images/og-image.png
+    image-width: 2400
+    image-height: 1600
+    image-alt: "Does Sleep Regularity Worsen Over the Third Trimester of Pregnancy?"
   chapters:
     - index.qmd
     - part: "Chapters"
