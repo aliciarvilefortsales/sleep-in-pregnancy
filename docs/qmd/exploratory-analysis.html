@@ -51,7 +51,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
@@ -138,6 +158,11 @@ window.Quarto = {
 <meta name="citation_doi" content="10.17605/OSF.IO/S4TBZ">
 <meta name="citation_language" content="en">
 <meta name="citation_dissertation_institution" content="University of São Paulo">
+<meta name="citation_reference" content="citation_title=A power primer;,citation_author=Jacob Cohen;,citation_publication_date=1992;,citation_cover_date=1992;,citation_year=1992;,citation_fulltext_html_url=http://doi.apa.org/getdoi.cfm?doi=10.1037/0033-2909.112.1.155;,citation_issue=1;,citation_doi=10.1037/0033-2909.112.1.155;,citation_issn=1939-1455, 0033-2909;,citation_volume=112;,citation_language=en-US;,citation_journal_title=Psychological Bulletin;,citation_journal_abbrev=Psychological Bulletin;">
+<meta name="citation_reference" content="citation_title=The essential guide to effect sizes: Statistical power, meta-analysis, and the interpretation of research results;,citation_abstract=This succinct and jargon-free introduction to effect sizes gives students and researchers the tools they need to interpret the practical significance of their results. Using a class-tested approach that includes numerous examples and step-by-step exercises, it introduces and explains three of the most important issues relating to the practical significance of research results: the reporting and interpretation of effect sizes (Part I), the analysis of statistical power (Part II), and the meta-analytic pooling of effect size estimates drawn from different studies (Part III). The book concludes with a handy list of recommendations for those actively engaged in or currently preparing research projects.;,citation_editor=Paul D. Ellis;,citation_publication_date=2010;,citation_cover_date=2010;,citation_year=2010;,citation_isbn=978-0-521-19423-5;,citation_language=en-US;">
+<meta name="citation_reference" content="citation_title=Sleep in late pregnancy predicts length of labor and type of delivery;,citation_abstract=Objective The purpose of this study was to test the hypothesis that fatigue and sleep disturbance in late pregnancy are associated with labor duration and delivery type. Study design In a prospective observational study of 131 women in their ninth month of pregnancy, objective (48-hour wrist actigraphy) and subjective (sleep logs and questionnaires) measures were used to predict labor outcomes using analysis of variance and logistic regression. Results Controlling for infant birth weight, women who slept less than 6 hours at night had longer labors and were 4.5 times more likely to have cesarean deliveries. Women with severely disrupted sleep had longer labors and were 5.2 times more likely to have cesarean deliveries. Fatigue was unrelated to labor outcomes. Conclusion Health care providers should prescribe 8 hours of bed time during pregnancy to assure adequate sleep and should include sleep quantity and quality in prenatal assessments as potential predictors of labor duration and delivery type.;,citation_author=Kathryn A. Lee;,citation_author=Caryl L. Gay;,citation_publication_date=2004;,citation_cover_date=2004;,citation_year=2004;,citation_fulltext_html_url=https://linkinghub.elsevier.com/retrieve/pii/S0002937804005745;,citation_issue=6;,citation_doi=10.1016/j.ajog.2004.05.086;,citation_issn=00029378;,citation_volume=191;,citation_language=en-US;,citation_journal_title=American Journal of Obstetrics and Gynecology;">
+<meta name="citation_reference" content="citation_title=ANOVA and ANCOVA: A GLM approach;,citation_author=Andrew Rutherford;,citation_publication_date=2011;,citation_cover_date=2011;,citation_year=2011;,citation_doi=10.1002/9781118491683;,citation_isbn=978-0-470-38555-5;,citation_language=en-US;">
+<meta name="citation_reference" content="citation_title=Recommended amount of sleep for a healthy adult: A joint consensus statement of the American Academy of Sleep Medicine and Sleep Research Society;,citation_abstract=Sleep is essential for optimal health. The American Academy of Sleep Medicine (AASM) and Sleep Research Society (SRS) developed a consensus recommendation for the amount of sleep needed to promote optimal health in adults, using a modified RAND Appropriateness Method process. The recommendation is summarized here. A manuscript detailing the conference proceedings and evidence supporting the final recommendation statement will be published in SLEEP and the Journal of Clinical Sleep Medicine.;,citation_author=Nathaniel F. Watson;,citation_author=M. Safwan Badr;,citation_author=Gregory Belenky;,citation_author=Donald L. Bliwise;,citation_author=Orfeu M. Buxton;,citation_author=Daniel Buysse;,citation_author=David F. Dinges;,citation_author=James Gangwisch;,citation_author=Michael A. Grandner;,citation_author=Clete Kushida;,citation_author=Raman K. Malhotra;,citation_author=Jennifer L. Martin;,citation_author=Sanjay R. Patel;,citation_author=Stuart F. Quan;,citation_author=Esra Tasali;,citation_publication_date=2015-06-15;,citation_cover_date=2015-06-15;,citation_year=2015;,citation_fulltext_html_url=http://jcsm.aasm.org/doi/10.5664/jcsm.4758;,citation_issue=6;,citation_doi=10.5664/jcsm.4758;,citation_issn=1550-9389, 1550-9397;,citation_volume=11;,citation_language=en-US;,citation_journal_title=Journal of Clinical Sleep Medicine;">
 </head>
 <body class="nav-sidebar floating quarto-light">
 
@@ -266,7 +291,8 @@ window.Quarto = {
   <ul class="collapse">
 <li><a href="#load-packages" id="toc-load-packages" class="nav-link" data-scroll-target="#load-packages"><span class="header-section-number">1.1.1</span> Load Packages</a></li>
   <li><a href="#load-custom-functions" id="toc-load-custom-functions" class="nav-link" data-scroll-target="#load-custom-functions"><span class="header-section-number">1.1.2</span> Load Custom Functions</a></li>
-  <li><a href="#set-keys" id="toc-set-keys" class="nav-link" data-scroll-target="#set-keys"><span class="header-section-number">1.1.3</span> Set Keys</a></li>
+  <li><a href="#set-data-directories" id="toc-set-data-directories" class="nav-link" data-scroll-target="#set-data-directories"><span class="header-section-number">1.1.3</span> Set Data Directories</a></li>
+  <li><a href="#set-keys" id="toc-set-keys" class="nav-link" data-scroll-target="#set-keys"><span class="header-section-number">1.1.4</span> Set Keys</a></li>
   </ul>
 </li>
   <li><a href="#setting-parameters" id="toc-setting-parameters" class="nav-link" data-scroll-target="#setting-parameters"><span class="header-section-number">1.2</span> Setting Parameters</a></li>
@@ -299,7 +325,6 @@ window.Quarto = {
   </ul>
 </li>
   <li><a href="#ancova-assumptions" id="toc-ancova-assumptions" class="nav-link" data-scroll-target="#ancova-assumptions"><span class="header-section-number">1.10</span> ANCOVA Assumptions</a></li>
-  <li><a href="#locking-the-data-directory" id="toc-locking-the-data-directory" class="nav-link" data-scroll-target="#locking-the-data-directory"><span class="header-section-number">1.11</span> Locking the Data Directory</a></li>
   </ul><div class="toc-actions"><ul><li><a href="https://github.com/aliciarvilefortsales/sleep-in-pregnancy/edit/main/qmd/exploratory-analysis.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/aliciarvilefortsales/sleep-in-pregnancy/issues/" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
@@ -356,52 +381,35 @@ window.Quarto = {
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"R"</span>, <span class="st">"anonymize_id.R"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
+</section><section id="set-data-directories" class="level3" data-number="1.1.3"><h3 data-number="1.1.3" class="anchored" data-anchor-id="set-data-directories">
+<span class="header-section-number">1.1.3</span> Set Data Directories</h3>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">get_n</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">group</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkTibble.html">assert_tibble</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
-<span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkSubset.html">assert_subset</a></span><span class="op">(</span><span class="st">"group"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkSetEqual.html">assert_set_equal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">group</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Poor"</span>, <span class="st">"Good"</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkChoice.html">assert_choice</a></span><span class="op">(</span><span class="va">group</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Poor"</span>, <span class="st">"Good"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="va">data</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>.group <span class="op">=</span> <span class="va">group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">.group</span> <span class="op">==</span> <span class="va">group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span><span class="op">)</span></span>
+<span><span class="va">processed_data_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"processed"</span><span class="op">)</span></span>
+<span><span class="va">processed_actigraphy_data_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"processed"</span>, <span class="st">"actigraphy"</span><span class="op">)</span></span>
+<span><span class="va">sri_data_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"sri"</span><span class="op">)</span></span>
+<span><span class="va">sleep_prop_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"sleep-prop"</span><span class="op">)</span></span>
+<span><span class="va">lux_data_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"lux"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">get_labor_duration</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">group</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkTibble.html">assert_tibble</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
-<span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkSubset.html">assert_subset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"group"</span>, <span class="st">"labor_duration"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkSetEqual.html">assert_set_equal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">group</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Poor"</span>, <span class="st">"Good"</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkChoice.html">assert_choice</a></span><span class="op">(</span><span class="va">group</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Poor"</span>, <span class="st">"Good"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="va">data</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>.group <span class="op">=</span> <span class="va">group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">.group</span> <span class="op">==</span> <span class="va">group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">labor_duration</span><span class="op">)</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"_dir$"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu">dir_exists</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/get.html">get</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="fu">dir_create</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/get.html">get</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span>, recurse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
+</section><section id="set-keys" class="level3" data-number="1.1.4"><h3 data-number="1.1.4" class="anchored" data-anchor-id="set-keys">
+<span class="header-section-number">1.1.4</span> Set Keys</h3>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># See Maxwell et al. (2018, p. 150)</span></span>
-<span></span>
-<span><span class="va">f_unb</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">k</span>, <span class="va">n_total</span>, <span class="va">f_test</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkInt.html">assert_int</a></span><span class="op">(</span><span class="va">k</span>, lower <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkInt.html">assert_int</a></span><span class="op">(</span><span class="va">n_total</span>, lower <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkNumber.html">assert_number</a></span><span class="op">(</span><span class="va">f_test</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="op">(</span><span class="op">(</span><span class="va">k</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">/</span> <span class="va">n_total</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu">`*`</span><span class="op">(</span><span class="op">(</span><span class="op">(</span><span class="va">n_total</span> <span class="op">-</span> <span class="va">k</span> <span class="op">-</span> <span class="fl">2</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">n_total</span> <span class="op">-</span> <span class="va">k</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="va">f_test</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://googlesheets4.tidyverse.org/reference/gs4_auth.html">gs4_auth</a></span><span class="op">(</span></span>
+<span>  cache <span class="op">=</span> <span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">".secrets"</span><span class="op">)</span>,</span>
+<span>  email <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  use_oob <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-</section><section id="set-keys" class="level3" data-number="1.1.3"><h3 data-number="1.1.3" class="anchored" data-anchor-id="set-keys">
-<span class="header-section-number">1.1.3</span> Set Keys</h3>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://googlesheets4.tidyverse.org/reference/gs4_auth.html">gs4_auth</a></span><span class="op">(</span>cache <span class="op">=</span> <span class="st">".secrets"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">salt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span><span class="op">(</span><span class="st">"PREGNANCY_SALT"</span><span class="op">)</span> <span class="co"># askpass()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section></section><section id="setting-parameters" class="level2" data-number="1.2"><h2 data-number="1.2" class="anchored" data-anchor-id="setting-parameters">
@@ -1296,7 +1304,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 \end{cases}
 \]</span></p>
 <blockquote class="blockquote">
-<p>See <span class="citation" data-cites="ellis2010">(<a href="references.html#ref-ellis2010" role="doc-biblioref"><strong>ellis2010?</strong></a>)</span> to learn more about Hedges’ g and other effect size measures.</p>
+<p>See <span class="citation" data-cites="ellis2010">Ellis (<a href="references.html#ref-ellis2010" role="doc-biblioref">2010</a>)</span> to learn more about Hedges’ g and other effect size measures.</p>
 </blockquote>
 <p><span class="math display">\[
 \text{g de Hedges} = \cfrac{\overline{\text{X}}_{\text{Ruim}} - \overline{\text{X}}_{\text{Bom}}}{\text{SD}_{\text{pooled}}}
@@ -1337,7 +1345,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 <li>Sleeping more than 9 hours per night on a regular basis may be appropriate for young adults, individuals recovering from sleep debt, and individuals with illnesses. For others, it is uncertain whether sleeping more than 9 hours per night is associated with health risk.</li>
 <li>People concerned they are sleeping too little or too much should consult their healthcare provider.</li>
 </ul>
-<p><span class="citation" data-cites="watson2015b">(<a href="references.html#ref-watson2015b" role="doc-biblioref"><strong>watson2015b?</strong></a>)</span></p>
+<p><span class="citation" data-cites="watson2015b">(<a href="references.html#ref-watson2015b" role="doc-biblioref">Watson et al., 2015</a>)</span></p>
 </div>
 </div>
 <div class="cell">
@@ -1428,7 +1436,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb73"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/cohens_d.html">cohens_d</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb73"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://danielvartan.github.io/rutils/reference/cohens_d.html">cohens_d</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">model_data_fps</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Poor"</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="va">model_data_fps</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Good"</span><span class="op">)</span>,</span>
 <span>  pooled_sd <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -1439,13 +1447,13 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 <span>  alternative <span class="op">=</span> <span class="st">"greater"</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/interpret_cohens_d.html">interpret_hedges_g</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span>  <span class="fu">interpret_hedges_g</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section></section><section id="ancova" class="level4" data-number="1.9.1.2"><h4 data-number="1.9.1.2" class="anchored" data-anchor-id="ancova">
 <span class="header-section-number">1.9.1.2</span> ANCOVA</h4>
 <blockquote class="blockquote">
-<p>See <span class="citation" data-cites="rutherford2011">(<a href="references.html#ref-rutherford2011" role="doc-biblioref"><strong>rutherford2011?</strong></a>)</span> to lear more about ANOVA-ANCOVA assumptions.</p>
+<p>See <span class="citation" data-cites="rutherford2011">Rutherford (<a href="references.html#ref-rutherford2011" role="doc-biblioref">2011, pp. 237–261</a>)</span> to lear more about ANOVA-ANCOVA assumptions.</p>
 </blockquote>
 <section id="test-1" class="level5" data-number="1.9.1.2.1"><h5 data-number="1.9.1.2.1" class="anchored" data-anchor-id="test-1">
 <span class="header-section-number">1.9.1.2.1</span> Test</h5>
@@ -1468,8 +1476,8 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </div>
 </section><section id="effect-size-1" class="level5" data-number="1.9.1.2.2"><h5 data-number="1.9.1.2.2" class="anchored" data-anchor-id="effect-size-1">
 <span class="header-section-number">1.9.1.2.2</span> Effect Size</h5>
-<p>Veja <span class="citation" data-cites="cohen1992">(<a href="references.html#ref-cohen1992" role="doc-biblioref"><strong>cohen1992?</strong></a>)</span> para saber mais.</p>
-<p>Tamanho de efeito para duraçõa do parto e FSP encontrado por <span class="citation" data-cites="lee2004a">(<a href="references.html#ref-lee2004a" role="doc-biblioref"><strong>lee2004a?</strong></a>)</span>:</p>
+<p>Veja <span class="citation" data-cites="cohen1992">Cohen (<a href="references.html#ref-cohen1992" role="doc-biblioref">1992</a>)</span> para saber mais.</p>
+<p>Tamanho de efeito para duraçõa do parto e FSP encontrado por <span class="citation" data-cites="lee2004a">Lee &amp; Gay (<a href="references.html#ref-lee2004a" role="doc-biblioref">2004</a>)</span>:</p>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb77"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
 <span><span class="va">num_df</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
@@ -1486,7 +1494,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb78"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">effect_size_aov_fps</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">model_aov_fps</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/eta_squared.html">cohens_f</a></span><span class="op">(</span></span>
+<span>  <span class="fu">cohens_f</span><span class="op">(</span></span>
 <span>    partial <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    generalized <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"eta"</span>,</span>
@@ -1495,7 +1503,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 <span>    alternative <span class="op">=</span> <span class="st">"greater"</span>,</span>
 <span>    verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/interpret_omega_squared.html">interpret_eta_squared</a></span><span class="op">(</span><span class="st">"cohen1992"</span><span class="op">)</span></span>
+<span>  <span class="fu">interpret_eta_squared</span><span class="op">(</span><span class="st">"cohen1992"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">effect_size_aov_fps</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -1529,7 +1537,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </section></section></section><section id="waso-wake-after-sleep-onset" class="level3" data-number="1.9.2"><h3 data-number="1.9.2" class="anchored" data-anchor-id="waso-wake-after-sleep-onset">
 <span class="header-section-number">1.9.2</span> WASO (Wake After Sleep Onset)</h3>
 <blockquote class="blockquote">
-<p>As an estimate of sleep disruption, WASO is reported as the percentage of minutes awake divided by minutes in bed after falling asleep. During a typical 7- to 8-hour sleep period, WASO of 15% represents more than an hour of wake time after falling asleep. WASO between 5% and 10% is typical in healthy, nonpregnant women5 and greater than 15% was considered severe sleep disruption for this study.<span class="citation" data-cites="lee2004a">(<a href="references.html#ref-lee2004a" role="doc-biblioref"><strong>lee2004a?</strong></a>[p.&nbsp;2042])</span>.</p>
+<p>As an estimate of sleep disruption, WASO is reported as the percentage of minutes awake divided by minutes in bed after falling asleep. During a typical 7- to 8-hour sleep period, WASO of 15% represents more than an hour of wake time after falling asleep. WASO between 5% and 10% is typical in healthy, nonpregnant women5 and greater than 15% was considered severe sleep disruption for this study.<span class="citation" data-cites="lee2004a">(<a href="references.html#ref-lee2004a" role="doc-biblioref">Lee &amp; Gay, 2004</a>[p.&nbsp;2042])</span>.</p>
 </blockquote>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb80"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data_waso</span> <span class="op">&lt;-</span></span>
@@ -1630,7 +1638,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb87"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/cohens_d.html">cohens_d</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb87"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://danielvartan.github.io/rutils/reference/cohens_d.html">cohens_d</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">model_data_waso</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Poor"</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="va">model_data_waso</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Good"</span><span class="op">)</span>,</span>
 <span>  pooled_sd <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -1641,7 +1649,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 <span>  alternative <span class="op">=</span> <span class="st">"greater"</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/interpret_cohens_d.html">interpret_hedges_g</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span>  <span class="fu">interpret_hedges_g</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section></section><section id="ancova-1" class="level4" data-number="1.9.2.2"><h4 data-number="1.9.2.2" class="anchored" data-anchor-id="ancova-1">
@@ -1667,8 +1675,8 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </div>
 </section><section id="effect-size-3" class="level5" data-number="1.9.2.2.2"><h5 data-number="1.9.2.2.2" class="anchored" data-anchor-id="effect-size-3">
 <span class="header-section-number">1.9.2.2.2</span> Effect Size</h5>
-<p>See <span class="citation" data-cites="cohen1992">(<a href="references.html#ref-cohen1992" role="doc-biblioref"><strong>cohen1992?</strong></a>)</span> to learn more.</p>
-<p>Effect size for labor duration and WASO found by <span class="citation" data-cites="lee2004a">(<a href="references.html#ref-lee2004a" role="doc-biblioref"><strong>lee2004a?</strong></a>)</span>:</p>
+<p>See <span class="citation" data-cites="cohen1992">Cohen (<a href="references.html#ref-cohen1992" role="doc-biblioref">1992</a>)</span> to learn more.</p>
+<p>Effect size for labor duration and WASO found by <span class="citation" data-cites="lee2004a">Lee &amp; Gay (<a href="references.html#ref-lee2004a" role="doc-biblioref">2004</a>)</span>:</p>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb91"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
 <span><span class="va">num_df</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
@@ -1685,7 +1693,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb92"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">effect_size_aov_waso</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">model_aov_waso</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/eta_squared.html">cohens_f</a></span><span class="op">(</span></span>
+<span>  <span class="fu">cohens_f</span><span class="op">(</span></span>
 <span>    partial <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"eta"</span>,</span>
 <span>    model2 <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -1693,7 +1701,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 <span>    alternative <span class="op">=</span> <span class="st">"greater"</span>,</span>
 <span>    verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/interpret_omega_squared.html">interpret_eta_squared</a></span><span class="op">(</span><span class="st">"cohen1992"</span><span class="op">)</span></span>
+<span>  <span class="fu">interpret_eta_squared</span><span class="op">(</span><span class="st">"cohen1992"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">effect_size_aov_waso</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -1727,40 +1735,52 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 <dl>
 <dt>Assumption 1</dt>
 <dd>
-<strong>Predictor is known</strong> (ANOVA). Each condition contains a random sample of the population of such scores <span class="citation" data-cites="rutherford2011">(<a href="references.html#ref-rutherford2011" role="doc-biblioref"><strong>rutherford2011?</strong></a>[p.&nbsp;237])</span>.
+<strong>Predictor is known</strong> (ANOVA). Each condition contains a random sample of the population of such scores <span class="citation" data-cites="rutherford2011">(<a href="references.html#ref-rutherford2011" role="doc-biblioref">Rutherford, 2011</a>[p.&nbsp;237])</span>.
 </dd>
 <dt>Assumption 2</dt>
 <dd>
-<strong>Normality</strong> (ANOVA). The scores in each condition are distributed normally <span class="citation" data-cites="rutherford2011">(<a href="references.html#ref-rutherford2011" role="doc-biblioref"><strong>rutherford2011?</strong></a>[p.&nbsp;237])</span>.
+<strong>Normality</strong> (ANOVA). The scores in each condition are distributed normally <span class="citation" data-cites="rutherford2011">(<a href="references.html#ref-rutherford2011" role="doc-biblioref">Rutherford, 2011</a>[p.&nbsp;237])</span>.
 </dd>
 <dt>Assumption 3</dt>
 <dd>
-<strong>Independence</strong> (ANOVA). The scores in each condition are independent of each other <span class="citation" data-cites="rutherford2011">(<a href="references.html#ref-rutherford2011" role="doc-biblioref"><strong>rutherford2011?</strong></a>[p.&nbsp;237])</span>.
+<strong>Independence</strong> (ANOVA). The scores in each condition are independent of each other <span class="citation" data-cites="rutherford2011">(<a href="references.html#ref-rutherford2011" role="doc-biblioref">Rutherford, 2011</a>[p.&nbsp;237])</span>.
 </dd>
 <dt>Assumption 4</dt>
 <dd>
-<strong>Common variance</strong> (homoscedasticity) (ANOVA). The variances of the scores in each experimental condition are homogeneous <span class="citation" data-cites="rutherford2011">(<a href="references.html#ref-rutherford2011" role="doc-biblioref"><strong>rutherford2011?</strong></a>[p.&nbsp;237])</span>.
+<strong>Common variance</strong> (homoscedasticity) (ANOVA). The variances of the scores in each experimental condition are homogeneous <span class="citation" data-cites="rutherford2011">(<a href="references.html#ref-rutherford2011" role="doc-biblioref">Rutherford, 2011</a>[p.&nbsp;237])</span>.
 </dd>
 <dt>Assumption 5</dt>
 <dd>
-<strong>Independence of the covariates</strong> (homoscedasticity) (ANCOVA). The covariate is independent of the treatments <span class="citation" data-cites="rutherford2011">(<a href="references.html#ref-rutherford2011" role="doc-biblioref"><strong>rutherford2011?</strong></a>[p.&nbsp;237])</span>.
+<strong>Independence of the covariates</strong> (homoscedasticity) (ANCOVA). The covariate is independent of the treatments <span class="citation" data-cites="rutherford2011">(<a href="references.html#ref-rutherford2011" role="doc-biblioref">Rutherford, 2011</a>[p.&nbsp;237])</span>.
 </dd>
 <dt>Assumption 6</dt>
 <dd>
-<strong>Linear mean</strong> (ANCOVA). In each treatment group the relationship between the covariate and the dependent variable is linear (the covariate and dependent variable are expressed at the first power only) <span class="citation" data-cites="rutherford2011">(<a href="references.html#ref-rutherford2011" role="doc-biblioref"><strong>rutherford2011?</strong></a>[p.&nbsp;240])</span>.
+<strong>Linear mean</strong> (ANCOVA). In each treatment group the relationship between the covariate and the dependent variable is linear (the covariate and dependent variable are expressed at the first power only) <span class="citation" data-cites="rutherford2011">(<a href="references.html#ref-rutherford2011" role="doc-biblioref">Rutherford, 2011</a>[p.&nbsp;240])</span>.
 </dd>
 <dt>Assumption 7</dt>
 <dd>
-<strong>Homogeneity of the coefficients</strong> (ANCOVA). The regression coefficients of the dependent variable on the covariate in each treatment group are homogeneous <span class="citation" data-cites="rutherford2011">(<a href="references.html#ref-rutherford2011" role="doc-biblioref"><strong>rutherford2011?</strong></a>[p.&nbsp;240])</span>.
+<strong>Homogeneity of the coefficients</strong> (ANCOVA). The regression coefficients of the dependent variable on the covariate in each treatment group are homogeneous <span class="citation" data-cites="rutherford2011">(<a href="references.html#ref-rutherford2011" role="doc-biblioref">Rutherford, 2011</a>[p.&nbsp;240])</span>.
 </dd>
-</dl></section><section id="locking-the-data-directory" class="level2" data-number="1.11"><h2 data-number="1.11" class="anchored" data-anchor-id="locking-the-data-directory">
-<span class="header-section-number">1.11</span> Locking the Data Directory</h2>
-<div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb94"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_dir</span> <span class="op">|&gt;</span> <span class="fu">lockr</span><span class="fu">::</span><span class="fu"><a href="https://danielvartan.github.io/lockr/reference/lock_dir.html">lock_dir</a></span><span class="op">(</span>public_key <span class="op">=</span> <span class="va">public_key_path</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
+</dl>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
+<div id="ref-cohen1992" class="csl-entry" role="listitem">
+Cohen, J. (1992). A power primer. <em>Psychological Bulletin</em>, <em>112</em>(1), 155–159. <a href="https://doi.org/10.1037/0033-2909.112.1.155">https://doi.org/10.1037/0033-2909.112.1.155</a>
 </div>
-
-
+<div id="ref-ellis2010" class="csl-entry" role="listitem">
+Ellis, P. D. (Ed.). (2010). <em>The essential guide to effect sizes: Statistical power, meta-analysis, and the interpretation of research results</em> (a). Cambridge University Press.
+</div>
+<div id="ref-lee2004a" class="csl-entry" role="listitem">
+Lee, K. A., &amp; Gay, C. L. (2004). Sleep in late pregnancy predicts length of labor and type of delivery. <em>American Journal of Obstetrics and Gynecology</em>, <em>191</em>(6), 2041–2046. <a href="https://doi.org/10.1016/j.ajog.2004.05.086">https://doi.org/10.1016/j.ajog.2004.05.086</a>
+</div>
+<div id="ref-rutherford2011" class="csl-entry" role="listitem">
+Rutherford, A. (2011). <em><span>ANOVA</span> and <span>ANCOVA</span>: A <span>GLM</span> approach</em> (2nd ed.). Wiley. <a href="https://doi.org/10.1002/9781118491683">https://doi.org/10.1002/9781118491683</a>
+</div>
+<div id="ref-watson2015b" class="csl-entry" role="listitem">
+Watson, N. F., Badr, M. S., Belenky, G., Bliwise, D. L., Buxton, O. M., Buysse, D., Dinges, D. F., Gangwisch, J., Grandner, M. A., Kushida, C., Malhotra, R. K., Martin, J. L., Patel, S. R., Quan, S. F., &amp; Tasali, E. (2015). Recommended amount of sleep for a healthy adult: <span>A</span> joint consensus statement of the <span>American Academy</span> of <span>Sleep Medicine</span> and <span>Sleep Research Society</span>. <em>Journal of Clinical Sleep Medicine</em>, <em>11</em>(6), 591–592. <a href="https://doi.org/10.5664/jcsm.4758">https://doi.org/10.5664/jcsm.4758</a>
+</div>
+</div>
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

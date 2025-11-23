@@ -119,6 +119,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="citation_doi" content="10.17605/OSF.IO/S4TBZ">
 <meta name="citation_language" content="en">
 <meta name="citation_dissertation_institution" content="University of São Paulo">
+<meta name="citation_reference" content="citation_title=A power primer;,citation_author=Jacob Cohen;,citation_publication_date=1992;,citation_cover_date=1992;,citation_year=1992;,citation_fulltext_html_url=http://doi.apa.org/getdoi.cfm?doi=10.1037/0033-2909.112.1.155;,citation_issue=1;,citation_doi=10.1037/0033-2909.112.1.155;,citation_issn=1939-1455, 0033-2909;,citation_volume=112;,citation_language=en-US;,citation_journal_title=Psychological Bulletin;,citation_journal_abbrev=Psychological Bulletin;">
+<meta name="citation_reference" content="citation_title=The essential guide to effect sizes: Statistical power, meta-analysis, and the interpretation of research results;,citation_abstract=This succinct and jargon-free introduction to effect sizes gives students and researchers the tools they need to interpret the practical significance of their results. Using a class-tested approach that includes numerous examples and step-by-step exercises, it introduces and explains three of the most important issues relating to the practical significance of research results: the reporting and interpretation of effect sizes (Part I), the analysis of statistical power (Part II), and the meta-analytic pooling of effect size estimates drawn from different studies (Part III). The book concludes with a handy list of recommendations for those actively engaged in or currently preparing research projects.;,citation_editor=Paul D. Ellis;,citation_publication_date=2010;,citation_cover_date=2010;,citation_year=2010;,citation_isbn=978-0-521-19423-5;,citation_language=en-US;">
+<meta name="citation_reference" content="citation_title=Sleep in late pregnancy predicts length of labor and type of delivery;,citation_abstract=Objective The purpose of this study was to test the hypothesis that fatigue and sleep disturbance in late pregnancy are associated with labor duration and delivery type. Study design In a prospective observational study of 131 women in their ninth month of pregnancy, objective (48-hour wrist actigraphy) and subjective (sleep logs and questionnaires) measures were used to predict labor outcomes using analysis of variance and logistic regression. Results Controlling for infant birth weight, women who slept less than 6 hours at night had longer labors and were 4.5 times more likely to have cesarean deliveries. Women with severely disrupted sleep had longer labors and were 5.2 times more likely to have cesarean deliveries. Fatigue was unrelated to labor outcomes. Conclusion Health care providers should prescribe 8 hours of bed time during pregnancy to assure adequate sleep and should include sleep quantity and quality in prenatal assessments as potential predictors of labor duration and delivery type.;,citation_author=Kathryn A. Lee;,citation_author=Caryl L. Gay;,citation_publication_date=2004;,citation_cover_date=2004;,citation_year=2004;,citation_fulltext_html_url=https://linkinghub.elsevier.com/retrieve/pii/S0002937804005745;,citation_issue=6;,citation_doi=10.1016/j.ajog.2004.05.086;,citation_issn=00029378;,citation_volume=191;,citation_language=en-US;,citation_journal_title=American Journal of Obstetrics and Gynecology;">
+<meta name="citation_reference" content="citation_title=ANOVA and ANCOVA: A GLM approach;,citation_author=Andrew Rutherford;,citation_publication_date=2011;,citation_cover_date=2011;,citation_year=2011;,citation_doi=10.1002/9781118491683;,citation_isbn=978-0-470-38555-5;,citation_language=en-US;">
+<meta name="citation_reference" content="citation_title=Recommended amount of sleep for a healthy adult: A joint consensus statement of the American Academy of Sleep Medicine and Sleep Research Society;,citation_abstract=Sleep is essential for optimal health. The American Academy of Sleep Medicine (AASM) and Sleep Research Society (SRS) developed a consensus recommendation for the amount of sleep needed to promote optimal health in adults, using a modified RAND Appropriateness Method process. The recommendation is summarized here. A manuscript detailing the conference proceedings and evidence supporting the final recommendation statement will be published in SLEEP and the Journal of Clinical Sleep Medicine.;,citation_author=Nathaniel F. Watson;,citation_author=M. Safwan Badr;,citation_author=Gregory Belenky;,citation_author=Donald L. Bliwise;,citation_author=Orfeu M. Buxton;,citation_author=Daniel Buysse;,citation_author=David F. Dinges;,citation_author=James Gangwisch;,citation_author=Michael A. Grandner;,citation_author=Clete Kushida;,citation_author=Raman K. Malhotra;,citation_author=Jennifer L. Martin;,citation_author=Sanjay R. Patel;,citation_author=Stuart F. Quan;,citation_author=Esra Tasali;,citation_publication_date=2015-06-15;,citation_cover_date=2015-06-15;,citation_year=2015;,citation_fulltext_html_url=http://jcsm.aasm.org/doi/10.5664/jcsm.4758;,citation_issue=6;,citation_doi=10.5664/jcsm.4758;,citation_issn=1550-9389, 1550-9397;,citation_volume=11;,citation_language=en-US;,citation_journal_title=Journal of Clinical Sleep Medicine;">
 </head>
 <body class="nav-sidebar floating quarto-light">
 
@@ -567,7 +572,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>    bmi_before <span class="op">=</span> <span class="va">weight_before</span> <span class="op">/</span> <span class="op">(</span><span class="op">(</span><span class="va">height</span> <span class="op">/</span> <span class="fl">100</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>,</span>
 <span>    bmi_current <span class="op">=</span> <span class="va">weight_current</span> <span class="op">/</span> <span class="op">(</span><span class="op">(</span><span class="va">height</span> <span class="op">/</span> <span class="fl">100</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="co"># dplyr::select(-cpf) |&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"cpf"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate</a></span><span class="op">(</span></span>
 <span>    <span class="va">id</span>, <span class="va">timestamp</span>, <span class="va">birth_date</span>, <span class="va">age</span>, <span class="va">weight_before</span>, <span class="va">weight_current</span>, <span class="va">height</span>, <span class="va">bmi_before</span>, <span class="va">bmi_current</span>, <span class="va">family_income</span></span>
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -576,7 +581,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">field_form_data</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 74</span></span>
-<span><span class="co">#&gt; Columns: 21</span></span>
+<span><span class="co">#&gt; Columns: 20</span></span>
 <span><span class="co">#&gt; $ id             &lt;chr&gt; "9e858cd8", "a053ce64", "b37bd425", "db850249", "022…</span></span>
 <span><span class="co">#&gt; $ timestamp      &lt;dttm&gt; 2023-05-21 11:18:49, 2023-05-26 17:55:52, 2023-06-3…</span></span>
 <span><span class="co">#&gt; $ birth_date     &lt;date&gt; 1991-03-22, 2001-07-25, 1989-02-23, 1998-01-12, 199…</span></span>
@@ -587,7 +592,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt; $ bmi_before     &lt;dbl&gt; 27.34375000, 20.54569362, 28.73563218, 24.50894577, …</span></span>
 <span><span class="co">#&gt; $ bmi_current    &lt;dbl&gt; 33.59375000, 30.81854043, 31.04769454, 26.60971255, …</span></span>
 <span><span class="co">#&gt; $ family_income  &lt;dbl&gt; 4000, 2800, 6000, 5000, 3000, 4000, 3000, 9000, 6000…</span></span>
-<span><span class="co">#&gt; $ cpf            &lt;chr&gt; "40726178810", "49629733803", "32599114802", "463904…</span></span>
 <span><span class="co">#&gt; $ gestations     &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1…</span></span>
 <span><span class="co">#&gt; $ study          &lt;lgl&gt; FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALS…</span></span>
 <span><span class="co">#&gt; $ work           &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE, FALSE, TR…</span></span>
@@ -719,13 +723,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu">divide_by</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">fps_mean</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">valid_cases</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">valid_cases</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"cpf"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 8</span></span>
-<span><span class="co">#&gt; Columns: 63</span></span>
+<span><span class="co">#&gt; Columns: 62</span></span>
 <span><span class="co">#&gt; $ id                       &lt;chr&gt; "a053ce64", "b0e857dd", "1d215e39", "b37bd…</span></span>
 <span><span class="co">#&gt; $ birth_center_delivery    &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, …</span></span>
 <span><span class="co">#&gt; $ labor_start              &lt;dttm&gt; 2023-08-06 09:30:00, 2023-08-01 03:30:00,…</span></span>
@@ -777,9 +782,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt; $ bmi_before               &lt;dbl&gt; 20.54569362, 27.88518739, 26.10656224, 28.…</span></span>
 <span><span class="co">#&gt; $ bmi_current              &lt;dbl&gt; 30.81854043, 33.09042237, 31.24876389, 31.…</span></span>
 <span><span class="co">#&gt; $ family_income            &lt;dbl&gt; 2800, 6000, 2500, 6000, 5000, 3000, 3500,…</span></span>
-<span><span class="co">#&gt; $ cpf                      &lt;chr&gt; "49629733803", "37160979850", "0731813456…</span></span>
 <span><span class="co">#&gt; $ gestations               &lt;dbl&gt; 1, 1, 1, 1, 1, 2, 1, 1</span></span>
-<span><span class="co">#&gt; $ study                    &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, F…</span></span>
+<span><span class="co">#&gt; $ study                    &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, …</span></span>
 <span><span class="co">#&gt; $ work                     &lt;lgl&gt; TRUE, TRUE, FALSE, TRUE, TRUE, FALSE, TRUE…</span></span>
 <span><span class="co">#&gt; $ health_plan              &lt;lgl&gt; FALSE, TRUE, FALSE, TRUE, TRUE, FALSE, FAL…</span></span>
 <span><span class="co">#&gt; $ solo                     &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, …</span></span>
@@ -959,27 +963,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span></span>
 <span>  <span class="fu"><a href="https://cli.r-lib.org/reference/cat_line.html">cat_line</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── cpf ──────────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; # A tibble: 15 × 2</span></span>
-<span><span class="co">#&gt;    name          value    </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;         &lt;chr&gt;    </span></span>
-<span><span class="co">#&gt;  1 name          cpf      </span></span>
-<span><span class="co">#&gt;  2 class         character</span></span>
-<span><span class="co">#&gt;  3 n             8        </span></span>
-<span><span class="co">#&gt;  4 n_rm_na       8        </span></span>
-<span><span class="co">#&gt;  5 n_na          0        </span></span>
-<span><span class="co">#&gt;  6 n_unique      8        </span></span>
-<span><span class="co">#&gt;  7 mode          &lt;NA&gt;     </span></span>
-<span><span class="co">#&gt;  8 '07318134566' 1        </span></span>
-<span><span class="co">#&gt;  9 '23710056810' 1        </span></span>
-<span><span class="co">#&gt; 10 '32599114802' 1        </span></span>
-<span><span class="co">#&gt; 11 '37160979850' 1        </span></span>
-<span><span class="co">#&gt; 12 '38013021807' 1        </span></span>
-<span><span class="co">#&gt; 13 '40928405869' 1        </span></span>
-<span><span class="co">#&gt; 14 '46390445857' 1        </span></span>
-<span><span class="co">#&gt; 15 '49629733803' 1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── ethnicity ────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; </span></span>

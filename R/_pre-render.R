@@ -37,7 +37,7 @@ for (i in dir_ls(here("images"), type = "file")) {
 
 # bbt_write_quarto_bib(
 #   bib_file = here("references.bib"),
-#   dir = c("."),
+#   dir = c(".", "qmd"),
 #   pattern = "\\.qmd$",
 #   wd = here()
 # )

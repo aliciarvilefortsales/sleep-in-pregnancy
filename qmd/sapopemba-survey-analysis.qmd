@@ -9,17 +9,29 @@ execute:
 #| label: setup
 #| include: false
 
-source(here::here("R/quarto-setup.R"))
+library(here)
+
+source(here("R", "_setup.R"))
 ```
 
-## Comments
+## Overview
 
-\* This is considering that all the other elegibility criteria are met (e.g., non-smoker, no gestational issues, etc.). Here we are considering only: the age of the pregnant women; the minimum time required for actigraph use; and if the delivery was at the birth center. Most of the other criteria are already met by the birth centers' selection criteria.
+This report aims to analyze the potential number of pregnant women in the Sapopemba birth center who fit the research sample for actigraphy use during pregnancy.
 
-## Setup
+This is done by considering that all the other eligibility criteria are met (e.g., non-smoker, no gestational issues, etc.). Here we are considering only:
+
+- The age of the pregnant women.
+- The minimum time required for actigraphy use.
+- If the delivery was at the birth center.
+
+Most of the other criteria are already met by the birth centers' selection criteria.
+
+## Set the Environment
+
+### Load Packages
 
 ```{r}
-#| eval: false
+#| output: false
 
 library(dplyr)
 library(ggplot2)
@@ -31,15 +43,24 @@ library(rutils) # github.com/danielvartan/rutils
 library(stringr)
 ```
 
-```{r}
-#| include: false
+### Set Data Directories
 
-library(magrittr)
+```{r}
+data_dir <- here("data")
+processed_data_dir <- here("data", "processed")
+processed_actigraphy_data_dir <- here("data", "processed", "actigraphy")
+sri_data_dir <- here("data", "sri")
+sleep_prop_dir <- here("data", "sleep-prop")
+lux_data_dir <- here("data", "lux")
 ```
 
-## Data munging
+```{r}
+for (i in ls(pattern = "_dir$")) {
+  if (!dir_exists(get(i))) dir_create(get(i), recurse = TRUE)
+}
+```
 
-### Importing data
+### Set Keys
 
 ```{r}
 #| output: false
@@ -54,12 +75,20 @@ gs4_auth(
 ```{r}
 #| output: false
 
+salt <- Sys.getenv("PREGNANCY_SALT") # askpass()
+```
+
+## Import Data
+
+```{r}
+#| output: false
+
 raw_data <-
   "1w5mLtYYoh6MPsP8lPqj1tyKNzX9XJuPMmCMsNFM-bcs" |>
   googlesheets4::read_sheet(sheet = "Dataset")
 ```
 
-### Tidying data
+## Tidy Data
 
 ```{r}
 raw_data <-
@@ -93,7 +122,7 @@ raw_data <-
 data |> dplyr::glimpse()
 ```
 
-### Transforming data
+## Transform Data
 
 ```{r}
 ga_start <- function(ultrasound, ga) {
@@ -262,7 +291,7 @@ data <-
   )
 ```
 
-## Analysis
+## Explore Data
 
 ### Parameters
 

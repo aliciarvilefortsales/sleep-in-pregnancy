@@ -61,7 +61,7 @@ Example (do not use these values):
 ``` ini
 OSF_PAT=bWHtQBmdeMvZXDv2R4twdNLjmakjLUZr4t72ouAbNjwycGtDzfm3gjz4ChYXwbBaBVJxJR
 PREGNANCY_PASSWORD=MmXN_od_pe*RdHgfKTaKiXdV7KD2qPzW
-PREGNANCY_SALT=iLG*Vu7@2c-KxY_LeQW4D6Kc2aFivvy2
+PREGNANCY_SALT=iLG*Vu7!2c-KxY_LeQW4D6Kc2aFivvy2
 ```
 
 Additionally, you will need the following keys in the project’s
@@ -122,7 +122,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     </td>
     <td width="70%">
       <p>
-        This study was financed by the Coordenação de Aperfeiçoamento de 
+        This study was financed by the Coordenação de Aperfeiçoamento de
         Pessoal de Nível Superior - Brazil (<a href="https://www.gov.br/capes/">CAPES</a>) - Finance Code 001, Grant Number 88887.940089/2024-00.
       </p>
     </td>

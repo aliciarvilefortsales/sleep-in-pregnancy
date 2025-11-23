@@ -3,7 +3,7 @@ execute:
   eval: false
 ---
 
-# Exploratory Analysis
+# Labor Duration Analysis
 
 ```{r}
 #| label: setup
@@ -52,6 +52,48 @@ library(tidyr)
 source(here("R", "anonymize_id.R"))
 ```
 
+```{r}
+get_n <- function(data, group) {
+  assert_tibble(data)
+  assert_subset("group", names(data))
+  assert_set_equal(levels(data$group), c("Poor", "Good"))
+  assert_choice(group, c("Poor", "Good"))
+
+  data |>
+    rename(.group = group) |>
+    filter(.group == group) |>
+    nrow()
+}
+```
+
+```{r}
+get_labor_duration <- function(data, group) {
+  assert_tibble(data)
+  assert_subset(c("group", "labor_duration"), names(data))
+  assert_set_equal(levels(data$group), c("Poor", "Good"))
+  assert_choice(group, c("Poor", "Good"))
+
+  data |>
+    rename(.group = group) |>
+    filter(.group == group) |>
+    pull(labor_duration)
+}
+```
+
+```{r}
+# See Maxwell et al. (2018, p. 150)
+
+f_unb <- function(k, n_total, f_test) {
+  assert_int(k, lower = 2)
+  assert_int(n_total, lower = 2)
+  assert_number(f_test)
+
+  ((k - 1) / n_total) %>%
+  `*`(((n_total - k - 2) / (n_total - k)) * (f_test - 1)) |>
+  sqrt()
+}
+```
+
 ### Set Data Directories
 
 ```{r}
@@ -87,44 +129,39 @@ gs4_auth(
 salt <- Sys.getenv("PREGNANCY_SALT") # askpass()
 ```
 
-## Setting Parameters
+## Download and Import the Control Form Data
 
 ```{r}
-#| eval: false
+#| label: Download and Import the Control Form Data
 #| output: false
 
-prettycheck:::assert_interactive()
-
-googlesheets4::gs4_auth()
+control_form_data <-
+  "13wtDr4fRD1wJSM-qdLOdGSchF8oXU1bG0Jtccu24GhY" |>
+  read_sheet(
+    sheet = "Dataset",
+    col_types = "c"
+  )
 ```
+
+## Download and Import the Field Form Data
 
 ```{r}
-#| eval: false
+#| label: Download and Import the Field Form Data
+#| output: false
 
-prettycheck:::assert_interactive()
-
-osfr::osf_auth()
+field_form_data <-
+  "1tY_TT0nPXFsErYQS2VED0-hqTzgHudA9BfhRhYG19fw" |>
+  read_sheet(
+    sheet = "Dataset",
+    col_types = "c"
+  )
 ```
 
-```{r}
-private_key_path <- here("_ssh", "id_rsa")
-```
+## Download Actigraphy Processed Data from OSF
 
-```{r}
-#| eval: false
-
-password <- askpass::askpass()
-```
-
-```{r}
-#| eval: false
-
-salt <- askpass::askpass()
-```
-
-```{r}
-public_key_path <- here("_ssh", "id_rsa.pub")
-```
+::: {.callout-note}
+See the `osf.qmd` Quarto notebook to download and decrypt the actigraphy processed data from OSF.
+:::
 
 ## Getting Data from Google Sheets
 
@@ -1140,7 +1177,7 @@ tibble(
 ```
 
 ```{r}
-cohens_d(
+effectsize::cohens_d(
   x = model_data_fps |> get_labor_duration("Poor"),
   y = model_data_fps |> get_labor_duration("Good"),
   pooled_sd = TRUE,
@@ -1151,7 +1188,7 @@ cohens_d(
   alternative = "greater",
   verbose = TRUE
 ) |>
-  interpret_hedges_g()
+  effectsize::interpret_hedges_g()
 ```
 
 #### ANCOVA
@@ -1200,7 +1237,7 @@ Tamanho de efeito *a posteriori*:
 ```{r}
 effect_size_aov_fps <-
   model_aov_fps |>
-  cohens_f(
+  effectsize::cohens_f(
     partial = FALSE,
     generalized = FALSE,
     method = "eta",
@@ -1209,7 +1246,7 @@ effect_size_aov_fps <-
     alternative = "greater",
     verbose = TRUE,
   ) |>
-  interpret_eta_squared("cohen1992")
+  effectsize::interpret_eta_squared("cohen1992")
 
 effect_size_aov_fps
 ```
@@ -1355,7 +1392,7 @@ tibble(
 ```
 
 ```{r}
-cohens_d(
+effectsize::cohens_d(
   x = model_data_waso |> get_labor_duration("Poor"),
   y = model_data_waso |> get_labor_duration("Good"),
   pooled_sd = TRUE,
@@ -1366,7 +1403,7 @@ cohens_d(
   alternative = "greater",
   verbose = TRUE
 ) |>
-  interpret_hedges_g()
+  effectsize::interpret_hedges_g()
 ```
 
 #### ANCOVA
@@ -1413,7 +1450,7 @@ Tamanho de efeito *a posteriori*:
 ```{r}
 effect_size_aov_waso <-
   model_aov_waso |>
-  cohens_f(
+  effectsize::cohens_f(
     partial = FALSE,
     method = "eta",
     model2 = NULL,
@@ -1421,7 +1458,7 @@ effect_size_aov_waso <-
     alternative = "greater",
     verbose = TRUE,
   ) |>
-  interpret_eta_squared("cohen1992")
+  effectsize::interpret_eta_squared("cohen1992")
 
 effect_size_aov_waso
 ```
@@ -1477,3 +1514,9 @@ Assumption 6
 
 Assumption 7
 : **Homogeneity of the coefficients** (ANCOVA). The regression coefficients of the dependent variable on the covariate in each treatment group are homogeneous [@rutherford2011[p. 240]].
+
+## Locking the Data Directory
+
+```{r}
+data_dir |> lockr::lock_dir(public_key = public_key_path)
+```

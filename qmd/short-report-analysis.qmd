@@ -304,7 +304,7 @@ field_form_data <-
     bmi_before = weight_before / ((height / 100)^2),
     bmi_current = weight_current / ((height / 100)^2)
   ) |>
-  # dplyr::select(-cpf) |>
+  dplyr::select(-starts_with("cpf")) |>
   relocate(
     id, timestamp, birth_date, age, weight_before, weight_current, height, bmi_before, bmi_current, family_income
   )
@@ -403,7 +403,8 @@ data <-
       as.numeric() |>
       divide_by(as.numeric(fps_mean))
   ) |>
-  filter(id %in% valid_cases)
+  filter(id %in% valid_cases) |>
+  dplyr::select(-starts_with("cpf"))
 ```
 
 ```{r}
