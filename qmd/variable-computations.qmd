@@ -1,0 +1,92 @@
+---
+execute:
+  eval: false
+---
+
+# Variable Computations
+
+```{r}
+#| label: setup
+#| include: false
+
+library(here)
+
+source(here("R", "_setup.R"))
+```
+
+## Overview
+
+This analysis aims to help to calculate the chronotype of a person based on his/her actigraphy record.
+
+## Setup
+
+```{r}
+#| eval: false
+
+library(lubridate)
+library(lubritime) # github.com/danielvartan/lubritime
+library(hms)
+library(mctq)
+```
+
+## Compute the Duration of an Interval
+
+```{r}
+tz <- "America/Sao_Paulo"
+start <- dmy_hms("01/01/2023 05:00:00", tz = tz)
+end <- dmy_hms("02/07/2023 01:00:00", tz = tz)
+```
+
+```{r}
+start |>
+  interval(end, tz = tz) |>
+  as.period()
+```
+
+## Compute Chronotype
+
+Total number of workdays and free days.
+
+```{r}
+wd <- 6
+fd <- 17
+```
+
+FPS on workdays and free days.
+
+```{r}
+fps_w <- parse_hms("07:01:10") |> as.duration()
+fps_f <- parse_hms("07:24:31") |> as.duration()
+```
+
+HIS on free days.
+
+```{r}
+his_f <- parse_hms("01:55:42")
+```
+
+FPS weighted mean.
+
+```{r}
+fps_weight_mean <- ((fps_w * wd) + (fps_f * fd)) / (wd + fd)
+```
+
+Mid-sleep on free days (proxy for chronotype).
+
+```{r}
+msf <- msl(his_f, fps_f)
+```
+
+```{r}
+msf_sc <-
+  msf_sc(
+    msf,
+    fps_w,
+    fps_f,
+    fps_weight_mean,
+    FALSE
+  ) |>
+  round_time()
+
+msf_sc
+````

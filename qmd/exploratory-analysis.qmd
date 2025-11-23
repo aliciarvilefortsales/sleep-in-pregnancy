@@ -513,7 +513,6 @@ data_dir |>
   )
 ```
 
-## Exploring the Data
 
 The actogram presented in the article was created using the [ActStudio](https://condorinst.com/en/actstudio-software/) software.
 
@@ -521,7 +520,7 @@ The actogram presented in the article was created using the [ActStudio](https://
 general_data |> dplyr::glimpse()
 ```
 
-### Qualitative Variables
+## Qualitative Variables
 
 ```{r}
 #| output: asis
@@ -541,7 +540,54 @@ general_data |> summarytools::freq(education,  style = "rmarkdown")
 general_data |> summarytools::freq(solo,  style = "rmarkdown")
 ```
 
-### Quantitative Variables
+## Quantitative Variables
+
+### Days from Actigraphy Processed Data
+
+```{r}
+ids <- model_data |> pull(id) |> unique()
+```
+
+```{r}
+files <-
+  dir_ls(
+    path = processed_actigraphy_data_dir,
+    type = "file",
+    regexp = paste0(ids, "_actigraphy-processed-data.rds$", collapse = "|")
+  )
+```
+
+```{r}
+days_by_id <- tibble()
+
+for (i in files) {
+  i_id <- str_remove(basename(i), "_actigraphy-processed-data.rds")
+  i_data <- i |> read_rds()
+  i_start <- i_data |> pull(timestamp) |> first()
+  i_end <- i_data |> pull(timestamp) |> last()
+
+  days_by_id <-
+    tibble(
+      id = i_id,
+      days = (i_end - i_start) |> as.numeric()
+    ) |>
+    bind_rows(days_by_id)
+}
+```
+
+```{r}
+days_by_id <- days_by_id |> arrange(id)
+```
+
+```{r}
+days_by_id |> print(n = Inf)
+```
+
+```{r}
+days_by_id |> pull(days) |> summary()
+```
+
+### Others
 
 ```{r}
 #| output: asis

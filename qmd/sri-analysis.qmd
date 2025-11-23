@@ -1,0 +1,2770 @@
+# SRI Analysis
+
+```{r}
+#| label: setup
+#| include: false
+
+library(here)
+
+source(here("R", "_setup.R"))
+```
+
+## Overview
+
+## Set the Environment
+
+### Load Packages
+
+```{r}
+#| label: Set the Environment
+#| output: false
+
+library(actverse) # github.com/danielvartan/actverse
+library(askpass)
+library(broom)
+library(checkmate)
+library(cli)
+library(colorspace)
+library(effectsize)
+library(fs)
+library(geepack)
+library(ggplot2)
+library(glmtoolbox)
+library(googlesheets4)
+library(here)
+library(hms)
+library(infer)
+library(janitor)
+library(lockr) # github.com/danielvartan/lockr
+library(lubridate)
+library(lubritime) # github.com/danielvartan/lubritime
+library(magrittr)
+library(orbis) # github.com/danielvartan/orbis
+library(patchwork)
+library(parsnip)
+library(performance)
+library(plotr) # github.com/danielvartan/plotr
+library(prettycheck) # github.com/danielvartan/prettycheck
+library(psychometric)
+library(pwr)
+library(pwrss)
+library(readr)
+library(rutils) # github.com/danielvartan/rutils
+library(scaler) # github.com/danielvartan/scaler
+library(scales)
+library(sodium)
+library(stats)
+library(stringr)
+library(summarytools)
+library(tidyr)
+library(tsibble)
+```
+
+### Load Custom Functions
+
+```{r}
+source(here("R", "anonymize_id.R"))
+source(here("R", "ga.R"))
+```
+
+### Set Data Directories
+
+```{r}
+data_dir <- here("data")
+processed_data_dir <- here("data", "processed")
+processed_actigraphy_data_dir <- here("data", "processed", "actigraphy")
+sri_data_dir <- here("data", "sri")
+sleep_prop_dir <- here("data", "sleep-prop")
+lux_data_dir <- here("data", "lux")
+```
+
+```{r}
+for (i in ls(pattern = "_dir$")) {
+  if (!dir_exists(get(i))) dir_create(get(i), recurse = TRUE)
+}
+```
+
+### Set Keys
+
+```{r}
+#| output: false
+
+gs4_auth(
+  cache = here(".secrets"),
+  email = TRUE,
+  use_oob = FALSE
+)
+```
+
+```{r}
+#| output: false
+
+salt <- Sys.getenv("PREGNANCY_SALT") # askpass()
+```
+
+## Set Exclusion Criteria
+
+::: {.callout-note}
+For SRI Data:
+
+> Last updated: 2025-09-19
+
+- n = 44
+
+- 5 days (drops 6) + 75% (drops 11): 27
+- 5 days (drops 6) + 62.5% (drops 2): 36
+- 4 days (drops 3) + 62.5% (drops 2): 39 # Ok
+- 4 days (drops 3) + 50% (drops 1): 40 # Ok
+
+1 of the 40 was dropped when filtering the gestacional age range.
+:::
+
+```{r}
+#| label: Define Exclusion Criteria
+
+min_days <- 4
+min_valid_data <- 0.5 # By `sri` and gestational age (they are related)
+```
+
+## Download and Import the Control Form Data
+
+```{r}
+#| label: Download and Import the Control Form Data
+#| output: false
+
+control_form_data <-
+  "13wtDr4fRD1wJSM-qdLOdGSchF8oXU1bG0Jtccu24GhY" |>
+  read_sheet(
+    sheet = "Dataset",
+    col_types = "c"
+  )
+```
+
+## Download and Import the Field Form Data
+
+```{r}
+#| label: Download and Import the Field Form Data
+#| output: false
+
+field_form_data <-
+  "1tY_TT0nPXFsErYQS2VED0-hqTzgHudA9BfhRhYG19fw" |>
+  read_sheet(
+    sheet = "Dataset",
+    col_types = "c"
+  )
+```
+
+## Download Actigraphy Processed Data from OSF
+
+::: {.callout-note}
+See the `osf.qmd` Quarto notebook to download and decrypt the actigraphy processed data from OSF.
+:::
+
+## Filter and Tidy the Control Form Data
+
+```{r}
+#| label: Filter and Tidy the Control Form Data
+
+control_form_data <-
+  control_form_data |>
+  `names<-`(paste0("X", seq_along(control_form_data))) |>
+  dplyr::select(X5, X6, X12, X39, X40) |>
+  rename(
+    cpf = X5,
+    id = X6,
+    birth_center_delivery = X12,
+    ultrasound_date = X40,
+    ultrasound_ga = X39
+  ) |>
+  mutate(
+    birth_center_delivery = case_when(
+      tolower(trimws(birth_center_delivery)) == "sim" ~ TRUE,
+      tolower(trimws(birth_center_delivery)) == "não" ~ FALSE,
+      TRUE ~ NA
+    ),
+    ultrasound_date = ymd(ultrasound_date),
+    ga_start = if_else(
+      is.na(ultrasound_ga),
+      as.Date(NA),
+      ga_start(
+        ultrasound = ultrasound_date,
+        ga =
+          str_extract(ultrasound_ga, "^\\d{1,2}") |>
+          as.integer() |>
+          weeks() |>
+          add(
+            str_extract(ultrasound_ga, "\\d(?= di)") |>
+            as.integer() |>
+            days()
+          )
+      )
+    )
+  ) |>
+  dplyr::select(id, birth_center_delivery, ga_start)
+```
+
+```{r}
+#| code-fold: false
+
+control_form_data |> glimpse()
+```
+
+## Filter and Tidy the Field Form Data
+
+```{r}
+#| label: Filter and Tidy the Field Form Data
+
+field_form_data <-
+  field_form_data |>
+  `names<-`(paste0("X", seq_along(field_form_data))) |>
+  dplyr::select(
+    X1, X4, X5, X11, X91, X92, X95, X96, X97, X99, X101, X102, X106, X119,
+    X118, X125, X126
+  ) |>
+  rename(
+    timestamp = X1,
+    birth_date = X4,
+    cpf = X5,
+    weight_before = X96,
+    weight_current = X95,
+    height = X97,
+    ethnicity = X106,
+    education = X118,
+    family_income = X99,
+    health_plan = X101,
+    solo = X102,
+    exercise = X119,
+    work = X92,
+    study = X91,
+    gestations = X11,
+    deliveries = X125,
+    abortions = X126
+  ) |>
+  mutate(
+    id = anonymize_id(cpf, salt),
+    timestamp = mdy_hms(timestamp),
+    birth_date = dmy(birth_date),
+    age = scaler:::age(birth_date, timestamp),
+    ethnicity = factor(
+      ethnicity,
+      levels = c(
+        "Indígena",
+        "Preta",
+        "Parda",
+        "Amarela",
+        "Branca"
+      ),
+      ordered = TRUE
+    ),
+    education = factor(
+      education,
+      levels = c(
+        "Não frequentou a escola",
+        "Fundamental incompleto",
+        "Fundamental completo",
+        "Ensino médio incompleto",
+        "Ensino médio completo",
+        "Ensino superior incompleto",
+        "Ensino superior completo",
+        "Mestrado incompleto",
+        "Mestrado completo",
+        "Doutorado incompleto",
+        "Doutorado completo",
+        "Pós-doutorado incompleto",
+        "Pós-doutorado completo"
+      ),
+      ordered = TRUE
+    ),
+    gestations = case_match(
+      gestations,
+      c("Sim", "0") ~ "1",
+      "Não" ~ "0",
+      .default = gestations
+    ),
+    deliveries = case_when(
+      is.na(deliveries) ~ "0",
+      TRUE ~ deliveries
+    ),
+    abortions = case_when(
+      is.na(abortions) ~ "0",
+      TRUE ~ abortions
+    )
+  ) |>
+  mutate(
+    across(
+      .cols = all_of(
+        c(
+          "weight_before", "weight_current", "height",
+          "family_income", "gestations", "deliveries",
+          "abortions"
+        )
+      ),
+      .fns = as.numeric
+    )
+  ) |>
+  mutate(
+    across(
+      .cols = all_of(
+        c("health_plan", "solo", "exercise", "work", "study")
+      ),
+      .fns = function(x) {
+        case_match(
+          x,
+          "Sim" ~ TRUE,
+          "Não" ~ FALSE
+        )
+      }
+    )
+  ) |>
+  mutate(
+    gestations = case_when(
+      id == "ae5fc5cd" ~ 3,
+      TRUE ~ gestations
+    ),
+  ) |>
+  mutate(
+    bmi_before = weight_before / ((height / 100)^2),
+    bmi_current = weight_current / ((height / 100)^2)
+  ) |>
+  dplyr::select(-cpf) |>
+  relocate(
+    id, timestamp, birth_date, age, weight_before, weight_current, height, bmi_before, bmi_current, family_income
+  )
+```
+
+```{r}
+#| code-fold: false
+
+field_form_data |> glimpse()
+```
+
+## Import, Tidy and Transform the Processed Actigraphy Data
+
+### Get Paths to Processed Actigraphy Data Files
+
+```{r}
+#| label: Import, Tidy and Transform the Processed Actigraphy Data
+
+files <-
+  dir_ls(
+    path = processed_actigraphy_data_dir,
+    type = "file",
+    regexp = ".txt$"
+  )
+```
+
+### Import, Tidy, Transform, and Write Data Files
+
+```{r}
+#| eval: false
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  i_id <- str_remove(basename(i), "_actigraphy-processed-data.txt")
+
+  i_ga_start <-
+    control_form_data |>
+    filter(id == i_id) |>
+    pull(ga_start)
+
+  i_data <-
+    i |>
+    read_acttrust(tz = "America/Sao_Paulo") |>
+    mutate(
+      ga =
+        i_ga_start |>
+        ga_point(timestamp) |>
+        as.numeric() |>
+        as.duration() |>
+        add(
+          as_hms(timestamp) |>
+            as.numeric() |>
+            as.duration()
+        ),
+      ga_week =
+        ga |>
+        as.numeric() |>
+        divide_by(
+          ddays(7) |>
+            as.numeric()
+        ) |>
+        as.integer()
+    ) |>
+    suppressMessages() |>
+    suppressWarnings()
+
+  i_data |>
+    write_rds(
+      path(
+        processed_actigraphy_data_dir,
+        paste0(i_id, "_actigraphy-processed-data.rds")
+      )
+    )
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+## Compute SRI
+
+### Delete Old SRI Data Files
+
+```{r}
+#| label: Delete Old SRI Data Files
+#| eval: false
+
+old_files <-
+  dir_ls(
+    path = sri_data_dir,
+    type = "file",
+    regexp = "sri"
+  )
+
+if (length(old_files) > 0) file_delete(old_files)
+```
+
+### Get Paths to Tidy and Transformed Actigraphy Data Files
+
+```{r}
+files <-
+  dir_ls(
+    path = processed_actigraphy_data_dir,
+    type = "file",
+    regexp = "_actigraphy-processed-data.rds$"
+  )
+```
+
+### Import Tidy and Transformed Actigraphy Data, Compute SRI and Write SRI Data Files
+
+```{r}
+#| eval: false
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  i_id <- str_remove(basename(i), "_actigraphy-processed-data.rds")
+
+  i_data <-
+    i |>
+    read_rds() |>
+    as_tibble() |>
+    group_by(ga_week) |>
+    mutate(
+      ga_week_available_days = (n() * 60) / as.numeric(ddays(1))
+    ) |>
+    ungroup(ga_week) |>
+    filter(ga_week_available_days >= min_days) |>
+    as_tsibble(index = timestamp)
+
+  if (nrow(i_data) == 0) {
+    cli_alert_info(
+      paste0(
+        "{.strong {col_red(i_id)}} was dropped because it has no gestational ",
+        "week with at least {min_days} days of data."
+      )
+    )
+
+    cli_progress_update()
+
+    next
+  }
+
+  i_sri_data <- tibble()
+
+  for (j in unique(i_data$ga_week)) {
+    j_data <- i_data |> filter(ga_week == j)
+    j_data_first_index <- which(i_data$ga_week == j)[1]
+
+    if (j_data_first_index > 1) {
+      j_data <-
+        i_data |>
+        slice(seq(j_data_first_index - 1440, j_data_first_index - 1)) |>
+        as_tibble() |>
+        bind_rows(j_data |> as_tibble()) |>
+        as_tsibble(index = timestamp)
+    }
+
+    i_sri_data <-
+      i_sri_data |>
+      bind_rows(
+        j_data |>
+          sri(
+            sleeping_states = c(1, 2),
+            awake_states = 0,
+            min_data = min_valid_data
+          ) |>
+          mutate(
+            id = i_id,
+            ga_week = j
+          ) |>
+          as_tibble()
+      )
+  }
+
+  i_sri_data <-
+    i_sri_data |>
+    drop_na(sri) |>
+    group_by(ga_week) |>
+    mutate(dummy = n() >= (1440 * min_valid_data)) |>
+    ungroup() |>
+    filter(dummy) |>
+    dplyr::select(-dummy)
+
+  if (nrow(i_sri_data) == 0) {
+    cli_alert_info(
+      paste0(
+        "{.strong {col_red(i_id)}} was dropped because it has no gestational ",
+        "week with at least {round(min_valid_data * 100, 2)}% of SRI data."
+      )
+    )
+
+    cli_progress_update()
+
+    next
+  }
+
+  i_sri_data |>
+    write_rds(
+      path(
+        sri_data_dir,
+        paste0(i_id, "_sri-data.rds"))
+      )
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+### Group and Transform SRI Data
+
+#### Get Paths to SRI Data Files
+
+```{r}
+#| label: Group and Transform SRI Data
+
+files <-
+  dir_ls(
+    path = sri_data_dir,
+    type = "file",
+    regexp = "_sri-data.rds$"
+  )
+```
+
+#### Group and Transform SRI Data
+
+```{r}
+sri_data <- tibble()
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  sri_data <-
+    i |>
+    read_rds() |>
+    mutate(
+      time =
+        time |>
+        as.numeric() |>
+        divide_by(60) |>
+        as.integer() |>
+        dminutes() |>
+        as.numeric() |>
+        as_hms()
+    ) |>
+    bind_rows(sri_data)
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+```{r}
+sri_data <-
+  sri_data |>
+  mutate(ga_week = as.factor(ga_week)) |>
+  arrange(ga_week)
+```
+
+```{r}
+#| code-fold: false
+
+sri_data |> glimpse()
+```
+
+### Compute SRI Mean Data by Gestational Week
+
+#### Get Paths to SRI Data Files
+
+```{r}
+#| labels: Compute SRI Mean Data by Gestational Week
+
+files <-
+  dir_ls(
+    path = sri_data_dir,
+    type = "file",
+    regexp = "_sri-data.rds$"
+  )
+```
+
+#### Summarize SRI Means by Gestational Week and Write SRI Mean Data Files
+
+```{r}
+#| eval: false
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  i_id <- str_remove(basename(i), "_sri-data.rds")
+
+  i_data <-
+    i |>
+    read_rds() |>
+    as_tibble() |>
+    group_by(ga_week) |>
+    summarize(sri = mean(sri, na.rm = TRUE)) |>
+    mutate(id = i_id) |>
+    dplyr::select(id, ga_week, sri)
+
+  i_data |>
+    write_rds(
+      path(
+        sri_data_dir,
+        paste0(i_id, "_sri-mean-data.rds")
+      )
+    )
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+### Group and Transform SRI Mean Data
+
+#### Get Paths to SRI Mean Data Files
+
+```{r}
+#| labels: Group and Transform SRI Mean Data
+
+files <-
+  dir_ls(
+    path = sri_data_dir,
+    type = "file",
+    regexp = "_sri-mean-data.rds$"
+  )
+```
+
+#### Import and Group SRI Mean Data
+
+```{r}
+sri_mean_data <- tibble()
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  sri_mean_data <-
+    i |>
+    read_rds(i) |>
+    bind_rows(sri_mean_data)
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+#### Transform SRI Mean Data
+
+```{r}
+sri_mean_data <-
+  sri_mean_data |>
+  mutate(ga_week = as.factor(ga_week)) |>
+  arrange(ga_week)
+```
+
+```{r}
+#| code-fold: false
+
+sri_mean_data |> glimpse()
+```
+
+## Get SRI Data Unique IDs
+
+```{r}
+#| labels: Get SRI Data Unique IDs
+
+sri_data_ids <- sri_data |> pull(id) |> unique()
+```
+
+```{r}
+#| code-fold: false
+
+sri_data_ids
+```
+
+## Compute Sleep Proportions
+
+### Delete Old Sleep Proportion Files
+
+```{r}
+#| labels: Delete Old Sleep Proportion Files
+#| eval: false
+
+old_files <-
+  dir_ls(
+    path = sleep_prop_dir,
+    type = "file",
+    regexp = "sleep-prop"
+  )
+
+if (length(old_files) > 0) file_delete(old_files)
+```
+
+### Get Paths to Tidy and Transformed Actigraphy Data Files
+
+```{r}
+files <-
+  dir_ls(
+    path = processed_actigraphy_data_dir,
+    type = "file",
+    regexp = "_actigraphy-processed-data.rds$"
+  )
+```
+
+
+### Import Tidy and Transformed Actigraphy Data, Compute Sleep Proportions and Write Sleep Proportion Data Files
+
+```{r}
+#| eval: false
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  i_id <- str_remove(basename(i), "_actigraphy-processed-data.rds")
+
+  if (!i_id %in% sri_data_ids) next
+
+  i_data <-
+    i |>
+    read_rds() |>
+    as_tibble() |>
+    group_by(ga_week) |>
+    mutate(
+      ga_week_available_days = (n() * 60) / as.numeric(ddays(1))
+    ) |>
+    ungroup(ga_week) |>
+    filter(ga_week_available_days >= min_days) |>
+    as_tsibble(index = timestamp)
+
+  if (nrow(i_data) == 0) {
+    cli_alert_info(
+      paste0(
+        "{.strong {col_red(i_id)}} was dropped because it has no gestational ",
+        "week with at least {min_days} days of data."
+      )
+    )
+
+    cli_progress_update()
+
+    next
+  }
+
+  i_sleep_prop_data <- tibble()
+
+  for (j in unique(i_data$ga_week)) {
+    j_data <- i_data |> filter(ga_week == j)
+
+    i_sleep_prop_data <-
+      i_sleep_prop_data |>
+      bind_rows(
+        j_data |>
+          state_prop(
+            state_values = 1 # Just "Sleeping", not "Resting" (2)
+          ) |>
+          mutate(
+            id = i_id,
+            ga_week = j
+          ) |>
+          as_tibble()
+      )
+  }
+
+  i_sleep_prop_data |>
+    write_rds(
+      path(
+        sleep_prop_dir,
+        paste0(i_id, "_sleep-prop-data.rds"))
+      )
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+### Group and Transform Sleep Proportions Data
+
+#### Get Paths to Sleep Proportions Data Files
+
+```{r}
+#| label: Group and Transform Sleep Proportions Data
+
+files <-
+  dir_ls(
+    path = sleep_prop_dir,
+    type = "file",
+    regexp = "_sleep-prop-data.rds$"
+  )
+```
+
+#### Group and Transform Sleep Proportions Data
+
+```{r}
+sleep_prop_data <- tibble()
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  sleep_prop_data <-
+    i |>
+    read_rds() |>
+    mutate(
+      time =
+        time |>
+        as.numeric() |>
+        divide_by(60) |>
+        as.integer() |>
+        dminutes() |>
+        as.numeric() |>
+        as_hms()
+    ) |>
+    bind_rows(sleep_prop_data)
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+```{r}
+sleep_prop_data <-
+  sleep_prop_data |>
+  mutate(ga_week = as.factor(ga_week)) |>
+  arrange(ga_week)
+```
+
+```{r}
+#| code-fold: false
+
+sleep_prop_data |> glimpse()
+```
+
+### Compute Sleep Proportions Mean Data by Gestational Week
+
+#### Get Paths to Sleep Proportions Data Files
+
+```{r}
+#| label: Compute Sleep Proportions Mean Data by Gestational Week
+
+files <-
+  dir_ls(
+    path = sleep_prop_dir,
+    type = "file",
+    regexp = "_sleep-prop-data.rds$"
+  )
+```
+
+#### Summarize Sleep Proportions by Gestational Week and Write Sleep Proportions Mean Data Files
+
+```{r}
+#| eval: false
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  i_id <- str_remove(basename(i), "_sleep-prop-data.rds")
+
+  i_data <-
+    i |>
+    read_rds() |>
+    as_tibble() |>
+    group_by(ga_week) |>
+    summarize(prop = mean(prop, na.rm = TRUE)) |>
+    mutate(id = i_id) |>
+    dplyr::select(id, ga_week, prop)
+
+  i_data |>
+    write_rds(
+      path(
+        sleep_prop_dir,
+        paste0(i_id, "_sleep-prop-mean-data.rds")
+      )
+    )
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+### Group and Transform Sleep Proportions Mean Data
+
+#### Get Paths to Sleep Proportions Mean Data Files
+
+```{r}
+#| label: Group and Transform Sleep Proportions Mean Data
+
+files <-
+  dir_ls(
+    path = sleep_prop_dir,
+    type = "file",
+    regexp = "_sleep-prop-mean-data.rds$"
+  )
+```
+
+#### Import and Group Sleep Proportions Mean Data
+
+```{r}
+sleep_prop_mean_data <- tibble()
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  sleep_prop_mean_data <-
+    i |>
+    read_rds(i) |>
+    bind_rows(sleep_prop_mean_data)
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+#### Transform Sleep Proportions Mean Data
+
+```{r}
+sleep_prop_mean_data <-
+  sleep_prop_mean_data |>
+  mutate(ga_week = as.factor(ga_week)) |>
+  arrange(ga_week)
+```
+
+```{r}
+#| code-fold: false
+
+sleep_prop_mean_data |> glimpse()
+```
+
+## Compute Illuminance Levels
+
+### Delete Old SRI Data Files
+
+```{r}
+#| label: Compute Illuminance Levels
+#| eval: false
+
+old_files <-
+  dir_ls(
+    path = lux_data_dir,
+    type = "file",
+    regexp = "sri"
+  )
+
+if (length(old_files) > 0) file_delete(old_files)
+```
+
+### Get Paths to Tidy and Transformed Actigraphy Data Files
+
+```{r}
+files <-
+  dir_ls(
+    path = processed_actigraphy_data_dir,
+    type = "file",
+    regexp = "_actigraphy-processed-data.rds$"
+  )
+```
+
+### Import Tidy and Transformed Actigraphy Data, Compute Illuminance Levels and Write Illuminance Data Files
+
+```{r}
+#| eval: false
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  i_id <- str_remove(basename(i), "_actigraphy-processed-data.rds")
+
+  if (!i_id %in% sri_data_ids) next
+
+  i_data <-
+    i |>
+    read_rds() |>
+    as_tibble()
+
+  i_lux_data <- tibble()
+
+  for (j in unique(i_data$ga_week)) {
+    j_lux_data <-
+      i_data |>
+      filter(ga_week == j) |>
+      dplyr::select(timestamp, light) |>
+      mutate(time = as_hms(timestamp)) |>
+      group_by(time) |>
+      summarize(lux = mean(light, na.rm = TRUE)) |>
+      ungroup() |>
+      mutate(
+        id = i_id,
+        ga_week = j
+      )
+
+    i_lux_data <-
+      i_lux_data |>
+      bind_rows(j_lux_data)
+  }
+
+  i_lux_data |>
+    write_rds(
+      path(
+        lux_data_dir,
+        paste0(i_id, "_lux-data.rds"))
+    )
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+### Group and Transform Illuminance Data
+
+#### Get Paths to Illuminance Data Files
+
+```{r}
+#| label: Group and Transform Illuminance Data
+
+files <-
+  dir_ls(
+    path = lux_data_dir,
+    type = "file",
+    regexp = "_lux-data.rds$"
+  )
+```
+
+#### Group and Transform Illuminance Data
+
+```{r}
+lux_data <- tibble()
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  lux_data <-
+    i |>
+    read_rds() |>
+    mutate(
+      time =
+        time |>
+        as.numeric() |>
+        divide_by(60) |>
+        as.integer() |>
+        dminutes() |>
+        as.numeric() |>
+        as_hms()
+    ) |>
+    bind_rows(lux_data)
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+```{r}
+lux_data <-
+  lux_data |>
+  mutate(ga_week = as.factor(ga_week)) |>
+  arrange(ga_week)
+```
+
+```{r}
+#| code-fold: false
+
+lux_data |> glimpse()
+```
+
+### Compute Illuminance Mean Data by Gestational Week
+
+#### Get Paths to Illuminance Data Files
+
+```{r}
+#| label: Compute Illuminance Mean Data by Gestational Week
+
+files <-
+  dir_ls(
+    path = lux_data_dir,
+    type = "file",
+    regexp = "_lux-data.rds$"
+  )
+```
+
+#### Summarize Illuminance by Gestational Week and Write Illuminance Mean Data Files
+
+```{r}
+#| eval: false
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  i_id <- str_remove(basename(i), "_lux-data.rds")
+
+  i_data <-
+    i |>
+    read_rds() |>
+    as_tibble() |>
+    group_by(ga_week) |>
+    summarize(lux = mean(lux, na.rm = TRUE)) |>
+    mutate(id = i_id) |>
+    dplyr::select(id, ga_week, lux)
+
+  i_data |>
+    write_rds(
+      path(
+        lux_data_dir,
+        paste0(i_id, "_lux-mean-data.rds")
+      )
+    )
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+### Group and Transform Illuminance Mean Data
+
+#### Get Paths to Illuminance Mean Data Files
+
+```{r}
+#| label: Group and Transform Illuminance Mean Data
+
+files <-
+  dir_ls(
+    path = lux_data_dir,
+    type = "file",
+    regexp = "_lux-mean-data.rds$"
+  )
+```
+
+#### Import and Group Illuminance Mean Data
+
+```{r}
+lux_mean_data <- tibble()
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  lux_mean_data <-
+    i |>
+    read_rds(i) |>
+    bind_rows(lux_mean_data)
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+#### Transform Illuminance Mean Data
+
+```{r}
+lux_mean_data <-
+  lux_mean_data |>
+  mutate(ga_week = as.factor(ga_week)) |>
+  arrange(ga_week)
+```
+
+```{r}
+#| code-fold: false
+
+lux_mean_data |> glimpse()
+```
+
+
+## Categorize Participantes by SRI Levels
+
+```{r}
+#| label: Categorize Participantes by SRI Levels
+
+sri_data_by_id <-
+  sri_data |>
+  summarize(
+    sri = mean(sri, na.rm = TRUE),
+    .by = id
+  )
+```
+
+```{r}
+sri_quintiles <-
+  sri_data_by_id |>
+  pull(sri) |>
+  quantile(probs = c(0, 0.2, 0.4, 0.6, 0.8, 1))
+```
+
+```{r}
+#| code-fold: false
+
+sri_quintiles
+```
+
+```{r}
+sri_top_quintile <- sri_quintiles[5]
+```
+
+```{r}
+sri_bottom_quintile <- sri_quintiles[2]
+```
+
+```{r}
+regular_sri_ids <-
+  sri_data_by_id |>
+  filter(sri >= sri_top_quintile) |>
+  pull(id)
+```
+
+```{r}
+#| code-fold: false
+
+regular_sri_ids
+```
+
+```{r}
+others_sri_ids <-
+  sri_data_by_id |>
+  filter(
+    sri > sri_bottom_quintile &
+    sri < sri_top_quintile
+  ) |>
+  pull(id)
+```
+
+```{r}
+#| code-fold: false
+
+others_sri_ids
+```
+
+```{r}
+irregular_sri_ids <-
+  sri_data_by_id |>
+  filter(sri <= sri_bottom_quintile) |>
+  pull(id)
+```
+
+```{r}
+#| code-fold: false
+
+irregular_sri_ids
+```
+
+## Filter Datasets by Gestational Age Range
+
+### Define Gestational Age Range
+
+```{r}
+#| label: Filter Datasets by Gestational Age Range
+
+sri_mean_data |>
+  summarize(
+    n = unique(id) |> length(),
+    .by = ga_week
+  ) |>
+  print(n = Inf)
+```
+
+```{r}
+ga_range <- c(36, 39) # Gestational age range
+```
+
+### Filter Datasets
+
+```{r}
+datasets <- c(
+  "sri_data",
+  "sri_mean_data",
+  "sleep_prop_data",
+  "sleep_prop_mean_data",
+  "lux_data",
+  "lux_mean_data"
+)
+
+for (i in datasets) {
+  assign(i, get(i) |>
+    filter(
+      between(
+        ga_week |>
+          as.character() |>
+          as.numeric(),
+        ga_range[1],
+        ga_range[2]
+      )
+    )
+  )
+}
+```
+
+## Explore Data
+
+### SRI
+
+#### Mean SRI
+
+##### By Pregnant Women
+
+```{r}
+#| label: Explore Data - SRI
+
+sri_mean_data_by_id <-
+  sri_data |>
+  summarize(
+    sri = mean(sri, na.rm = TRUE),
+    .by = id
+  )
+
+sri_mean_data_by_id
+```
+
+```{r}
+#| code-fold: false
+
+sri_mean_data_by_id |> glimpse()
+```
+
+##### Global SRI
+
+###### Using All the Data
+
+::: {.callout-note}
+Mean SRI considering all the SRI data points across all pregnant women.
+:::
+
+```{r}
+sri_data |> pull(sri) |> mean(na.rm = TRUE)
+```
+
+###### Using the Means by Pregnant Women
+
+```{r}
+sri_data |>
+  summarize(
+    sri = mean(sri, na.rm = TRUE),
+    .by = id
+  ) |>
+  pull(sri) |>
+  mean(na.rm = TRUE)
+```
+
+##### Mean SRI by Gestational Age Week
+
+```{r}
+sri_data |>
+  summarize(
+    sri = mean(sri, na.rm = TRUE),
+    .by = ga_week
+  )
+```
+
+##### Histogram
+
+```{r}
+bin_width <- 5
+```
+
+```{r}
+sri_mean_data_by_id |>
+  ggplot(aes(x = sri)) +
+  geom_histogram(
+    binwidth = bin_width,
+    color = "black",
+    fill = "white"
+  ) +
+  geom_density(
+    aes(y = ..count.. * bin_width),
+    color = "red",
+    size = 1
+  ) +
+  labs(
+    x = "Índice de Regularidade do Sono (SRI)", # Sleep Regularity Index (SRI)
+    y = "Frequência", # Frequency
+  )
+```
+
+#### By Gestational Age Week
+
+##### Scatter Plot with Linear Trend
+
+```{r}
+sri_mean_data |>
+  mutate(ga_week = ga_week |> as.character() |> as.numeric()) |>
+  ggplot(aes(x = ga_week, y = sri)) +
+  geom_point() +
+  geom_smooth(
+    method = "lm",
+    formula = y ~ x,
+    color = "red"
+  ) +
+  labs(
+    x = "Semana Gestacional", # Gestational Age Week
+    y = "Índice de Regularidade do Sono (SRI)", # Sleep Regularity Index (SRI)
+  )
+  theme(legend.position = "none")
+```
+
+##### Boxplots
+
+```{r}
+sri_mean_data |>
+  mutate(ga_week = ga_week |> as.character() |> as.numeric()) |>
+  mutate(ga_week = factor(ga_week)) |>
+  ggplot(aes(x = sri, y = ga_week)) +
+  geom_boxplot() +
+  stat_summary(
+    fun = mean,
+    geom = "point",
+    size = 4,
+    color = "red",
+    shape = 18
+  ) +
+  geom_point(
+    position = position_jitter(height = 0.1, width = 0),
+    size = 2,
+    alpha = 0.25,
+    color = "blue"
+  ) +
+  coord_flip() +
+  labs(
+    x = "Índice de Regularidade do Sono (SRI)", # Sleep Regularity Index (SRI)
+    y = "Semana Gestacional", # Gestational Age Week
+  ) +
+  scale_color_viridis_d() +
+  theme(legend.position = "none")
+```
+
+##### Linear Trends by ID
+
+```{r}
+sri_mean_data |>
+  mutate(ga_week = ga_week |> as.character() |> as.numeric()) |>
+  slice_sample(prop = 0.5) |>
+  ggplot(aes(x = ga_week, y = sri, color = id)) +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
+  geom_smooth(
+    mapping = aes(x = ga_week, y = sri),
+    method = "lm",
+    formula = y ~ x,
+    se = FALSE,
+    color = "red"
+  ) +
+  scale_color_grey(
+    start = 0.7,
+    end = 0.9
+  ) +
+  labs(
+    x = "Gestational Age Week",
+    y = "Sleep Regularity Index (SRI)",
+    color = NULL
+  ) +
+  theme(legend.position = "none")
+```
+
+#### By Gestational Age Week & Time of Day
+
+##### Global Trend
+
+```{r}
+#| warning: false
+
+sri_plot_global <-
+  sri_data |>
+  ggplot(aes(x = time, y = sri, color = id)) +
+  geom_smooth(
+    se = FALSE
+  ) +
+  geom_smooth(
+    aes(x = time, y = sri),
+    color = "#000000",
+    fill = lighten("#000000", 0.5),
+    linewidth = 2,
+    se = TRUE
+  ) +
+  scale_color_grey(
+    start = 0.7,
+    end = 0.9
+  ) +
+  labs(
+    x = "Hora do Dia", # Time of day (Hour)
+    y = "Índice de Regularidade do Sono (SRI)", # Sleep Regularity Index (SRI)
+  ) +
+  scale_x_time(
+    breaks = breaks_width("6 hours"),
+    labels = label_time("%-H") # Use "%#H" for Windows
+  ) +
+  scale_y_continuous(limits = c(0, 100)) +
+  theme(legend.position = "none")
+
+sri_plot_global
+```
+
+##### Regular Trend
+
+```{r}
+#| warning: false
+
+sri_plot_regular <-
+  sri_data |>
+  filter(id %in% regular_sri_ids) |>
+  ggplot(aes(x = time, y = sri, color = id)) +
+  geom_smooth(
+    se = FALSE
+  ) +
+  geom_smooth(
+    aes(x = time, y = sri),
+    color = "#0000FF",
+    fill = lighten("#0000FF", 0.5),
+    linewidth = 2,
+    se = TRUE
+  ) +
+  scale_color_grey(
+    start = 0.7,
+    end = 0.9
+  ) +
+  labs(
+    x = "Hora do Dia", # Time of day (Hour)
+    y = "Índice de Regularidade do Sono (SRI)", # Sleep Regularity Index (SRI)
+  ) +
+  scale_x_time(
+    breaks = breaks_width("6 hours"),
+    labels = label_time("%-H") # Use "%#H" for Windows
+  ) +
+  scale_y_continuous(limits = c(0, 100)) +
+  theme(legend.position = "none")
+
+sri_plot_regular
+```
+
+##### "Others" Trend
+
+```{r}
+#| warning: false
+
+sri_plot_others <-
+  sri_data |>
+  filter(id %in% others_sri_ids) |>
+  ggplot(aes(x = time, y = sri, color = id)) +
+  geom_smooth(
+    se = FALSE
+  ) +
+  geom_smooth(
+    aes(x = time, y = sri),
+    color = "#5E5E5E",
+    fill = lighten("#5E5E5E", 0.5),
+    linewidth = 2,
+    se = TRUE
+  ) +
+  scale_color_grey(
+    start = 0.7,
+    end = 0.9
+  ) +
+  labs(
+    x = "Hora do Dia", # Time of day (Hour)
+    y = "Índice de Regularidade do Sono (SRI)", # Sleep Regularity Index (SRI)
+  ) +
+  scale_x_time(
+    breaks = breaks_width("6 hours"),
+    labels = label_time("%-H") # Use "%#H" for Windows
+  ) +
+  scale_y_continuous(limits = c(0, 100)) +
+  theme(legend.position = "none")
+
+sri_plot_others
+```
+
+##### Irregular Trend
+
+```{r}
+#| warning: false
+
+sri_plot_irregular <-
+  sri_data |>
+  filter(id %in% irregular_sri_ids) |>
+  ggplot(aes(x = time, y = sri, color = id)) +
+  geom_smooth(
+    se = FALSE
+  ) +
+  geom_smooth(
+    aes(x = time, y = sri),
+    color = "#FF0000",
+    fill = lighten("#FF0000", 0.5),
+    linewidth = 2,
+    se = TRUE
+  ) +
+  scale_color_grey(
+    start = 0.7,
+    end = 0.9
+  ) +
+  labs(
+    x = "Hora do Dia", # Time of day (Hour)
+    y = "Índice de Regularidade do Sono (SRI)", # Sleep Regularity Index (SRI)
+  ) +
+  scale_x_time(
+    breaks = breaks_width("6 hours"),
+    labels = label_time("%-H") # Use "%#H" for Windows
+  ) +
+  scale_y_continuous(limits = c(0, 100)) +
+  theme(legend.position = "none")
+
+sri_plot_irregular
+```
+
+### Sleep Proportions
+
+#### Mean Sleep Proportions by Pregnant Women
+
+```{r}
+#| label: Explore Data - Sleep Proportions
+
+sleep_prop_mean_by_id_data <-
+  sleep_prop_data |>
+  summarize(
+    prop = mean(prop, na.rm = TRUE),
+    .by = id
+  ) |>
+  mutate(
+    prop_hours =
+      prop |>
+      multiply_by(24) |>
+      multiply_by(60) |>
+      multiply_by(60) |>
+      as_hms()
+  )
+
+sleep_prop_mean_by_id_data
+```
+
+#### Mean Global Sleep Proportion
+
+##### Using All Data
+
+::: {.callout-note}
+Mean sleep proportion considering all the proportion data points across all pregnant women.
+:::
+
+```{r}
+sleep_prop_data |>
+  pull(prop) |>
+  mean(na.rm = TRUE) |>
+  multiply_by(24) |>
+  multiply_by(60) |>
+  multiply_by(60) |>
+  as_hms()
+```
+
+##### Using the Means by Pregnant Women
+
+```{r}
+sleep_prop_data |>
+  summarize(
+    prop = mean(prop, na.rm = TRUE),
+    .by = id
+  ) |>
+  pull(prop) |>
+  mean(na.rm = TRUE) |>
+  multiply_by(24) |>
+  multiply_by(60) |>
+  multiply_by(60) |>
+  as_hms()
+```
+
+#### Mean Sleep Proportion by Gestational Age Week
+
+```{r}
+sleep_prop_data |>
+  summarize(
+    prop = mean(prop, na.rm = TRUE),
+    .by = ga_week
+  ) |>
+  mutate(
+    prop_hours =
+      prop |>
+      multiply_by(24) |>
+      multiply_by(60) |>
+      multiply_by(60) |>
+      as_hms()
+  )
+```
+
+#### By Gestational Age Week
+
+##### Scatter Plot with Linear Trend
+
+```{r}
+sleep_prop_mean_data |>
+  mutate(
+    prop_hours =
+      prop |>
+      multiply_by(24) |>
+      multiply_by(60) |>
+      multiply_by(60) |>
+      as_hms()
+  ) |>
+  mutate(ga_week = ga_week |> as.character() |> as.numeric()) |>
+  ggplot(aes(x = ga_week, y = prop_hours)) +
+  geom_point() +
+  geom_smooth(
+    method = "lm",
+    formula = y ~ x,
+    color = "red"
+  ) +
+  labs(
+    x = "Semana Gestacional", # Gestational Age Week
+    y = "Tempo Total de Sono (TTS)", # Total Sleep Time
+  ) +
+  theme(legend.position = "none")
+```
+
+##### Boxplots
+
+```{r}
+sleep_prop_mean_data |>
+  mutate(
+    prop_hours =
+      prop |>
+      multiply_by(24) |>
+      multiply_by(60) |>
+      multiply_by(60) |>
+      as_hms()
+  ) |>
+  mutate(ga_week = ga_week |> as.character() |> as.numeric()) |>
+  mutate(ga_week = factor(ga_week)) |>
+  ggplot(aes(x = prop_hours, y = ga_week)) +
+  geom_boxplot() +
+  stat_summary(
+    fun = mean,
+    geom = "point",
+    size = 4,
+    color = "red",
+    shape = 18
+  ) +
+  geom_point(
+    position = position_jitter(height = 0.1, width = 0),
+    size = 2,
+    alpha = 0.25,
+    color = "blue"
+  ) +
+  coord_flip() +
+  labs(
+    x = "Tempo Total de Sono (TTS)", # Total Sleep Time
+    y = "Semana Gestacional", # Gestational Age Week
+  ) +
+  scale_color_viridis_d() +
+  theme(legend.position = "none")
+```
+
+##### Linear Trends by ID
+
+```{r}
+sleep_prop_mean_data |>
+  mutate(
+    prop_hours =
+      prop |>
+      multiply_by(24) |>
+      multiply_by(60) |>
+      multiply_by(60) |>
+      as_hms()
+  ) |>
+  mutate(ga_week = ga_week |> as.character() |> as.numeric()) |>
+  slice_sample(prop = 0.5) |>
+  ggplot(aes(x = ga_week, y = prop_hours, color = id)) +
+  geom_smooth(
+    method = "lm",
+    formula = y ~ x,
+    se = FALSE
+  ) +
+  geom_smooth(
+    mapping = aes(x = ga_week, y = prop_hours),
+    method = "lm",
+    formula = y ~ x,
+    se = FALSE,
+    color = "red"
+  ) +
+  scale_color_grey(
+    start = 0.7,
+    end = 0.9
+  ) +
+  labs(
+    x = "Semana Gestacional", # Gestational Age Week
+    y = "Tempo Total de Sono (TTS)", # Total Sleep Time
+  ) +
+  theme(legend.position = "none")
+```
+
+#### By Gestational Age Week & Time of Day
+
+##### Global Trend
+
+```{r}
+#| warning: false
+
+sleep_prop_plot_global <-
+  sleep_prop_data |>
+  mutate(per = prop * 100) |>
+  ggplot(aes(x = time, y = per, color = id)) +
+  geom_smooth(
+    se = FALSE
+  ) +
+  geom_smooth(
+    aes(x = time, y = per),
+    color = "#000000",
+    fill = lighten("#000000", 0.5),
+    linewidth = 2,
+    se = TRUE
+  ) +
+  scale_color_grey(
+    start = 0.7,
+    end = 0.9
+  ) +
+  labs(
+    x = "Hora do Dia", # Time of day (Hour)
+    y = "Percentual de Tempo Dormindo (%)",
+  ) +
+  scale_x_time(
+    breaks = breaks_width("6 hours"),
+    labels = label_time("%-H") # Use "%#H" for Windows
+  ) +
+  scale_y_continuous(limits = c(0, 100)) +
+  theme(legend.position = "none")
+
+sleep_prop_plot_global
+```
+
+##### Regular Trend
+
+```{r}
+#| warning: false
+
+sleep_prop_plot_regular <-
+  sleep_prop_data |>
+  mutate(per = prop * 100) |>
+  filter(id %in% regular_sri_ids) |>
+  ggplot(aes(x = time, y = per, color = id)) +
+  geom_smooth(
+    se = FALSE
+  ) +
+  geom_smooth(
+    aes(x = time, y = per),
+    color = "#0000FF",
+    fill = lighten("#0000FF", 0.5),
+    linewidth = 2,
+    se = TRUE
+  ) +
+  scale_color_grey(
+    start = 0.7,
+    end = 0.9
+  ) +
+  labs(
+    x = "Hora do Dia", # Time of day (Hour)
+    y = "Percentual de Tempo Dormindo (%)", # Sleep Proportion (%)
+  ) +
+  scale_x_time(
+    breaks = breaks_width("6 hours"),
+    labels = label_time("%-H") # Use "%#H" for Windows
+  ) +
+  scale_y_continuous(limits = c(0, 100)) +
+  theme(legend.position = "none")
+
+sleep_prop_plot_regular
+```
+
+##### "Others" Trend
+
+```{r}
+#| warning: false
+
+sleep_prop_plot_others <-
+  sleep_prop_data |>
+  mutate(per = prop * 100) |>
+  filter(id %in% others_sri_ids) |>
+  ggplot(aes(x = time, y = per, color = id)) +
+  geom_smooth(
+    se = FALSE
+  ) +
+  geom_smooth(
+    aes(x = time, y = per),
+    color = "#5E5E5E",
+    fill = lighten("#5E5E5E", 0.5),
+    linewidth = 2,
+    se = TRUE
+  ) +
+  scale_color_grey(
+    start = 0.7,
+    end = 0.9
+  ) +
+  labs(
+    x = "Hora do Dia", # Time of day (Hour)
+    y = "Percentual de Tempo Dormindo (%)", # Sleep Proportion (%)
+  ) +
+  scale_x_time(
+    breaks = breaks_width("6 hours"),
+    labels = label_time("%-H") # Use "%#H" for Windows
+  ) +
+  scale_y_continuous(limits = c(0, 100)) +
+  theme(legend.position = "none")
+
+sleep_prop_plot_others
+```
+
+##### Irregular Trend
+
+```{r}
+#| warning: false
+
+sleep_prop_plot_irregular <-
+  sleep_prop_data |>
+  mutate(per = prop * 100) |>
+  filter(id %in% irregular_sri_ids) |>
+  ggplot(aes(x = time, y = per, color = id)) +
+  geom_smooth(
+    se = FALSE
+  ) +
+  geom_smooth(
+    aes(x = time, y = per),
+    color = "#FF0000",
+    fill = lighten("#FF0000", 0.5),
+    linewidth = 2,
+    se = TRUE
+  ) +
+  scale_color_grey(
+    start = 0.7,
+    end = 0.9
+  ) +
+  labs(
+    x = "Hora do Dia", # Time of day (Hour)
+    y = "Percentual de Tempo Dormindo (%)", # Sleep Proportion (%)
+  ) +
+  scale_x_time(
+    breaks = breaks_width("6 hours"),
+    labels = label_time("%-H") # Use "%#H" for Windows
+  ) +
+  scale_y_continuous(limits = c(0, 100)) +
+  theme(legend.position = "none")
+
+sleep_prop_plot_irregular
+```
+
+### Illuminance Levels
+
+#### Statistics
+
+##### Mean Illuminance by Pregnant Women
+
+```{r}
+#| label: Explore Data - Illuminance Levels
+
+lux_data |>
+  summarize(
+    lux = mean(lux, na.rm = TRUE),
+    .by = id
+  )
+```
+
+##### Mean Global Illuminance
+
+###### Using All Data
+
+::: {.callout-note}
+Mean SRI considering all the SRI data points across all pregnant women.
+:::
+
+```{r}
+lux_data |> pull(lux) |> mean(na.rm = TRUE)
+```
+
+###### Using the Means by Pregnant Women
+
+```{r}
+lux_data |>
+  summarize(
+    lux = mean(lux, na.rm = TRUE),
+    .by = id
+  ) |>
+  pull(lux) |>
+  mean(na.rm = TRUE)
+```
+
+##### Mean Illuminance by Gestational Age Week
+
+```{r}
+lux_data |>
+  summarize(
+    lux = mean(lux, na.rm = TRUE),
+    .by = ga_week
+  )
+```
+
+#### By Gestational Age Week
+
+##### Scatter Plot with Linear Trend
+
+```{r}
+lux_mean_data |>
+  mutate(ga_week = ga_week |> as.character() |> as.numeric()) |>
+  ggplot(aes(x = ga_week, y = lux)) +
+  geom_point() +
+  geom_smooth(
+    method = "lm",
+    formula = y ~ x,
+    color = "red"
+  ) +
+  labs(
+    x = "Semana Gestacional", # Gestational Age Week
+    y = "Índice de Iluminância (Lux)", # Illuminance Index (Lux)
+  ) +
+  theme(legend.position = "none")
+```
+
+##### Boxplots
+
+```{r}
+lux_mean_data |>
+  mutate(ga_week = ga_week |> as.character() |> as.numeric()) |>
+  mutate(ga_week = factor(ga_week)) |>
+  ggplot(aes(x = lux, y = ga_week)) +
+    geom_boxplot() +
+  stat_summary(
+    fun = mean,
+    geom = "point",
+    size = 4,
+    color = "red",
+    shape = 18
+  ) +
+  geom_point(
+    position = position_jitter(height = 0.1, width = 0),
+    size = 2,
+    alpha = 0.25,
+    color = "blue"
+  ) +
+  coord_flip() +
+  # scale_y_discrete(limits = rev) +
+  labs(
+    x = "Índice de Iluminância (Lux)", # Illuminance Index (Lux)
+    y = "Semana Gestacional", # Gestational Age Week
+  ) +
+  scale_color_viridis_d() +
+  theme(legend.position = "none")
+```
+
+##### Linear Trends by ID
+
+```{r}
+lux_mean_data |>
+  mutate(ga_week = ga_week |> as.character() |> as.numeric()) |>
+  slice_sample(prop = 0.5) |>
+  ggplot(aes(x = ga_week, y = lux, color = id)) +
+  geom_smooth(
+    method = "lm",
+    formula = y ~ x,
+    se = FALSE
+  ) +
+  geom_smooth(
+    mapping = aes(x = ga_week, y = lux),
+    method = "lm",
+    formula = y ~ x,
+    se = FALSE,
+    color = "red"
+  ) +
+  scale_color_grey(
+    start = 0.7,
+    end = 0.9
+  ) +
+  labs(
+    x = "Semana Gestacional", # Gestational Age Week
+    y = "Índice de Iluminância (Lux)", # Illuminance Index (Lux)
+  ) +
+  theme(legend.position = "none")
+```
+
+#### By Gestational Age Week & Time of Day
+
+##### Global Trend
+
+```{r}
+#| warning: false
+
+lux_plot_global <-
+  lux_data |>
+  ggplot(aes(x = time, y = lux, color = id)) +
+  geom_smooth(
+    se = FALSE
+  ) +
+  geom_smooth(
+    aes(x = time, y = lux),
+    color = "#000000",
+    fill = lighten("#000000", 0.5),
+    linewidth = 2,
+    se = TRUE
+  ) +
+  scale_color_grey(
+    start = 0.7,
+    end = 0.9
+  ) +
+  labs(
+    x = "Hora do Dia", # Time of day (Hour)
+    y = "Índice de Iluminância (Lux)", # Illuminance Index (Lux)
+  ) +
+  scale_x_time(
+    breaks = breaks_width("6 hours"),
+    labels = label_time("%-H") # Use "%#H" for Windows
+  ) +
+  scale_y_continuous(
+    limits = c(0, 1200),
+    breaks = seq(0, 1200, by = 300)
+  ) +
+  theme(legend.position = "none")
+
+lux_plot_global
+```
+
+##### Regular Trend
+
+```{r}
+#| warning: false
+
+lux_plot_regular <-
+  lux_data |>
+  filter(id %in% regular_sri_ids) |>
+  ggplot(aes(x = time, y = lux, color = id)) +
+  geom_smooth(
+    se = FALSE
+  ) +
+  geom_smooth(
+    aes(x = time, y = lux),
+    color = "#0000FF",
+    fill = lighten("#0000FF", 0.5),
+    linewidth = 2,
+    se = TRUE
+  ) +
+  scale_color_grey(
+    start = 0.7,
+    end = 0.9
+  ) +
+  labs(
+    x = "Hora do Dia", # Time of day (Hour)
+    y = "Índice de Iluminância (Lux)", # Illuminance Index (Lux)
+  ) +
+  scale_x_time(
+    breaks = breaks_width("6 hours"),
+    labels = label_time("%-H") # Use "%#H" for Windows
+  ) +
+  scale_y_continuous(
+    limits = c(0, 1200),
+    breaks = seq(0, 1200, by = 300)
+  ) +
+  theme(legend.position = "none")
+
+lux_plot_regular
+```
+
+##### "Others" Trend
+
+```{r}
+#| warning: false
+
+lux_plot_others <-
+  lux_data |>
+  filter(id %in% others_sri_ids) |>
+  ggplot(aes(x = time, y = lux, color = id)) +
+  geom_smooth(
+    se = FALSE
+  ) +
+  geom_smooth(
+    aes(x = time, y = lux),
+    color = "#5E5E5E",
+    fill = lighten("#5E5E5E", 0.5),
+    linewidth = 2,
+    se = TRUE
+  ) +
+  scale_color_grey(
+    start = 0.7,
+    end = 0.9
+  ) +
+  labs(
+    x = "Hora do Dia", # Time of day (Hour)
+    y = "Índice de Iluminância (Lux)", # Illuminance Index (Lux)
+  ) +
+  scale_x_time(
+    breaks = breaks_width("6 hours"),
+    labels = label_time("%-H") # Use "%#H" for Windows
+  ) +
+  scale_y_continuous(
+    limits = c(0, 1200),
+    breaks = seq(0, 1200, by = 300)
+  ) +
+  theme(legend.position = "none")
+
+lux_plot_others
+```
+
+##### Irregular Trend
+
+```{r}
+#| warning: false
+
+lux_plot_irregular <-
+  lux_data |>
+  filter(id %in% irregular_sri_ids) |>
+  ggplot(aes(x = time, y = lux, color = id)) +
+  geom_smooth(
+    se = FALSE
+  ) +
+  geom_smooth(
+    aes(x = time, y = lux),
+    color = "#FF0000",
+    fill = lighten("#FF0000", 0.5),
+    linewidth = 2,
+    se = TRUE
+  ) +
+  scale_color_grey(
+    start = 0.7,
+    end = 0.9
+  ) +
+  labs(
+    x = "Hora do Dia", # Time of day (Hour)
+    y = "Índice de Iluminância (Lux)", # Illuminance Index (Lux)
+  ) +
+  scale_x_time(
+    breaks = breaks_width("6 hours"),
+    labels = label_time("%-H") # Use "%#H" for Windows
+  ) +
+  scale_y_continuous(
+    limits = c(0, 1200),
+    breaks = seq(0, 1200, by = 300)
+  ) +
+  theme(legend.position = "none")
+
+lux_plot_irregular
+```
+
+### SRI *versus* Illuminance
+
+```{r}
+#| label: SRI *versus* Illuminance
+#| warning: false
+
+wrap_plots(
+  A = sri_plot_regular,
+  X = ggplot() + theme_void(),
+  C = lux_plot_regular,
+  B = sri_plot_irregular,
+  Y = ggplot() + theme_void(),
+  D = lux_plot_irregular,
+  ncol = 3,
+  nrow = 2,
+  widths = c(0.4875, 0.025, 0.4875),
+  axes = "collect",
+  tag_level = "new"
+)
+```
+
+### Sleep Proportion *versus* Illuminance
+
+```{r}
+#| label: Sleep Proportion *versus* Illuminance
+#| warning: false
+
+wrap_plots(
+  A = sleep_prop_plot_regular,
+  X = ggplot() + theme_void(),
+  C = lux_plot_regular,
+  B = sleep_prop_plot_irregular,
+  Y = ggplot() + theme_void(),
+  D = lux_plot_irregular,
+  ncol = 3,
+  nrow = 2,
+  widths = c(0.4875, 0.025, 0.4875),
+  axes = "collect",
+  tag_level = "new"
+)
+```
+
+### SRI *versus* Sleep Duration
+
+```{r}
+#| label: SRI *versus* Sleep Duration
+
+plot_data <-
+  sri_mean_data_by_id |>
+  left_join(
+    sleep_prop_mean_by_id_data,
+    by = "id"
+  ) |>
+  mutate(
+    group = case_when(
+      id %in% regular_sri_ids ~ "Regular",
+      id %in% irregular_sri_ids ~ "Irregular",
+      TRUE ~ "Outros"
+    )
+  )
+```
+
+```{r}
+plot_data |> glimpse()
+```
+
+```{r}
+plot_data |>
+  summarize(
+    n = n(),
+    x = mean(sri, na.rm = TRUE),
+    y =
+      prop_hours |>
+      as.numeric() |>
+      mean(na.rm = TRUE) |>
+      as_hms(),
+    x_se =
+      sri |>
+      sd(na.rm = TRUE) |>
+      divide_by(sqrt(n())),
+    y_se =
+      prop_hours |>
+      as.numeric() |>
+      sd(na.rm = TRUE) |>
+      divide_by(sqrt(n())) |>
+      as_hms()
+  )
+```
+
+```{r}
+plot_data_se <-
+  plot_data |>
+  summarize(
+    n = n(),
+    x = mean(sri, na.rm = TRUE),
+    y =
+      prop_hours |>
+      as.numeric() |>
+      mean(na.rm = TRUE) |>
+      as_hms(),
+    x_se =
+      sri |>
+      sd(na.rm = TRUE) |>
+      divide_by(sqrt(n())),
+    y_se =
+      prop_hours |>
+      as.numeric() |>
+      sd(na.rm = TRUE) |>
+      divide_by(sqrt(n())) |>
+      as_hms(),
+    .by = group
+  )
+```
+
+```{r}
+plot_data_se
+```
+
+```{r}
+plot_data_se <- plot_data_se |> filter(!group == "Outros")
+```
+
+```{r}
+#| warning: false
+
+plot_data |>
+  ggplot(
+    aes(x = sri, y = prop_hours, color = group, shape = group)
+  ) +
+  geom_point(
+    size = 4
+  ) +
+  geom_crossbar(
+    data = plot_data_se,
+    aes(x = x, y = y, ymin = y - y_se, ymax = y + y_se, color = group),
+    width = 0,
+    inherit.aes = FALSE
+  ) +
+  geom_errorbar(
+    data = plot_data_se,
+    aes(x = x, y = y, xmin = x - x_se, xmax = x + x_se, color = group),
+    height = 0,
+    inherit.aes = FALSE
+  ) +
+  scale_shape_manual(
+    values = c(
+      "Regular" = 15,
+      "Irregular" = 16,
+      "Outros" = 6
+    )
+  ) +
+  scale_color_manual(
+    values = c(
+      "Regular" = "blue",
+      "Irregular" = "red",
+      "Outros" = "black"
+    )
+  ) +
+  scale_y_time(
+    limits = c(as_hms("04:30:00"), as_hms("08:45:00")),
+    breaks = "1 hour",
+    labels = function(x) {
+      x |>
+        as.POSIXct() |>
+        format("%H:%M")
+    }
+  ) +
+  scale_x_continuous(
+    limits = c(42.5, 85),
+    breaks = seq(40, 100, by = 10)
+  ) +
+  labs(
+    # Sleep Regularity Index (SRI)
+    x = "Índice de Regularidade do Sono (SRI)",
+    # Average Daily Total Sleep Time (TST)
+    y = "Média do Tempo Total de Sono (TTS)",
+    color = NULL,
+    shape = NULL
+  ) +
+  guides(
+    color = guide_legend(override.aes = list(linetype = 0))
+  )
+```
+
+
+
+## Bootstrap Test
+
+## Compute an *A Priori* Power Analysis
+
+```{r}
+#| label: Compute an *A Priori* Power Analysis
+
+set.seed(2025)
+```
+
+```{r}
+n_clusters <- 66 # Number of participants
+cluster_size <- 2 # Average number of weeks per participant
+alpha <- 0.3 # Intra-class correlation
+beta <- - 2 # Effect size (per week)
+sigma <- 5 # Standard deviation of the outcome
+type_one_error <- 0.05
+n_sim <- 1000
+rejects <- 0
+```
+
+```{r}
+cli_progress_bar(total = n_sim, clear = FALSE)
+
+for (i in seq_len(n_sim)){
+  sim_data <- tibble(
+    id = seq_len(n_clusters) |> rep(each = cluster_size),
+    x = seq_len(cluster_size) |> rep(n_clusters)
+  )
+
+  correlated_errors <-
+    rep(
+      rnorm(n_clusters, 0, sigma * sqrt(alpha)),
+      each = cluster_size
+    ) |>
+    add(
+      rnorm(n_clusters * cluster_size, 0, sigma * sqrt(1 - alpha))
+    )
+
+  sim_data <- sim_data |> mutate(y = beta * x + correlated_errors)
+
+  fit <- geeglm(
+    y ~ x,
+    family = gaussian,
+    id = id,
+    data = sim_data,
+    corstr = "exchangeable"
+  )
+
+  p_value <- summary(fit)$coefficients[2,4]
+
+  if (p_value < type_one_error) rejects <- rejects + 1
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+
+power_estimate <- rejects / n_sim
+
+power_estimate
+```
+
+## Model Data
+
+### Prepare Model Data
+
+```{r}
+#| label: Model Data
+
+model_data <-
+  sri_mean_data |>
+  mutate(
+    ga_week =
+      ga_week |>
+      as.character() |>
+      as.numeric()
+  ) |>
+  mutate(
+    ga_week_centered =
+      ga_week |>
+      scale(center = TRUE, scale = FALSE) # Mean deviations
+  ) |>
+  group_by(ga_week) |>
+  mutate(n = n()) |>
+  ungroup() |>
+  left_join(
+    field_form_data |> dplyr::select(-timestamp),
+    by = "id"
+  )
+```
+
+### Inspect Model Data
+
+```{r}
+model_data |> nrow()
+```
+
+```{r}
+model_data |>
+  pull(id) |>
+  unique() |>
+  length()
+```
+
+```{r}
+model_data |>
+  pull(ga_week) |>
+  unique() |>
+  length()
+```
+
+```{r}
+model_data |>
+  summarize(
+    n = n(),
+    .by = id
+  ) |>
+    arrange(n) |>
+    print(n = Inf)
+```
+
+```{r}
+model_data |> glimpse()
+```
+
+### Model Data with Generalized Estimating Equations (GEE)
+
+#### Prepare Model Data for GEE
+
+```{r}
+model_data_gee <-
+  model_data |>
+  mutate(
+    id =
+      id |>
+      as.factor() |>
+      as.numeric()
+  ) |>
+  arrange(id, ga_week)
+```
+
+```{r}
+model_data_gee |>
+  summarize(
+    n = n(),
+    .by = id
+  ) |>
+    arrange(n) |>
+    print(n = Inf)
+```
+
+#### Model Data
+
+```{r}
+model_gee <- geeglm(
+  sri ~ ga_week_centered,
+  family = gaussian,
+  id = id,
+  weights = n,
+  data = model_data_gee,
+  corstr = "exchangeable"
+)
+```
+
+#### Inspect Model Results
+
+```{r}
+model_gee
+```
+
+```{r}
+summary(model_gee)
+```
+
+#### Transform p-value for an One-Tailed Hypothesis
+
+```{r}
+coefs <- summary(model_gee)$coefficients
+beta  <- coefs["ga_week_centered", "Estimate"]
+se    <- coefs["ga_week_centered", "Std.err"]
+
+p_one_tailed <- pnorm(beta / se)
+
+p_one_tailed
+```
+
+### Model Diagnostics
+
+#### Check Normality of Residuals
+
+```{r}
+tibble(x = residuals(model_gee)[, 1]) |>
+  ggplot(aes(sample = x)) +
+  stat_qq() +
+  stat_qq_line() +
+  labs(
+    x = "Quantis Teóricos (Normal Padrão)",
+    y = "Quantis Amostrais"
+  )
+```
+
+```{r}
+tibble(x = residuals(model_gee)[, 1]) |>
+  rutils:::normality_summary("x") |>
+  print(n = Inf)
+```
+
+#### Use `performance` Package to Check the Model
+
+```{r}
+check_model(model_gee)
+```
+
+### Check the Standardized Effect by Week
+
+$$
+d_{Total} = \cfrac{\beta}{\text{SD}(Y)}
+$$
+
+```{r}
+beta <- coef(model_gee)["ga_week_centered"]
+scale_parameter <- summary(model_gee)$dispersion[[1]]
+sd_residuals <- sqrt(scale_parameter)
+
+d_by_week <- beta / sd_residuals
+
+d_by_week
+```
+
+```{r}
+se_beta <- summary(model_gee)$coefficients["ga_week_centered", "Std.err"]
+
+# 1.645 == One-tailed 95% CI z-score
+ci_lower <- (beta - (1.645 * se_beta)) / sd_residuals
+ci_upper <- (beta + (1.645 * se_beta)) / sd_residuals
+
+c(ci_lower, ci_upper)
+```
+
+```{r}
+interpret_cohens_d(d_by_week)
+```
+
+### Check Standardized Effect for 5 Weeks
+
+$$
+d_{Total} = \cfrac{\beta \times \Delta\text{Weeks}}{\text{SD}(Y)}
+$$
+
+```{r}
+d_5_weeks <- d_by_week * 5
+```
+
+```{r}
+d_5_weeks
+```
+
+```{r}
+interpret_cohens_d(d_5_weeks)
+```
+
+## Compute an *A Posteriori* Power Analysis
+
+```{r}
+#| label: Compute an *A Posteriori* Power Analysis
+
+set.seed(2025)
+```
+
+```{r}
+n_clusters <- summary(model_gee)$clusz |> length()
+cluster_size <- summary(model_gee)$clusz |> mean() |> floor()
+alpha <- summary(model_gee)$corr[[1]]
+beta <- coefficients(model_gee)[2]
+sigma <- summary(model_gee)$dispersion[[1]] |> sqrt()
+n_sim <- 1000
+rejects <- 0
+```
+
+```{r}
+cli_progress_bar(total = n_sim, clear = FALSE)
+
+for (i in seq_len(n_sim)){
+  sim_data <- tibble(
+    id = seq_len(n_clusters) |> rep(each = cluster_size),
+    x = seq_len(cluster_size) |> rep(n_clusters)
+  )
+
+  correlated_errors <-
+    rnorm(n = n_clusters, mean = 0, sd = sigma * sqrt(alpha)) |>
+    rep(each = cluster_size) |>
+    add(
+      rnorm(n_clusters * cluster_size, 0, sigma * sqrt(1 - alpha))
+    )
+
+  sim_data <-
+    sim_data |>
+    mutate(
+      y = beta * x + correlated_errors
+    )
+
+  fit <- geeglm(
+    y ~ x,
+    family = gaussian,
+    id = id,
+    data = sim_data,
+    corstr = "exchangeable"
+  )
+
+  p_value <- summary(fit)$coefficients[2,4]
+
+  if (p_value < 0.05) rejects <- rejects + 1
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+
+power_estimate <- rejects / n_sim
+
+power_estimate
+```

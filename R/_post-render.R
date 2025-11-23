@@ -3,10 +3,30 @@
 library(beepr)
 library(groomr) # github.com/danielvartan/groomr
 library(here)
+library(quartor) # github.com/danielvartan/quartor
 
 # Remove Empty Lines from `README.md` -----
 
 here("README.md") |> remove_blank_line_dups()
+
+# Delete unnecessary files and folders -----
+
+dir_list <-
+  c(".temp", "index_cache", "index_files", "site_libs") |>
+  append(x = _, list.dirs(here("qmd"))[-1])
+
+quartor:::clean_quarto_mess(
+  file = c(".luarc.json"),
+  dir =
+    c(".temp", "index_cache", "index_files", "site_libs") |>
+    append(x = _, list.dirs("qmd")[-1]),
+  ext = c(
+    "aux", "bbx", "bcf-SAVE-ERROR", "cbx", "dbx", "fdb_latexmk", "lbx", "loa",
+    "log", "otf", "pdf", "scss", "tex", "xdv"
+  ),
+  ignore = NULL,
+  wd = here::here()
+)
 
 # Check If the Script Ran Successfully -----
 

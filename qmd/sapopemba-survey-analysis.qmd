@@ -1,0 +1,603 @@
+---
+execute:
+  eval: false
+---
+
+# Sapopemba Survey Analysis
+
+```{r}
+#| label: setup
+#| include: false
+
+source(here::here("R/quarto-setup.R"))
+```
+
+## Comments
+
+\* This is considering that all the other elegibility criteria are met (e.g., non-smoker, no gestational issues, etc.). Here we are considering only: the age of the pregnant women; the minimum time required for actigraph use; and if the delivery was at the birth center. Most of the other criteria are already met by the birth centers' selection criteria.
+
+## Setup
+
+```{r}
+#| eval: false
+
+library(dplyr)
+library(ggplot2)
+library(googlesheets4)
+library(lubridate)
+library(magrittr)
+library(purrr)
+library(rutils) # github.com/danielvartan/rutils
+library(stringr)
+```
+
+```{r}
+#| include: false
+
+library(magrittr)
+```
+
+## Data munging
+
+### Importing data
+
+```{r}
+#| output: false
+
+gs4_auth(
+  cache = here(".secrets"),
+  email = TRUE,
+  use_oob = FALSE
+)
+```
+
+```{r}
+#| output: false
+
+raw_data <-
+  "1w5mLtYYoh6MPsP8lPqj1tyKNzX9XJuPMmCMsNFM-bcs" |>
+  googlesheets4::read_sheet(sheet = "Dataset")
+```
+
+### Tidying data
+
+```{r}
+raw_data <-
+  data |>
+  dplyr::mutate(
+    date_on_entry = lubridate::ymd(date_on_entry),
+    baby_birth_date = lubridate::ymd(baby_birth_date),
+    age = as.numeric(age),
+    ultrassom_date = lubridate::ymd(ultrassom_date),
+    ga_on_ultrassom =
+      (
+        ga_on_ultrassom |>
+         stringr::str_extract("^[0-9]*(?=/)") |>
+         as.numeric() |>
+         lubridate::weeks()
+       ) +
+      (
+        ga_on_ultrassom |>
+         stringr::str_extract("(?<=/)[0-9]$") |>
+         as.numeric() |>
+          lubridate::days()
+      ),
+    n_gestation = as.numeric(n_gestation),
+    n_delivery = as.numeric(n_delivery),
+    n_abortion = as.numeric(n_abortion),
+    birth_center_delivery = as.logical(birth_center_delivery)
+  )
+```
+
+```{r}
+data |> dplyr::glimpse()
+```
+
+### Transforming data
+
+```{r}
+ga_start <- function(ultrasound, ga) {
+  checkmate::assert_date(ultrasound)
+  rutils:::assert_period(ga, lower = lubridate::period(0))
+  rutils:::assert_identical(ultrasound, ga, type = "length")
+
+  lubridate::as_date(ultrasound - ga)
+}
+```
+
+```{r}
+ga_point <- function(ga_start, point, print = TRUE) {
+  checkmate::assert_date(ga_start)
+  checkmate::assert_multi_class(point, c("Date", "POSIXt"))
+  checkmate::assert_flag(print)
+
+  for (i in seq_along(ga_start)) {
+    for (j in seq_along(point)) {
+      if (point[i] < ga_start[i]) {
+        cli::cli_abort(paste(
+          "{.strong {cli::col_red('point')}} must be equal or greater than",
+          "{.strong {cli::col_blue('ga_start')}}."
+        ))
+      }
+    }
+  }
+
+  ga_start <- ga_start |> lubridate::as_date()
+  point <- point |> lubridate::as_date()
+
+  out <-
+    lubridate::interval(ga_start, point, tzone ="UTC") |>
+     as.numeric() %>%
+    `/`(as.numeric(lubridate::ddays())) %>%
+    lubridate::days()
+
+  if (isTRUE(print)) {
+    out_duration <- out |> lubridate::as.duration()
+
+    weeks <- floor(out_duration / lubridate::dweeks())
+    days <- out_duration %% lubridate::dweeks() / lubridate::ddays()
+
+    cli::cli_alert_info(paste(
+      "{.strong",
+      "{weeks} {.strong {cli::col_red('week(s)')}}",
+      "{days} {.strong {cli::col_red('day(s)')}}",
+      "}"
+    ))
+  }
+
+  invisible(out)
+}
+```
+
+```{r}
+ga_week_int <- function(ga_start, week) {
+  checkmate::assert_date(ga_start, len = 1)
+  checkmate::assert_number(week, lower = 0)
+
+  week_start <-
+    (ga_start + lubridate::dweeks(week)) |>
+    lubridate::as_date()
+
+  week_end <-
+    (week_start + lubridate::dweeks(1) - lubridate::dseconds(1)) |>
+    lubridate::as_date()
+
+  lubridate::interval(week_start, week_end)
+}
+```
+
+```{r}
+ga_weeks <- function(ga) {
+  rutils:::assert_period(ga)
+
+  ga <- ga |> lubridate::as.duration()
+
+  floor(ga / lubridate::dweeks())
+}
+```
+
+```{r}
+ga_days <- function(ga) {
+  rutils:::assert_period(ga)
+
+  ga <- ga |> lubridate::as.duration()
+  weeks <- floor(ga / lubridate::dweeks())
+
+  ga %% lubridate::dweeks() / lubridate::ddays()
+}
+```
+
+```{r}
+ga_weeks_days <- function(ga) {
+  rutils:::assert_period(ga)
+
+  ga <- ga |> lubridate::as.duration()
+  weeks <- floor(ga / lubridate::dweeks())
+  days <- ga %% lubridate::dweeks() / lubridate::ddays()
+
+  paste0(weeks, "/", days)
+}
+```
+
+```{r}
+extract_weeks_from_interval <- function(start, end) {
+  checkmate::assert_date(start)
+  checkmate::assert_date(end)
+
+  lubridate::interval(start, end, tzone ="UTC") |>
+    as.numeric() %>%
+    `/`(as.numeric(lubridate::dweeks())) |>
+    floor()
+}
+```
+
+```{r}
+data <-
+  data |>
+  dplyr::mutate(
+    ga_start = ga_start(
+      ultrasound = ultrassom_date,
+      ga = ga_on_ultrassom
+    ),
+    ga_on_entry = ga_point(
+      ga_start = ga_start,
+      point = date_on_entry,
+      print = FALSE
+    ),
+    ga_on_entry_weeks = ga_weeks(ga_on_entry),
+    ga_on_entry_days = ga_days(ga_on_entry),
+    ga_on_baby_birth_date = ga_point(
+      ga_start = ga_start,
+      point = baby_birth_date,
+      print = FALSE
+    ),
+    ga_on_baby_birth_date_weeks = ga_weeks(ga_on_baby_birth_date),
+    ga_on_baby_birth_date_days = ga_days(ga_on_baby_birth_date),
+    duration_from_entry_to_birth =
+      lubridate::as.period(baby_birth_date - date_on_entry)
+  )
+```
+
+```{r}
+data <-
+  data |>
+  dplyr::select(
+    ga_start,
+    date_on_entry,
+    ga_on_entry,
+    ga_on_entry_weeks,
+    ga_on_entry_days,
+    baby_birth_date,
+    ga_on_baby_birth_date,
+    ga_on_baby_birth_date_weeks,
+    ga_on_baby_birth_date_days,
+    ultrassom_date,
+    ga_on_ultrassom,
+    duration_from_entry_to_birth,
+    age,
+    n_gestation,
+    n_delivery,
+    n_abortion,
+    birth_center_delivery
+  )
+```
+
+## Analysis
+
+### Parameters
+
+```{r}
+min_actigraphy_days <- 7
+```
+
+### How much time does the survey cover?
+
+```{r}
+period_from_interval <- function(start, end) {
+  checkmate::assert_date(start)
+  checkmate::assert_date(end)
+
+  lubridate::interval(start, end, tzone ="UTC") |>
+    lubridate::as.period()
+}
+```
+
+```{r}
+start <- data |>
+  magrittr::extract2("date_on_entry") |>
+  min()
+
+end <- data |>
+  magrittr::extract2("date_on_entry") |>
+  max()
+
+cli::cli_bullets(c(
+  "{.strong From}: {start}",
+  "{.strong To}: {end}",
+  paste0(
+    "{.strong {cli::col_red('Duration')}}: ",
+    "{period_from_interval(start, end)}"
+  )
+))
+```
+
+### What is the potential number of pregnant women who fit the research sample in a given period of time?
+
+```{r}
+n_fit <- function(data, start, end, min_actigraphy_days = 7, print = TRUE) {
+  checkmate::assert_tibble(data)
+  checkmate::assert_date(start)
+  checkmate::assert_date(end)
+  checkmate::assert_number(min_actigraphy_days)
+  checkmate::assert_flag(print)
+
+  data <-
+    data |>
+    dplyr::filter(
+      date_on_entry >= start,
+      date_on_entry <= end
+    )
+
+  total <- data |> nrow()
+
+  n_fit <-
+    data |>
+    dplyr::filter(
+      age >= 18,
+      duration_from_entry_to_birth >= lubridate::days(min_actigraphy_days),
+      birth_center_delivery == TRUE
+    ) |>
+    nrow()
+
+  n_fit_per <- n_fit / total * 100
+
+  if (isTRUE(print)) {
+    cli::cli_bullets(c(
+      paste0(
+      "{.strong {cli::col_red('Number of fit pregnant women')}}: ",
+      "{n_fit}/{total}"
+      ),
+      paste0(
+      "{.strong Percentage of fit pregnant women}: ",
+      "{round(n_fit_per, 3)} %"
+      )
+    ))
+  }
+
+  invisible(
+    list(
+      n_fit = n_fit,
+      n_fit_per = n_fit_per,
+      total = total,
+      start = start,
+      end = end,
+      min_actigraphy_days = min_actigraphy_days
+    )
+  )
+}
+```
+
+```{r}
+data |>
+  n_fit(
+    start = start,
+    end = end,
+    min_actigraphy_days = min_actigraphy_days,
+    print = TRUE
+  )
+```
+
+```{r}
+data |>
+  dplyr::filter(
+    date_on_entry >= start,
+    date_on_entry <= end
+  ) |>
+  ggplot2::ggplot(
+    ggplot2::aes(
+      x =
+        duration_from_entry_to_birth |>
+        lubridate::as.duration() %>%
+        `/`(lubridate::ddays())
+    )
+  ) +
+  ggplot2::geom_histogram(bins = 30) +
+  ggplot2::geom_vline(
+    xintercept = 7,
+    color = "red",
+    linetype = "dashed"
+  ) +
+    ggplot2::geom_vline(
+    xintercept = 15,
+    color = "blue",
+    linetype = "dashed"
+  ) +
+  ggplot2::labs(
+    x = "Days from entry to birth",
+    y = "Frequency",
+    title = "Distribution of days from entry to birth"
+  )
+```
+
+### What is the maximum gestational age at the time of recruitment that provides the best chance of achieving the optimal gain-loss balance in the number of pregnant women who meet the minimum time required for actigraph use?
+
+```{r}
+gain_minus_loss <- function(
+    data,
+    ga_cut,
+    min_actigraphy_days = 7,
+    print = TRUE
+  ) {
+  checkmate::assert_tibble(data)
+  rutils:::assert_period(ga_cut)
+  checkmate::assert_number(min_actigraphy_days)
+  checkmate::assert_flag(print)
+
+  gain <-
+    data |>
+    dplyr::filter(
+      ga_on_entry <= ga_cut,
+      age >= 18,
+      duration_from_entry_to_birth >= lubridate::days(min_actigraphy_days),
+      birth_center_delivery == TRUE
+    ) |>
+    nrow()
+
+  loss <-
+    data |>
+    dplyr::filter(
+      ga_on_entry <= ga_cut,
+      age >= 18,
+      duration_from_entry_to_birth < lubridate::days(min_actigraphy_days),
+      birth_center_delivery == TRUE
+    ) |>
+    nrow()
+
+  gain_minus_loss <- gain - loss
+  total <- gain + loss
+
+  if (isTRUE(print)) {
+    cli::cli_bullets(c(
+      paste0(
+        "{.strong {cli::col_blue('Gestational age cut')}}: ",
+        " {ga_weeks_days(ga_cut)}"
+      ),
+      paste0("{.strong Gain}: {gain}"),
+      paste0("{.strong Loss}: {loss}"),
+      paste0("{.strong Total}: {total}"),
+      paste0("{.strong {cli::col_red('Gain - Loss')}}: {gain_minus_loss}")
+    ))
+  }
+
+  invisible(
+    list(
+      ga_cut = ga_cut,
+      gain = gain,
+      loss = loss,
+      total = total,
+      gain_minus_loss = gain_minus_loss,
+      min_actigraphy_days = min_actigraphy_days
+    )
+  )
+}
+```
+
+```{r}
+min_ga <- lubridate::weeks(36)
+max_ga <- lubridate::weeks(41) + lubridate::days(6)
+diff <- max_ga - min_ga
+days <- attributes(diff)$day
+
+ga_options <- purrr::map_vec(
+  .x = lubridate::days(seq(days)),
+  .f = ~ .x + min
+)
+
+stats <- purrr::map_df(
+  .x = ga_options,
+  .f = function(x) {
+    list <-
+      data |>
+      gain_minus_loss(
+        ga_cut = x,
+        min_actigraphy_days = min_actigraphy_days,
+        print = FALSE
+      ) |>
+      dplyr::as_tibble()
+  }
+)
+```
+
+```{r}
+indexes <- stats$gain_minus_loss == max(stats$gain_minus_loss, na.rm = TRUE)
+
+ga_max_by_gain_minus_loss <-
+  stats |>
+  magrittr::extract2("ga_cut") %>%
+  `[`(indexes) |>
+  dplyr::last()
+
+data |>
+  gain_minus_loss(
+  ga_cut = ga_max_by_gain_minus_loss,
+  min_actigraphy_days = min_actigraphy_days,
+  print = TRUE
+)
+```
+
+```{r}
+stats |>
+  ggplot2::ggplot(
+    ggplot2::aes(
+      x = ga_cut |>
+        lubridate::as.duration() %>%
+        `/`(lubridate::dweeks()),
+      y = gain_minus_loss
+    )
+  ) +
+  ggplot2::geom_line(color = "blue") +
+  ggplot2::geom_point() +
+  ggplot2::labs(
+    x = "Gestational age cut",
+    y = "Gain - Loss",
+    title = "Gain - Loss by gestational age cut"
+  )
+```
+
+```{r}
+data |>
+  dplyr::filter(
+    age >= 18,
+    birth_center_delivery == TRUE,
+    duration_from_entry_to_birth >= lubridate::days(min_actigraphy_days)
+  ) |>
+  ggplot2::ggplot(
+    ggplot2::aes(
+      x = ga_on_entry |>
+        lubridate::as.duration() %>%
+        `/`(lubridate::dweeks())
+    )
+  ) +
+  ggplot2::geom_histogram(bins = 30) +
+  ggplot2::geom_vline(
+    xintercept =
+      lubridate::dweeks(37) %>%
+      `+`(lubridate::ddays(6)) %>%
+      `/`(lubridate::dweeks()),
+    color = "red",
+    linetype = "dashed"
+  ) +
+  ggplot2::labs(
+    x = "Gestation age at entry",
+    y = "Frequency",
+    title = paste0(
+      "Distribution of the gestational age at the time of entry ",
+      "of pregnant women",
+      "\n",
+      "that meet the minimum time required for actigraph use"
+    )
+  )
+```
+
+```{r}
+data |>
+  dplyr::filter(
+    age >= 18,
+    birth_center_delivery == TRUE,
+    duration_from_entry_to_birth < lubridate::days(min_actigraphy_days)
+  ) |>
+  ggplot2::ggplot(
+    ggplot2::aes(
+      x = ga_on_entry |>
+        lubridate::as.duration() %>%
+        `/`(lubridate::dweeks())
+    )
+  ) +
+  ggplot2::geom_histogram(bins = 30) +
+  ggplot2::geom_vline(
+    xintercept =
+      lubridate::dweeks(37) %>%
+      `+`(lubridate::ddays(6)) %>%
+      `/`(lubridate::dweeks()),
+    color = "red",
+    linetype = "dashed"
+  ) +
+  ggplot2::labs(
+    x = "Gestation age at entry",
+    y = "Frequency",
+    title = paste0(
+      "Distribution of the gestational age at the time of entry ",
+      "of pregnant women",
+      "\n",
+      "that DO NOT meet the minimum time required for actigraph use"
+    )
+  )
+```
+
+### What is the age distribution of these pregnant women?
+
+### What is the average gestational age of pregnant women at the time of the entry?
+
+### What is the parity of these pregnant women?
+
+### How many births of pregnant women who initiated a birth plan occurred at the birth center?

@@ -1,10 +1,37 @@
 editor: source
 
-project:
-  render: [README.qmd]
-  post-render: "R/_post-render.R"
+execute:
+  cache: false # "Danger Will Robinson!"
+  freeze: false # If you plan to use it, remember to disable it afterward!
+                # Goddammit! What did I tell you?
 
-format:
-  gfm:
-    html-table-processing: none
-    default-image-extension: ""
+# quarto render --profile html
+
+profile:
+  group:
+    - [gfm, html]
+  default: gfm
+
+book:
+  title: "Does Sleep Regularity Worsen Over the Third Trimester of Pregnancy?"
+  keyword: >
+    Pregnancy. Obstetrics. Nursing. Sleep. Actigraphy. Biological rhythms.
+    Chronobiology. Sleep Regularity Index. SRI.
+  language: en
+  license: "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)"
+  favicon: images/favicon.png
+  url: https://aliciarvilefortsales.github.io/sleep-in-pregnancy/
+  site-url: https://aliciarvilefortsales.github.io/sleep-in-pregnancy/
+  repo-url: https://github.com/aliciarvilefortsales/sleep-in-pregnancy/
+  issue-url: https://github.com/aliciarvilefortsales/sleep-in-pregnancy/issues/
+  repo-branch: main
+
+citation:
+  type: thesis
+  publisher: "University of São Paulo"
+  publisher-place: "São Paulo, SP, Brazil"
+  doi: "10.17605/OSF.IO/S4TBZ"
+  url: "https://doi.org/10.17605/OSF.IO/S4TBZ"
+
+google-scholar: true
+bibliography: references.bib

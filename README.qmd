@@ -8,6 +8,8 @@
 
 library(badger)
 library(here)
+library(htmltools)
+library(knitr)
 
 source(here("R", "_setup.R"))
 ```
@@ -41,7 +43,7 @@ cat(
 
 ## Overview
 
-This repository contains materials for the study: *Associations Between the Duration and Quality of Sleep in Third-Trimester Pregnant Women with the Duration of Labor*. The full research compendium, including data and supplementary materials, is available on the Open Science Framework ([OSF](https://osf.io/)) at: <https://doi.org/10.17605/OSF.IO/S4TBZ>
+This repository contains materials for the study: *Does Sleep Regularity Worsen Over the Third Trimester of Pregnancy?*. The full research compendium, including data and supplementary materials, is available on the Open Science Framework ([OSF](https://osf.io/)) at: <https://doi.org/10.17605/OSF.IO/S4TBZ>
 
 ## Keys
 
@@ -126,13 +128,13 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #| echo: false
 #| output: asis
 
-htmltools::tags$table(
-  htmltools::tags$tr(
-    htmltools::tags$td(
-      htmltools::tags$br(),
-      htmltools::tags$p(
-        htmltools::tags$a(
-          htmltools::tags$img(
+tags$table(
+  tags$tr(
+    tags$td(
+      tags$br(),
+      tags$p(
+        tags$a(
+          tags$img(
             src = "images/capes-logo.svg",
             width = 125
           ),
@@ -140,14 +142,14 @@ htmltools::tags$table(
         ),
         align = "center"
       ),
-      htmltools::tags$br(),
+      tags$br(),
       width = "30%"
     ),
-    htmltools::tags$td(
-      htmltools::tags$p(
+    tags$td(
+      tags$p(
         "This study was financed by the Coordenação de Aperfeiçoamento de ",
         "Pessoal de Nível Superior - Brazil (",
-        htmltools::tags$a(
+        tags$a(
           "CAPES",
           href = "https://www.gov.br/capes/",
           .noWS = "outside"
@@ -158,5 +160,5 @@ htmltools::tags$table(
     )
   )
 ) |>
-  knitr::raw_html()
+  raw_html()
 ```

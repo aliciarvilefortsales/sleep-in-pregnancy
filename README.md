@@ -15,11 +15,11 @@ GPLv3](https://img.shields.io/badge/license-GPLv3-bd0000.svg)](https://www.gnu.o
 
 ## Overview
 
-This repository contains materials for the study: *Associations Between
-the Duration and Quality of Sleep in Third-Trimester Pregnant Women with
-the Duration of Labor*. The full research compendium, including data and
-supplementary materials, is available on the Open Science Framework
-([OSF](https://osf.io/)) at: <https://doi.org/10.17605/OSF.IO/S4TBZ>
+This repository contains materials for the study: *Does Sleep Regularity
+Worsen Over the Third Trimester of Pregnancy?*. The full research
+compendium, including data and supplementary materials, is available on
+the Open Science Framework ([OSF](https://osf.io/)) at:
+<https://doi.org/10.17605/OSF.IO/S4TBZ>
 
 ## Keys
 
@@ -122,7 +122,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     </td>
     <td width="70%">
       <p>
-        This study was financed by the Coordenação de Aperfeiçoamento de
+        This study was financed by the Coordenação de Aperfeiçoamento de 
         Pessoal de Nível Superior - Brazil (<a href="https://www.gov.br/capes/">CAPES</a>) - Finance Code 001, Grant Number 88887.940089/2024-00.
       </p>
     </td>

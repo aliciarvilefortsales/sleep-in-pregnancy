@@ -1,0 +1,332 @@
+---
+execute:
+  eval: false
+---
+
+# Sleep Statistics
+
+```{r}
+#| label: setup
+#| include: false
+
+source(here::here("R", "_setup.R"))
+```
+
+## Overview
+
+This notebook aims to help compute mean statistics for actigraphy data.
+
+## Set the Environment
+
+### Load Packages
+
+```{r}
+#| output: false
+
+library(astroFns)
+library(checkmate)
+library(cli)
+library(circular)
+library(here)
+library(hms)
+library(lubritime) # github.com/danielvartan/lubritime
+library(magrittr)
+library(rutils) # github.com/danielvartan/rutils
+```
+
+### Set Keys
+
+```{r}
+#| eval: false
+#| output: false
+
+gs4_auth(cache = ".secrets")
+```
+
+## Importing Data
+
+```{r}
+#| output: false
+
+ss <- "1iqjhdSiWYr9RYSvIvJQfFw35DR31YA_oj2SW8iR5WPw"
+
+raw_data <- ss |> googlesheets4::read_sheet(sheet = "Dataset")
+```
+
+## Tidy data
+
+```{r}
+parse_hms_as_duration <- function(x) {
+  x |>
+    hms::parse_hms() |>
+    lubridate::as.duration()
+}
+```
+
+```{r}
+data <-
+  raw_data |>
+  dplyr::mutate(
+    dplyr::across(
+      .cols = dplyr::matches("^his|^hfs"),
+      .fns = hms::parse_hms
+    ),
+    dplyr::across(
+      .cols = dplyr::matches("^fps|^tts_m|^tts_s|^waso"),
+      .fns = parse_hms_as_duration
+    ),
+    dplyr::across(
+      .cols = dplyr::matches("^tts_fps|^awakenings"),
+      .fns = as.numeric
+    )
+  )
+```
+
+```{r}
+data |> dplyr::glimpse()
+```
+
+## Analysis
+
+```{r}
+hms_to_decimal_hours <- function(x) {
+  rutils:::assert_hms(x)
+
+  x |>
+    as.numeric() %>%
+    `/`(60 * 60)
+}
+```
+
+```{r}
+decimal_hours_to_hms <- function(x) {
+  checkmate::assert_numeric(x)
+
+  x %>%
+    `*`(60 * 60) |>
+    hms::as_hms()
+}
+```
+
+```{r}
+hms_to_circular <- function(
+    x,
+    ...,
+    type = "angles",
+    units = "hours",
+    template = "clock24"
+) {
+  rutils:::assert_hms(x)
+
+  x |>
+    hms_to_decimal_hours() |>
+    circular::circular(
+      type = type,
+      units = units,
+      template = template,
+      ...
+    )
+}
+```
+
+```{r}
+circular_time_stat <- function(x, fun = circular::mean.circular) {
+  rutils:::assert_hms(x)
+  checkmate::assert_function(fun)
+
+  if (identical(fun, circular::sd.circular) ||
+      identical(fun, stats::sd)) {
+    x |>
+      hms_to_circular() |>
+      fun() |>
+      astroFns::rad2hms() |>
+      hms::as_hms() |>
+      hms::round_hms(secs = 1)
+  } else {
+    x |>
+      hms_to_circular() |>
+      fun() |>
+      as.numeric() |>
+      lubritime::cycle_time(cycle = 24) |>
+      decimal_hours_to_hms() |>
+      hms::round_hms(secs = 1)
+  }
+}
+```
+
+```{r}
+alt_circular_time_stat <- function(x, fun = mean) {
+  rutils:::assert_hms(x)
+  checkmate::assert_function(fun)
+
+  x |>
+    lubritime:::link_to_timeline(threshold = hms::parse_hms("12:00:00")) |>
+    fun() |>
+    hms::as_hms() |>
+    hms::round_hms(secs = 1)
+}
+```
+
+```{r}
+linear_time_stat <- function(x, fun = mean) {
+  rutils:::assert_duration(x)
+  checkmate::assert_function(fun)
+
+  x |>
+    fun() |>
+    hms::as_hms() |>
+    hms::round_hms(secs = 1)
+}
+```
+
+```{r}
+rounded_stat <- function(x, fun = mean) {
+  checkmate::assert_numeric(x)
+  checkmate::assert_function(fun)
+
+  x |>
+    fun() |>
+    round(3)
+}
+```
+
+### What is the aggregate mean/standard deviation of the actigraphic summary statistics from the selected pregnant women?
+
+```{r}
+aggregate_mean_data <-
+  data |>
+  dplyr::select(-id) |>
+  dplyr::group_by() |>
+  dplyr::summarize(
+    dplyr::across(
+      .cols = dplyr::matches("^his|^hfs"),
+      .fns = ~ circular_time_stat(.x, fun = circular::mean.circular)
+    ),
+    dplyr::across(
+      .cols = dplyr::matches("^fps|^tts_m|^tts_s|^waso"),
+      .fns = ~ linear_time_stat(.x, fun = mean)
+    ),
+    dplyr::across(
+      .cols = dplyr::matches("^tts_fps|^awakenings"),
+      .fns = ~ rounded_stat(.x, fun = mean)
+    )
+  )|>
+  tidyr::pivot_longer(
+    cols = dplyr::everything(),
+    names_to = c(".value", "type"),
+    names_sep = "_(?!.*_)",
+  ) |>
+  dplyr::relocate(tts_fps, .after = tts)
+```
+
+```{r}
+aggregate_mean_data
+```
+
+```{r}
+aggregate_sd_data <-
+  data |>
+  dplyr::select(-id) |>
+  dplyr::group_by() |>
+  dplyr::summarize(
+    dplyr::across(
+      .cols = dplyr::matches("^his|^hfs"),
+      .fns = ~ circular_time_stat(.x, fun = circular::sd.circular)
+    ),
+    dplyr::across(
+      .cols = dplyr::matches("^fps|^tts_m|^tts_s|^waso"),
+      .fns = ~ linear_time_stat(.x, fun = stats::sd)
+    ),
+    dplyr::across(
+      .cols = dplyr::matches("^tts_fps|^awakenings"),
+      .fns = ~ rounded_stat(.x, fun = stats::sd)
+    )
+  )|>
+  tidyr::pivot_longer(
+    cols = dplyr::everything(),
+    names_to = c(".value", "type"),
+    names_sep = "_(?!.*_)",
+  ) |>
+  dplyr::relocate(tts_fps, .after = tts)
+```
+
+```{r}
+aggregate_sd_data
+```
+
+## Compare Methods
+
+```{r}
+circular_vector <- data |> magrittr::extract2("his_max")
+```
+
+### A Primitive Way for Doing Circular Statistics
+
+```{r}
+x <- circular_vector |> hms_to_decimal_hours()
+x <- ifelse(x < 1, x + 24, x)
+
+x |>
+  mean() |>
+  decimal_hours_to_hms() |>
+  hms::round_hms(secs = 1)
+```
+
+```{r}
+x |>
+  stats::sd() |>
+  decimal_hours_to_hms() |>
+  hms::round_hms(secs = 1)
+```
+
+### Using `link_to_timeline()` with Mid-Day as Threshold
+
+```{r}
+circular_vector |> alt_circular_time_stat(fun = mean)
+```
+
+```{r}
+circular_vector |> alt_circular_time_stat(fun = stats::sd)
+```
+
+### How Much We Lost By Transforming The `hms` Vector to Decimal Hours?
+
+```{r}
+dplyr::tibble(
+  original = circular_vector,
+  processed = circular_vector |>
+    hms_to_decimal_hours() |>
+    decimal_hours_to_hms()
+)
+```
+
+### Circular Statistics Using the `circular` Package
+
+```{r}
+circular_vector |> hms_to_circular()
+```
+
+```{r}
+circular_vector |>
+  hms_to_circular() |>
+  plot()
+```
+
+```{r}
+circular_vector |>
+  hms_to_circular() |>
+  circular::mean.circular()
+```
+
+```{r}
+circular_vector |> circular_time_stat(fun = mean)
+```
+
+```{r}
+circular_vector |>
+  hms_to_circular() |>
+  circular::sd.circular() |>
+  astroFns::rad2hms() |>
+  hms::as_hms() |>
+  hms::round_hms(secs = 1)
+```

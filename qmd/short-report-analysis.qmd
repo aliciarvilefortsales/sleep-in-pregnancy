@@ -1,0 +1,735 @@
+# Short Report Analysis
+
+```{r}
+#| label: setup
+#| include: false
+
+library(here)
+
+source(here("R", "_setup.R"))
+```
+
+## Overview
+
+## Set the Environment
+
+### Load Packages
+
+```{r}
+#| label: Set the Environment
+#| output: false
+
+library(askpass)
+library(car)
+library(checkmate)
+library(cli)
+library(dplyr)
+library(fs)
+library(ggplot2)
+library(googlesheets4)
+library(grDevices)
+library(gt)
+library(gtsummary)
+library(groomr) # github.com/danielvartan/groomr
+library(here)
+library(hms)
+library(lubridate)
+library(lubritime) # github.com/danielvartan/lubritime
+library(moments)
+library(plotr) # github.com/danielvartan/plotr
+library(prettycheck) # github.com/danielvartan/prettycheck
+library(rutils) # github.com/danielvartan/rutils
+library(scaler) # github.com/danielvartan/scaler
+library(sodium)
+library(stats)
+library(stringr)
+library(summarytools)
+library(tidyr)
+```
+
+### Load Custom Functions
+
+```{r}
+source(here("R", "anonymize_id.R"))
+```
+
+```{r}
+Skewness <- skewness
+Kurtosis <- kurtosis
+```
+
+### Set Data Directories
+
+```{r}
+data_dir <- here("data")
+processed_data_dir <- here("data", "processed")
+processed_actigraphy_data_dir <- here("data", "processed", "actigraphy")
+```
+
+```{r}
+for (i in ls(pattern = "_dir$")) {
+  if (!dir_exists(get(i))) dir_create(get(i), recurse = TRUE)
+}
+```
+
+### Set Keys
+
+```{r}
+#| output: false
+
+gs4_auth(
+  cache = here(".secrets"),
+  email = TRUE,
+  use_oob = FALSE
+)
+```
+
+```{r}
+#| output: false
+
+salt <- Sys.getenv("PREGNANCY_SALT") # askpass()
+```
+
+## Download and Import the Control Form Data
+
+The following are internal data collected and organized using a Google Form to facilitate the management of the study.
+
+```{r}
+#| label: Download and Import the Control Form Data
+#| output: false
+
+control_form_data <-
+  "13wtDr4fRD1wJSM-qdLOdGSchF8oXU1bG0Jtccu24GhY" |>
+  read_sheet(
+    sheet = "Dataset",
+    col_types = "c"
+  )
+```
+
+## Download and Import the Field Form Data
+
+The following are data extracted from the Google Form used to collect data from the participants of the study.
+
+```{r}
+#| label: Download and Import the Field Form Data
+#| output: false
+
+field_form_data <-
+  "1tY_TT0nPXFsErYQS2VED0-hqTzgHudA9BfhRhYG19fw" |>
+  read_sheet(
+    sheet = "Dataset",
+    col_types = "c"
+  )
+```
+
+## Download and Import the Sleep Data
+
+The sleep data were extracted using the Condor Instrument [ActStudio](https://condorinst.com/en/actstudio-software/) software and subsequently formatted in Google Sheets for further analysis.
+
+```{r}
+#| label: Download and Import the Sleep Data
+#| output: false
+
+sleep_data <-
+  "1iqjhdSiWYr9RYSvIvJQfFw35DR31YA_oj2SW8iR5WPw" |>
+  read_sheet(
+    sheet = "Dataset",
+    col_types = "c"
+  )
+```
+
+## Download and Import the Medical Records Data
+
+Medical records were obtained from participants' medical files and organized in Google Sheets for subsequent analysis.
+
+```{r}
+#| label: Download and Import the Medical Records Data
+#| output: false
+
+medical_record_data <-
+  "10yvvTOCjZsRKPO8A4yn0NCvWe4Jn_Kq-Zu_CV4miGJI" |>
+  read_sheet(
+    sheet = "Dataset",
+    col_types = "c"
+  )
+```
+
+## Filter and Tidy the Control Form Data
+
+```{r}
+#| label: Filter and Tidy the Control Form Data
+
+control_form_data <-
+  control_form_data |>
+  `names<-`(paste0("X", seq_along(control_form_data))) |>
+  dplyr::select(X5, X6, X7, X12, X13, X14) |>
+  rename(
+    cpf = X5,
+    id = X6,
+    name = X7,
+    birth_center_delivery = X12,
+    birth = X13,
+    labor_start = X14
+  ) |>
+  mutate(
+    birth_center_delivery = case_when(
+      tolower(trimws(birth_center_delivery)) == "sim" ~ TRUE,
+      tolower(trimws(birth_center_delivery)) == "não" ~ FALSE,
+      TRUE ~ NA
+    ),
+    birth = as_datetime(birth),
+    labor_start = as_datetime(labor_start)
+  ) |>
+  mutate(
+    labor_duration =
+      interval(
+        start = labor_start,
+        end = birth
+      ) |>
+        int_duration()
+  ) |>
+  filter(!is.na(labor_duration)) |>
+  dplyr::select(id, birth_center_delivery, labor_start, labor_duration)
+```
+
+```{r}
+#| code-fold: false
+
+control_form_data |> glimpse()
+```
+
+## Filter and Tidy the Field Form Data
+
+```{r}
+#| label: Filter and Tidy the Field Form Data
+
+field_form_data <-
+  field_form_data |>
+  `names<-`(paste0("X", seq_along(field_form_data))) |>
+  dplyr::select(
+    X1, X4, X5, X11, X91, X92, X95, X96, X97, X99, X101, X102, X106, X119,
+    X118, X125, X126
+  ) |>
+  rename(
+    timestamp = X1,
+    birth_date = X4,
+    cpf = X5,
+    weight_before = X96,
+    weight_current = X95,
+    height = X97,
+    ethnicity = X106,
+    education = X118,
+    family_income = X99,
+    health_plan = X101,
+    solo = X102,
+    exercise = X119,
+    work = X92,
+    study = X91,
+    gestations = X11,
+    deliveries = X125,
+    abortions = X126
+  ) |>
+  mutate(
+    id = anonymize_id(cpf, salt),
+    timestamp = mdy_hms(timestamp),
+    birth_date = dmy(birth_date),
+    age = scaler:::age(birth_date, timestamp),
+    ethnicity = factor(
+      ethnicity,
+      levels = c(
+        "Indígena",
+        "Preta",
+        "Parda",
+        "Amarela",
+        "Branca"
+      ),
+      ordered = TRUE
+    ),
+    education = factor(
+      education,
+      levels = c(
+        "Não frequentou a escola",
+        "Fundamental incompleto",
+        "Fundamental completo",
+        "Ensino médio incompleto",
+        "Ensino médio completo",
+        "Ensino superior incompleto",
+        "Ensino superior completo",
+        "Mestrado incompleto",
+        "Mestrado completo",
+        "Doutorado incompleto",
+        "Doutorado completo",
+        "Pós-doutorado incompleto",
+        "Pós-doutorado completo"
+      ),
+      ordered = TRUE
+    ),
+    gestations = case_match(
+      gestations,
+      c("Sim", "0") ~ "1",
+      "Não" ~ "0",
+      .default = gestations
+    ),
+    deliveries = case_when(
+      is.na(deliveries) ~ "0",
+      TRUE ~ deliveries
+    ),
+    abortions = case_when(
+      is.na(abortions) ~ "0",
+      TRUE ~ abortions
+    )
+  ) |>
+  mutate(
+    across(
+      .cols = all_of(
+        c(
+          "weight_before", "weight_current", "height",
+          "family_income", "gestations", "deliveries",
+          "abortions"
+        )
+      ),
+      .fns = as.numeric
+    )
+  ) |>
+  mutate(
+    across(
+      .cols = all_of(
+        c("health_plan", "solo", "exercise", "work", "study")
+      ),
+      .fns = function(x) {
+        case_match(
+          x,
+          "Sim" ~ TRUE,
+          "Não" ~ FALSE
+        )
+      }
+    )
+  ) |>
+  mutate(
+    gestations = case_when(
+      id == "ae5fc5cd" ~ 3,
+      TRUE ~ gestations
+    ),
+  ) |>
+  mutate(
+    bmi_before = weight_before / ((height / 100)^2),
+    bmi_current = weight_current / ((height / 100)^2)
+  ) |>
+  dplyr::select(-cpf) |>
+  relocate(
+    id, timestamp, birth_date, age, weight_before, weight_current, height, bmi_before, bmi_current, family_income
+  )
+```
+
+```{r}
+#| code-fold: false
+
+field_form_data |> glimpse()
+```
+
+## Filter and Tidy the Sleep Data
+
+```{r}
+#| label: Filter and Tidy the Sleep Data
+
+sleep_data <-
+  sleep_data |>
+  mutate(
+    across(
+      .cols = matches("^his_|^hfs_|^fps_|^tts_m|^tts_sd|^waso_"),
+      .fns = hms::parse_hms
+    ),
+    across(
+      .cols = matches("^tts_fps_|^awakenings_"),
+      .fns = as.numeric
+    )
+  )
+```
+
+```{r}
+#| code-fold: false
+
+sleep_data |> glimpse()
+```
+
+## Filter and Tidy the Medical Record Data
+
+```{r}
+medical_record_data <-
+  medical_record_data |>
+  mutate(
+    across(
+      .cols = all_of(c("partograph_begin", "baby_birth")),
+      .fns = ~ ymd_hms(.x, tz = "America/Sao_Paulo")
+    ),
+    across(
+      .cols = -all_of(c("id", "partograph_begin", "baby_birth")),
+      .fns = as.numeric
+    ),
+    across(
+      .cols = starts_with("apgar_"),
+      .fns = as.integer
+    )
+  )
+```
+
+```{r}
+#| code-fold: false
+
+medical_record_data |> glimpse()
+```
+
+## Identify Valid Cases
+
+```{r}
+#| label: Identify Valid Cases
+
+valid_cases <-
+  field_form_data |>
+  left_join(control_form_data, by = "id") |>
+  left_join(sleep_data, by = "id") |>
+  left_join(medical_record_data, by = "id") |>
+  filter(birth_center_delivery == TRUE) |>
+  drop_na(labor_duration, baby_weight, fps_mean, waso_mean) |>
+  pull(id)
+```
+
+```{r}
+#| code-fold: false
+
+valid_cases
+```
+
+## Create the Data for Analysis
+
+```{r}
+data <-
+  control_form_data |>
+  left_join(sleep_data, by = "id") |>
+  left_join(medical_record_data, by = "id") |>
+  left_join(field_form_data, by = "id") |>
+  mutate(
+    waso_prop =
+      waso_mean |>
+      as.numeric() |>
+      divide_by(as.numeric(fps_mean))
+  ) |>
+  filter(id %in% valid_cases)
+```
+
+```{r}
+data |> glimpse()
+```
+
+## Get Time Interval of Data Collection
+
+```{r}
+#| label: Get Time Interval of Data Collection
+#| code-fold: false
+
+tibble(
+    min =
+      data |>
+      pull(timestamp) |>
+      min(na.rm = FALSE),
+    max =
+      data |>
+      pull(timestamp) |>
+      max(na.rm = FALSE),
+    int =
+      min |>
+      interval(max) |>
+      as.period()
+  ) |>
+  glimpse()
+```
+
+## Get Frequencies for Logical Variables
+
+```{r}
+#| label: Get Frequencies for Logical Variables
+
+logical_vars <-
+  data |>
+  select(where(is.logical)) |>
+  names()
+```
+
+```{r}
+#| code-fold: false
+
+for (i in logical_vars) {
+  cli::cli_h1(i)
+  cat_line()
+
+  data |>
+    rutils:::stats_summary(col = i, name = i) |>
+    print(n = Inf)
+
+  cat_line()
+}
+```
+
+## Get Frequencies for Categorical Variables
+
+```{r}
+#| label: Get Frequencies for Categorical Variables
+
+categorical_vars <-
+  data |>
+  select(where(is.character) | where(is.factor)) |>
+  select(-id) |>
+  names()
+```
+
+```{r}
+#| code-fold: false
+
+for (i in categorical_vars) {
+  cli::cli_h1(i)
+  cat_line()
+
+  data |>
+    rutils:::stats_summary(col = i, name = i) |>
+    print(n = Inf)
+
+  cat_line()
+}
+```
+
+## Get Descriptive Statistics for Numerical Variables
+
+```{r}
+#| label: Get Descriptive Statistics for Numerical Variables
+
+numerical_vars <-
+  data |>
+  select(where(is.numeric) & !where(test_temporal)) |>
+  names()
+```
+
+```{r}
+#| code-fold: false
+
+for (i in numerical_vars) {
+  cli::cli_h1(i)
+  cat_line()
+
+  data |>
+    rutils:::stats_summary(col = i, name = i) |>
+    print(n = Inf)
+
+  cat_line()
+}
+```
+
+## Get Descriptive Statistics for Linear Temporal Variables
+
+```{r}
+#| eval: false
+#| include: false
+
+test <-
+  data |>
+  select(\(x) test_temporal(x, rm = c("Date", "POSIXct"))) |>
+  tbl_summary(
+    type = everything() ~ "continuous2",
+    statistic = all_continuous() ~ c(
+      "{mean} ({sd})",
+      "{median}",
+      "{min}, {max}",
+      "{IQR} ({p25}, {p75})",
+      "{var}",
+      "{Skewness}",
+      "{Kurtosis}"
+    ),
+    digits = all_continuous() ~ 3
+  ) |>
+  fmt_hms()
+
+test
+```
+
+```{r}
+#| label: Get Descriptive Statistics for Linear Temporal Variables
+
+linear_temporal_vars <-
+  data |>
+  select(where(test_temporal)) |>
+  select(!starts_with(c("his_", "hfs_"))) |>
+  names()
+```
+
+```{r}
+#| code-fold: false
+
+for (i in linear_temporal_vars) {
+  cli::cli_h1(i)
+  cat_line()
+
+  data |>
+    rutils:::stats_summary(col = i, name = i) |>
+    print(n = Inf)
+
+  cat_line()
+}
+```
+
+## Get Descriptive Statistics for Circular Temporal Variables
+
+```{r}
+#| label: Get Descriptive Statistics for Circular Temporal Variables
+
+circular_temporal_vars <-
+  data |>
+  select(starts_with(c("his_", "hfs_"))) |>
+  names()
+```
+
+```{r}
+#| code-fold: false
+
+for (i in circular_temporal_vars) {
+  cli::cli_h1(i)
+  cat_line()
+
+  data |>
+    rutils:::stats_summary(
+      col = i,
+      name = i,
+      threshold = hms::parse_hms("12:00:00")
+    ) |>
+    print(n = Inf)
+
+  cat_line()
+}
+```
+
+## Plot Distributions
+
+### `fps_mean`
+
+```{r}
+#| label: Plot Distributions
+
+data |>
+  plotr:::plot_dist(
+    col = "fps_mean",
+    line_color = "red"
+  )
+```
+
+```{r}
+data |>
+  plotr:::plot_box_plot(
+    col = "fps_mean",
+    line_color = "red"
+  )
+```
+
+### `bmi_current`
+
+```{r}
+data |>
+  plotr:::plot_dist(
+    col = "bmi_current",
+    line_color = "red"
+  )
+```
+
+```{r}
+data |>
+  plotr:::plot_box_plot(
+    col = "bmi_current",
+    line_color = "red"
+  )
+```
+
+## Plot Correlation Matrices
+
+```{r}
+#| label: Plot Correlation Matrices
+
+data |>
+  plotr:::plot_ggally(
+    cols = c(
+      "labor_duration", "age", "family_income", "bmi_before"
+    ),
+    labels = c(
+      "Duração do parto", "Idade", "Renda familiar", "IMC"
+    )
+  )
+```
+
+```{r}
+data |>
+  plotr:::plot_ggally(
+    cols = c(
+      "labor_duration", "gestations", "deliveries", "abortions"
+    ),
+    labels = c(
+      "Duração do parto", "# Gestações", "# Partos", "# Abortos"
+    )
+  )
+```
+
+```{r}
+data |>
+  plotr:::plot_ggally(
+    cols = c(
+      "labor_duration", "baby_weight", "baby_length",
+      "baby_head_perimeter",  "baby_thoracic_perimeter",
+      "baby_abdominal_perimeter"
+    ),
+    labels = c(
+      "Duração do parto", "Peso do bebê", "Comprimento do bebê",
+      "Per. da cabeça do bebê", "Per. torácico do bebê", "Per. abdominal do bebê"
+    )
+  )
+```
+
+```{r}
+data |>
+  plotr:::plot_ggally(
+    cols = c("labor_duration", "fps_mean", "waso_mean", "awakenings_mean"),
+    labels = c("Duração do parto", "FPS", "WASO", "Desp.")
+  )
+```
+
+```{r}
+data |>
+  mutate(
+    his_mean = his_mean |> link_to_timeline(),
+    hfs_mean = hfs_mean |> link_to_timeline()
+  ) |>
+  plotr:::plot_ggally(
+    cols = c(
+      "his_mean", "hfs_mean", "fps_mean", "tts_mean", "tts_fps_mean",
+       "waso_mean", "awakenings_mean"
+    ),
+    labels = c(
+      "HIS", "HFS", "FPS", "TTS", "TTS/FPS", "WASO", "Desp."
+    ),
+    brandr = FALSE
+  )
+```
+
+```{r}
+data |>
+  plotr:::plot_ggally(
+    cols = c(
+      "fps_mean", "tts_mean", "waso_mean", "awakenings_mean",
+      "age", "family_income", "bmi_before"
+    ),
+    labels = c(
+      "FPS", "TTS", "WASO", "Desp.", "Idade", "Renda", "IMC"
+    )
+  )
+```
+
+```{r}
+#| eval: false
+#| include: false
+
+dev.off()
+```

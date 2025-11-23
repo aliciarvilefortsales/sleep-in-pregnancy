@@ -1,0 +1,55 @@
+project:
+  type: book
+  output-dir: docs
+  pre-render: "R/_pre-render.R"
+  post-render: "R/_post-render.R"
+
+book:
+  author: "Alícia Rafaelly Vilefort Sales"
+  date: today
+  date-format: "long"
+  reader-mode: true
+  repo-actions: [edit, issue]
+  chapters:
+    - index.qmd
+    - part: "Chapters"
+      chapters:
+        - qmd/exploratory-analysis.qmd
+        - qmd/sapopemba-survey-analysis.qmd
+        - qmd/short-report-analysis.qmd
+        - qmd/sri-analysis.qmd
+    - qmd/references.qmd
+  appendices:
+    - qmd/osf-routines.qmd
+    - qmd/file-processing-routines.qmd
+    - qmd/variable-computations.qmd
+
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: "#>"
+    dev: "ragg_png" # Set `AGG` as the backend of your graphic device.
+    dev.args:
+      bg: "transparent"
+
+format:
+  html:
+    date-format: "long"
+    open-graph: true
+    locale: en
+    language: en-us
+    code-fold: true
+    code-link: true
+    code-tools: false
+    df-print: paged
+    cap-location: top
+    fig-align: center
+    fig-width: 7
+    fig-height: 5.25
+    callout-appearance: simple
+    csl: csl/english-apa-author-date.csl
+    repo-actions: true
+    link-external-icon: false
+    link-external-newwindow: false
+    lightbox: true
+    theme: [cosmo, brand, scss/styles.scss]

@@ -1,0 +1,55 @@
+# Welcome {.unnumbered}
+
+```{r}
+#| label: setup
+#| include: false
+
+library(badger)
+library(here)
+
+source(here("R", "_setup.R"))
+```
+
+This book represents an collection of data reports related to the study: *Does Sleep Regularity Worsen Over the Third Trimester of Pregnancy?*.
+
+All analyses presented in this document are fully reproducible and were conducted using the [Quarto](https://quarto.org/) publishing system and the [R](https://www.r-project.org/) programming language. Click [here](https://github.com/aliciarvilefortsales/sleep-in-pregnancy) or on the GitHub icon in the menu to explore the code. The research compendium is also accessible by clicking [here](https://doi.org/10.17605/OSF.IO/S4TBZ) via [The Open Science Framework](https://osf.io/).
+
+## License {.unnumbered}
+
+```{r}
+#| echo: false
+#| output: asis
+
+cat(
+  badge_license(
+    license = "GPLv3",
+    color = "bd0000",
+    url = "https://www.gnu.org/licenses/gpl-3.0"
+  ),
+  badge_license(
+    "CC BY-NC-SA 4.0",
+    "lightgrey",
+    url = "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+  )
+)
+```
+
+The code in this repository is licensed under the [GNU General Public License Version 3](https://www.gnu.org/licenses/gpl-3.0), while the documents are available under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+
+The research data is subject to a private license and is not publicly available due to privacy and ethical considerations.
+
+```text
+Copyright (C) 2025 Alícia Rafaelly Vilefort Sales
+
+The code in this repository is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
+```

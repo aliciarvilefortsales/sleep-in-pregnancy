@@ -1,0 +1,15 @@
+# References {.unnumbered}
+
+```{r}
+#| label: setup
+#| include: false
+
+library(here)
+
+source(here("R", "_setup.R"))
+```
+
+In accordance with the [American Psychological Association (APA) Style](https://apastyle.apa.org/), 7th edition.
+
+::: {#refs}
+:::

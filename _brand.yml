@@ -1,28 +1,25 @@
 meta:
   name:
     short: |
-      Associations between the duration and quality of sleep of pregnant
-      women in the third trimester with the duration of labor
+      Does Sleep Regularity Worsen Over the Third Trimester of Pregnancy?
     full: |
-      Associations between the duration and quality of sleep of pregnant
-      women in the third trimester with the duration of labor
+      Does Sleep Regularity Worsen Over the Third Trimester of Pregnancy?
       [Master's Thesis]
   link:
-    home: https://aliciarvilefortsales.github.io/mastersthesis
-    github: https://github.com/aliciarvilefortsales/mastersthesis
+    home: https://aliciarvilefortsales.github.io/sleep-in-pregnancy
+    github: https://github.com/aliciarvilefortsales/sleep-in-pregnancy
     osf: https://doi.org/10.17605/OSF.IO/S4TBZ
   description: |
     Quarto book of the Master's Thesis:
     Associations between the duration and quality of sleep of pregnant
     women in the third trimester with the duration of labor
-
 logo:
   images:
     favicon:
-      path: images/favicon.png
+      path: images/favicon.svg
       alt: "Favicon"
     og-image:
-      path: images/og-image.png
+      path: images/og-image.svg
       alt: "Open Graph Image"
 
 # See
@@ -36,6 +33,7 @@ color:
     pantone-2y12-sp: "#89634C" # PANTONE 2Y12 SP
     pantone-5r07-sp: "#BE9186" # PANTONE 5R07 SP
     pantone-2r03-sp: "#CAA596" # PANTONE 2R03 SP
+    code-block: "#FFF5F2"
     white: "#FFFFFF"
     black: "#63483E" # PANTONE 4415 SP
     black-725: "#A99A94" # get_brand_color_tint(725, "black")
@@ -65,9 +63,9 @@ typography:
   monospace: Source Code Pro
   monospace-inline:
     color: black
-    background-color: pantone-4r14-sp-995
+    background-color: code-block
   monospace-block:
-    background-color: pantone-4r14-sp-995
+    background-color: code-block
   link:
     color: pantone-2y12-sp
     decoration: underline

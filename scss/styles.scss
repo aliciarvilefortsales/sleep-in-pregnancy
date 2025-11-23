@@ -1,0 +1,17 @@
+/*-- scss:defaults --*/
+
+$content-padding-top: 1.25rem;
+
+$callout-color-note: #89634C;
+$callout-color-tip: #89634C;
+$callout-color-caution: #89634C;
+$callout-color-warning: #89634C;
+$callout-color-important: #89634C;
+
+/*-- scss:rules --*/
+
+/* Body ----- */
+
+body {
+  color: $brand-black;
+}
