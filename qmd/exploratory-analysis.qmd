@@ -49,7 +49,7 @@ library(tidyr)
 ### Load Custom Functions
 
 ```{r}
-source(here::here("R", "anonymize_id.R"))
+source(here("R", "anonymize_id.R"))
 ```
 
 
@@ -61,8 +61,8 @@ get_n <- function(data, group) {
   checkmate::assert_choice(group, c("Poor", "Good"))
 
   data |>
-    dplyr::rename(.group = group) |>
-    dplyr::filter(.group == group) |>
+    rename(.group = group) |>
+    filter(.group == group) |>
     nrow()
 }
 ```
@@ -75,9 +75,9 @@ get_labor_duration <- function(data, group) {
   checkmate::assert_choice(group, c("Poor", "Good"))
 
   data |>
-    dplyr::rename(.group = group) |>
-    dplyr::filter(.group == group) |>
-    dplyr::pull(labor_duration)
+    rename(.group = group) |>
+    filter(.group == group) |>
+    pull(labor_duration)
 }
 ```
 
@@ -124,7 +124,7 @@ osfr::osf_auth()
 ```
 
 ```{r}
-private_key_path <- here::here("_ssh", "id_rsa")
+private_key_path <- here("_ssh", "id_rsa")
 ```
 
 ```{r}
@@ -140,7 +140,7 @@ salt <- askpass::askpass()
 ```
 
 ```{r}
-public_key_path <- here::here("_ssh", "id_rsa.pub")
+public_key_path <- here("_ssh", "id_rsa.pub")
 ```
 
 ## Getting Data from Google Sheets
@@ -200,7 +200,7 @@ control_data <-
   control_form |>
   `names<-`(paste0("X", seq_along(control_form))) |>
   dplyr::select(X5, X6, X7, X12, X13, X14) |>
-  dplyr::rename(
+  rename(
     cpf = X5,
     id = X6,
     name = X7,
@@ -208,8 +208,8 @@ control_data <-
     birth = X13,
     labor_start = X14
   ) |>
-  dplyr::mutate(
-    birth_center_delivery = dplyr::case_when(
+  mutate(
+    birth_center_delivery = case_when(
       tolower(trimws(birth_center_delivery)) == "sim" ~ TRUE,
       tolower(trimws(birth_center_delivery)) == "não" ~ FALSE,
       TRUE ~ NA
@@ -217,7 +217,7 @@ control_data <-
     birth = lubridate::as_datetime(birth),
     labor_start = lubridate::as_datetime(labor_start)
   ) |>
-  dplyr::mutate(
+  mutate(
     labor_duration =
       lubridate::interval(
         start = labor_start,
@@ -225,7 +225,7 @@ control_data <-
       ) |>
         lubritime::int_duration()
   ) |>
-  dplyr::filter(!is.na(labor_duration)) |>
+  filter(!is.na(labor_duration)) |>
   dplyr::select(id, birth_center_delivery, labor_start, labor_duration)
 
 control_data
@@ -239,7 +239,7 @@ field_form_data <-
     X1, X4, X5, X11, X91, X92, X95, X96, X97, X99, X101, X102, X106, X119,
     X118, X125, X126
   ) |>
-  dplyr::rename(
+  rename(
     timestamp = X1,
     birth_date = X4,
     cpf = X5,
@@ -258,7 +258,7 @@ field_form_data <-
     deliveries = X125,
     abortions = X126
   ) |>
-  dplyr::mutate(
+  mutate(
     id = anonymize_id(cpf, salt),
     timestamp = lubridate::mdy_hms(timestamp),
     birth_date = lubridate::dmy(birth_date),
@@ -293,24 +293,24 @@ field_form_data <-
       ),
       ordered = TRUE
     ),
-    gestations = dplyr::case_match(
+    gestations = case_match(
       gestations,
       c("Sim", "0") ~ "1",
       "Não" ~ "0",
       .default = gestations
     ),
-    deliveries = dplyr::case_when(
+    deliveries = case_when(
       is.na(deliveries) ~ "0",
       TRUE ~ deliveries
     ),
-    abortions = dplyr::case_when(
+    abortions = case_when(
       is.na(abortions) ~ "0",
       TRUE ~ abortions
     )
   ) |>
-  dplyr::mutate(
-    dplyr::across(
-      .cols = dplyr::all_of(
+  mutate(
+    across(
+      .cols = all_of(
         c(
           "weight_before", "weight_current", "height",
           "family_income", "gestations", "deliveries",
@@ -320,13 +320,13 @@ field_form_data <-
       .fns = as.numeric
     )
   ) |>
-  dplyr::mutate(
-    dplyr::across(
-      .cols = dplyr::all_of(
+  mutate(
+    across(
+      .cols = all_of(
         c("health_plan", "solo", "exercise", "work", "study")
       ),
       .fns = function(x) {
-        dplyr::case_match(
+        case_match(
           x,
           "Sim" ~ TRUE,
           "Não" ~ FALSE
@@ -334,18 +334,18 @@ field_form_data <-
       }
     )
   ) |>
-  dplyr::mutate(
-    gestations = dplyr::case_when(
+  mutate(
+    gestations = case_when(
       id == "ae5fc5cd" ~ 3,
       TRUE ~ gestations
     ),
   ) |>
-  dplyr::mutate(
+  mutate(
     bmi_before = weight_before / ((height / 100)^2),
     bmi_current = weight_current / ((height / 100)^2)
   ) |>
   dplyr::select(-cpf) |>
-  dplyr::relocate(
+  relocate(
     id, timestamp, birth_date, age, weight_before, weight_current, height, bmi_before, bmi_current, family_income
   )
 
@@ -355,13 +355,13 @@ field_form_data
 ```{r}
 sleep_data <-
   sleep_input |>
-  dplyr::mutate(
-    dplyr::across(
-      .cols = dplyr::matches("^his_|^hfs_|^fps_|^tts_m|^tts_sd|^waso_"),
+  mutate(
+    across(
+      .cols = matches("^his_|^hfs_|^fps_|^tts_m|^tts_sd|^waso_"),
       .fns = hms::parse_hms
     ),
-    dplyr::across(
-      .cols = dplyr::matches("^tts_fps_|^awakenings_"),
+    across(
+      .cols = matches("^tts_fps_|^awakenings_"),
       .fns = as.numeric
     )
   )
@@ -372,21 +372,21 @@ sleep_data
 ```{r}
 medical_record_data <-
   medical_record_input |>
-  dplyr::mutate(
-    dplyr::across(
-      .cols = dplyr::all_of(c("partograph_begin", "baby_birth")),
+  mutate(
+    across(
+      .cols = all_of(c("partograph_begin", "baby_birth")),
       .fns = ~ lubridate::ymd_hms(.x, tz = "America/Sao_Paulo")
     ),
-    dplyr::across(
-      .cols = -dplyr::all_of(c("id", "partograph_begin", "baby_birth")),
+    across(
+      .cols = -all_of(c("id", "partograph_begin", "baby_birth")),
       .fns = as.numeric
     ),
-    dplyr::across(
-      .cols = dplyr::matches("^begin_dilation$|^apgar_"),
+    across(
+      .cols = matches("^begin_dilation$|^apgar_"),
       .fns = as.integer
     )
   ) |>
-  dplyr::mutate(
+  mutate(
     partogram_duration =
       lubridate::interval(
         start = partograph_begin,
@@ -401,21 +401,21 @@ medical_record_data
 ```{r}
 valid_cases <-
   field_form_data |>
-  dplyr::left_join(
+  left_join(
     control_data,
     by = "id"
   ) |>
-  dplyr::left_join(
+  left_join(
     sleep_data,
     by = "id"
   ) |>
-  dplyr::left_join(
+  left_join(
     medical_record_data,
     by = "id"
   ) |>
-  dplyr::filter(birth_center_delivery == TRUE) |>
-  tidyr::drop_na(labor_duration, baby_weight, fps_mean, waso_mean) |>
-  dplyr::pull(id)
+  filter(birth_center_delivery == TRUE) |>
+  drop_na(labor_duration, baby_weight, fps_mean, waso_mean) |>
+  pull(id)
 
 valid_cases
 ```
@@ -423,28 +423,28 @@ valid_cases
 ```{r}
 general_data <-
   control_data |>
-  dplyr::left_join(
+  left_join(
     sleep_data,
     by = "id"
   ) |>
-  dplyr::left_join(
+  left_join(
     medical_record_data,
     by = "id"
   ) |>
-  dplyr::left_join(
+  left_join(
     field_form_data,
     by = "id"
   ) |>
-  dplyr::mutate(
+  mutate(
     waso_prop = (as.numeric(waso_mean)) / as.numeric(fps_mean)
   ) |>
-  dplyr::filter(id %in% valid_cases)
+  filter(id %in% valid_cases)
 ```
 
 ## Getting Data from OSF
 
 ```{r}
-data_dir <- here::here("data")
+data_dir <- here("data")
 ```
 
 ```{r}
@@ -463,12 +463,12 @@ osf_processed_data_id <- "a2dsw"
 osf_processed_data_id |>
   osfr::osf_retrieve_node() |>
   osfr::osf_ls_files(n_max = Inf) |>
-  dplyr::filter(name == "actigraphy") |>
-  dplyr::pull(id) |>
+  filter(name == "actigraphy") |>
+  pull(id) |>
   osfr::osf_retrieve_file() |>
   osfr::osf_ls_files(n_max = Inf) |>
-  dplyr::filter(stringr::str_detect(name, valid_cases_pattern)) |>
-  dplyr::filter(stringr::str_detect(name, "actigraphy-processed-data")) |>
+  filter(str_detect(name, valid_cases_pattern)) |>
+  filter(str_detect(name, "actigraphy-processed-data")) |>
   osfr::osf_download(
     path = data_dir,
     conflicts = "overwrite",
@@ -484,11 +484,11 @@ osf_raw_data_id <- "7kg34"
 osf_raw_data_id |>
   osfr::osf_retrieve_node() |>
   osfr::osf_ls_files(n_max = Inf) |>
-  dplyr::filter(name == "medical-record") |>
-  dplyr::pull(id) |>
+  filter(name == "medical-record") |>
+  pull(id) |>
   osfr::osf_retrieve_file() |>
   osfr::osf_ls_files(n_max = Inf) |>
-  dplyr::filter(stringr::str_detect(name, valid_cases_pattern)) |>
+  filter(str_detect(name, valid_cases_pattern)) |>
   osfr::osf_download(
     path = data_dir,
     conflicts = "overwrite",
@@ -500,8 +500,8 @@ osf_raw_data_id |>
 valid_cases |>
   setdiff(
     test |>
-    dplyr::pull(name) |>
-    stringr::str_extract(".*(?=_medical)")
+    pull(name) |>
+    str_extract(".*(?=_medical)")
   )
 ```
 
@@ -517,7 +517,7 @@ data_dir |>
 The actogram presented in the article was created using the [ActStudio](https://condorinst.com/en/actstudio-software/) software.
 
 ```{r}
-general_data |> dplyr::glimpse()
+general_data |> glimpse()
 ```
 
 ## Qualitative Variables
@@ -587,90 +587,6 @@ days_by_id |> print(n = Inf)
 days_by_id |> pull(days) |> summary()
 ```
 
-### Others
-
-```{r}
-#| output: asis
-
-dplyr::tibble(
-    min = general_data |> dplyr::pull(timestamp) |> min(),
-    max = general_data |> dplyr::pull(timestamp) |> max(),
-    int = lubridate::interval(min, max) |> as.period()
-  ) |>
-  t()
-```
-
-```{r}
-#| output: asis
-
-general_data |> summarytools::freq(awakenings_mean,  style = "rmarkdown")
-```
-
-```{r}
-#| output: asis
-
-general_data |>
-  summarytools::descr(
-    age,
-    round.digits = 3,
-    style = "rmarkdown"
-  )
-```
-
-```{r}
-#| output: asis
-
-general_data |>
-  summarytools::descr(
-    family_income,
-    round.digits = 3,
-    style = "rmarkdown"
-  )
-```
-
-```{r}
-general_data |>
-  rutils:::stats_summary(
-    paste0("hfs", "_", "mean"),
-    threshold = NULL
-    # threshold = hms::parse_hms("12:00:00")
-  ) |>
-  print(n = Inf)
-```
-
-```{r}
-#| output: asis
-
-general_data |>
-  rutils:::stats_summary(
-    paste0("hfs", "_", "sd"),
-    threshold = NULL
-    # threshold = hms::parse_hms("12:00:00")
-  ) |>
-  print(n = Inf)
-```
-
-```{r}
-general_data |>
-  summarytools::descr(
-    awakenings_sd,
-    style = "rmarkdown"
-  )
-```
-
-```{r}
-#| output: asis
-
-general_data |> summarytools::descr(labor_duration, style = "rmarkdown")
-```
-
-```{r}
-general_data |> plotr:::plot_dist(col = "bmi_current")
-```
-
-```{r}
-general_data |> plotr:::plot_box_plot(col = "bmi_current")
-```
 
 ## Partogram Duration Model
 
@@ -708,7 +624,7 @@ fit |>
 ```{r}
 fit |>
   broom::glance() |>
-  tidyr::pivot_longer(cols = dplyr::everything()) |>
+  pivot_longer(cols = everything()) |>
   print(n = Inf)
 ```
 
@@ -719,7 +635,7 @@ fit_augment <- fit |> broom::augment(new_data = medical_record_data)
 ```{r}
 fit_error <-
   fit_augment |>
-  dplyr::transmute(
+  transmute(
     .pred = .pred,
     .resid = .resid,
     partogram_duration = partogram_duration |> as.numeric(),
@@ -731,7 +647,7 @@ fit_error <-
 fit_augment <-
   fit |>
   broom::augment(
-    new_data = dplyr::tibble(
+    new_data = tibble(
       begin_dilation = 1
     )
   )
@@ -809,7 +725,7 @@ general_data |>
 
 ```{r}
 general_data |>
-  dplyr::mutate(
+  mutate(
     his_mean = his_mean |> lubritime::link_to_timeline(),
     hfs_mean = hfs_mean |> lubritime::link_to_timeline()
   ) |>
@@ -849,18 +765,18 @@ grDevices::dev.off()
 
 ```{r}
 actigraphy_data <-
-  here::here("data") |>
-  fs::dir_ls(type = "file") |>
-  stringr::str_subset(paste0("f1e30a89")) |>
-  actverse::read_acttrust(tz = "America/Sao_Paulo")
+  here("data") |>
+  dir_ls(type = "file") |>
+  str_subset(paste0("f1e30a89")) |>
+  read_acttrust(tz = "America/Sao_Paulo")
 ```
 
 ```{r}
 actigraphy_data |>
-  actverse::actogram(
+  actogram(
     days = -1,
-    latitude = orbis::get_brazil_state_latitude("sp"),
-    longitude = orbis::get_brazil_state_longitude("sp")
+    latitude = brazil_state_latitude("sp"),
+    longitude = brazil_state_longitude("sp")
     # locale = "pt_BR.UTF-8",
     # x_label = "2 Dias — Horas",
     # y_label = "Dias",
@@ -885,112 +801,54 @@ actigraphy_data |>
 
 ### Sleep Irregularity Index (SRI)
 
-```{r}
-sri_data <- actigraphy_data |> actverse::sri()
+::: {.callout-note}
+See the _SRI Analysis Report_ for statistics and visualizations related to Sleep Irregularity Index (SRI).
+:::
 
-sri_data
-```
+### Sleep Proportions
 
-```{r}
-sri_data |>
-  rutils:::stats_summary("sri", threshold = NULL) |>
-  print(n = Inf)
-```
+::: {.callout-note}
+See the _SRI Analysis Report_ for statistics and visualizations related to Sleep Proportions.
+:::
 
-```{r}
-sri_data |>
-  dplyr::filter(sri > 0) |>
-  rutils:::stats_summary("sri", threshold = NULL) |>
-  print(n = Inf)
-```
+### Illuminance Levels
 
-```{r}
-if (min(sri_data$sri) < 0) {
-  y_scale <- \() ggplot2::scale_y_continuous(limits = c(NA, 100))
-} else {
-  y_scale <- \() ggplot2::scale_y_continuous(limits = c(0, 100))
-}
-
-y_scale
-
-sri_data |>
-  ggplot2::ggplot(ggplot2::aes(x = time, y = sri)) +
-  ggplot2::geom_smooth(color = "#FC2913") +
-  ggplot2::labs(
-    x = "Time of day (Hour)",
-    y = "Sleep Regularity Index (SRI)"
-  ) +
-  ggplot2::scale_x_time(
-    breaks = scales::breaks_width("6 hours"),
-    labels = scales::label_time("%-H") # Use "%#H" for Windows
-  ) +
-  y_scale()
-```
-
-### Percentage of Time Asleep
-
-```{r}
-sleep_prop_data <-
-  actigraphy_data |>
-  actverse::state_prop(state_values = 1)
-
-sleep_prop_data
-```
-
-```{r}
-sleep_prop_data |>
-  rutils:::stats_summary("prop", threshold = NULL) |>
-  print(n = Inf)
-```
-
-```{r}
-sleep_prop_data |>
-  dplyr::mutate(per = prop * 100) |>
-  ggplot2::ggplot(ggplot2::aes(x = time, y = per)) +
-  ggplot2::geom_smooth(color = "#FC2913") +
-  ggplot2::labs(
-    x = "Time of day (Hour)",
-    y = "Percentage of time asleep (%)",
-  ) +
-  ggplot2::scale_x_time(
-    breaks = scales::breaks_width("6 hours"),
-    labels = scales::label_time("%-H") # Use "%#H" for Windows
-  ) +
-  ggplot2::scale_y_continuous(limits = c(0, 100))
-```
+::: {.callout-note}
+See the _SRI Analysis Report_ for statistics and visualizations related to Illuminance Levels.
+:::
 
 ### Groups
 
 ```{r}
 group_data <-
   control_data |>
-  dplyr::left_join(
+  left_join(
     sleep_data,
     by = "id"
   ) |>
-  dplyr::left_join(
+  left_join(
     medical_record_data,
     by = "id"
   ) |>
-  dplyr::filter(id %in% valid_cases) |>
+  filter(id %in% valid_cases) |>
   dplyr::select(labor_duration, fps_mean, waso_mean, baby_weight) |>
-  tidyr::drop_na() |>
-  dplyr::mutate(
+  drop_na() |>
+  mutate(
     waso_prop = (as.numeric(waso_mean)) / as.numeric(fps_mean),
     group_fps =
-      dplyr::case_when(
+      case_when(
         fps_mean < hms::parse_hm("07:00") ~ "<7h (Poor)",
         fps_mean >= hms::parse_hm("07:00") ~ ">7h (Good)"
       ) |>
       factor(levels = c("<7h (Poor)", ">7h (Good)")),
     group_waso =
-      dplyr::case_when(
+      case_when(
         waso_prop > 0.1 ~ ">10% (Poor)",
         waso_prop < 0.1 ~ "<10% (Good)"
       ) |>
       factor(levels = c(">10% (Poor)", "<10% (Good)"))
   ) |>
-  tidyr::drop_na()
+  drop_na()
 ```
 
 ::: {#tbl-pa-groups}
@@ -1002,27 +860,27 @@ row_list <- list(
   c("group_fps", ">7h (Good)")
 )
 
-out <- dplyr::tibble()
+out <- tibble()
 
 for (i in row_list) {
   out <-
     out |>
-    dplyr::bind_rows(
-    dplyr::tibble(
+    bind_rows(
+    tibble(
       n =
         group_data |>
-        dplyr::filter(!!as.symbol(i[1]) == i[2]) |>
+        filter(!!as.symbol(i[1]) == i[2]) |>
         nrow(),
       mean =
         group_data |>
-        dplyr::filter(!!as.symbol(i[1]) == i[2]) |>
-        dplyr::pull(labor_duration) |>
+        filter(!!as.symbol(i[1]) == i[2]) |>
+        pull(labor_duration) |>
         as.numeric() |>
         mean(na.rm = TRUE),
       sd =
         group_data |>
-        dplyr::filter(!!as.symbol(i[1]) == i[2]) |>
-        dplyr::pull(labor_duration) |>
+        filter(!!as.symbol(i[1]) == i[2]) |>
+        pull(labor_duration) |>
         as.numeric() |>
         stats::sd(na.rm = TRUE),
       labor_duration = paste0(
@@ -1037,7 +895,7 @@ for (i in row_list) {
           as.character()
       )
     ) |>
-      dplyr::mutate(group = i[2]) |>
+      mutate(group = i[2]) |>
       dplyr::select(group, everything())
   )
 }
@@ -1075,12 +933,12 @@ group_data |>
 ::: {#fig-pa-waso-baby-weight-scatterplot}
 ```{r}
 group_data |>
-  dplyr::mutate(
+  mutate(
     labor_duration =
       labor_duration |>
       as.numeric() |>
       hms::as_hms(),
-    group_fps = dplyr::case_match(
+    group_fps = case_match(
       group_fps,
       "<7h (Poor)" ~ "<7h (Ruim)",
       ">7h (Good)" ~ ">7h (Bom)"
@@ -1124,12 +982,12 @@ group_data |>
 ::: {#fig-pa-waso-baby-weight-scatterplot}
 ```{r}
 group_data |>
-  dplyr::mutate(
+  mutate(
     labor_duration =
       labor_duration |>
       as.numeric() |>
       hms::as_hms(),
-    group_waso = dplyr::case_match(
+    group_waso = case_match(
       group_waso,
       ">10% (Poor)" ~ ">10% (Ruim)",
       "<10% (Good)" ~ "<10% (Bom)"
@@ -1159,7 +1017,7 @@ Relação da variável `labor_duration` (Duração do parto) com a covariante `b
 [Fonte: Elaborado pela autora.]{.legend}
 :::
 
-## Hypothesis Testing
+## Hypothesis Testing (Sleep and Labor Duration)
 
 > Variável dependente: `labor_duration`
 
@@ -1179,17 +1037,17 @@ $$
 ```{r}
 model_data <-
   control_data |>
-  dplyr::left_join(
+  left_join(
     sleep_data,
     by = "id"
   ) |>
-  dplyr::left_join(
+  left_join(
     medical_record_data,
     by = "id"
   ) |>
-  dplyr::filter(id %in% valid_cases) |>
+  filter(id %in% valid_cases) |>
   dplyr::select(labor_duration, fps_mean, waso_mean, baby_weight) |>
-  tidyr::drop_na()
+  drop_na()
 
 model_data
 ```
@@ -1212,20 +1070,20 @@ risk of accidents.
 model_data_fps <-
   model_data |>
   dplyr::select(labor_duration, fps_mean, baby_weight) |>
-  dplyr::mutate(
+  mutate(
     group =
-      dplyr::case_when(
+      case_when(
         fps_mean < hms::parse_hm("07:00") ~ "Poor",
         fps_mean >= hms::parse_hm("07:00") ~ "Good"
       ) |>
       factor(levels = c("Poor", "Good"))
   ) |>
-  dplyr::mutate(
+  mutate(
     labor_duration = as.numeric(labor_duration)
   ) |>
-  dplyr::relocate(group) |>
+  relocate(group) |>
   dplyr::select(group, labor_duration, baby_weight) |>
-  tidyr::drop_na()
+  drop_na()
 
 model_data_fps
 ```
@@ -1283,7 +1141,7 @@ report::report(model_t_test_fps)
 ##### Effect Size
 
 ```{r}
-dplyr::tibble(
+tibble(
   fps_mean_poor =
     model_data_fps |>
     get_labor_duration("Poor") |>
@@ -1410,24 +1268,26 @@ pwr_analysis_fps_anconva
 model_data_waso <-
   model_data |>
   dplyr::select(labor_duration, waso_mean, fps_mean, baby_weight) |>
-  dplyr::mutate(
+  mutate(
     waso_prop = (as.numeric(waso_mean)) / as.numeric(fps_mean)
   ) |>
-  dplyr::mutate(
+  mutate(
     group =
-      dplyr::case_when(
+      case_when(
         waso_prop > 0.1 ~ "Poor",
         waso_prop < 0.1 ~ "Good"
       ) |>
       factor(levels = c("Poor", "Good"))
   ) |>
-  dplyr::mutate(
+  mutate(
     labor_duration = as.numeric(labor_duration)
   ) |>
-  dplyr::relocate(group) |>
+  relocate(group) |>
   dplyr::select(group, labor_duration, baby_weight) |>
-  tidyr::drop_na()
+  drop_na()
+```
 
+```{r}
 model_data_waso
 ```
 
@@ -1447,8 +1307,6 @@ Desired power: $(1 - \beta) \geq 0.8$
 
 ```{r}
 #| eval: false
-
-# A posteriori
 
 pwr_analysis_waso_t_test <- pwrss::pwrss.t.2means(
   mu1 = model_data_waso |>
@@ -1498,7 +1356,7 @@ report::report(model_t_test_waso)
 ##### Effect Size
 
 ```{r}
-dplyr::tibble(
+tibble(
   waso_mean_poor =
     model_data_waso |>
     get_labor_duration("Poor") |>
@@ -1551,9 +1409,9 @@ model_aov_waso |> report::report()
 
 ##### Effect Size
 
-Veja @cohen1992 para saber mais.
+See @cohen1992 to learn more.
 
-Tamanho de efeito para duração do parto e WASO encontrado por @lee2004a:
+Effect size for labor duration and WASO found by @lee2004a:
 
 ```{r}
 k <- 3

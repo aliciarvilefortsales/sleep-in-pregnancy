@@ -2504,6 +2504,10 @@ for (i in seq_len(n_sim)){
 cli_progress_done()
 
 power_estimate <- rejects / n_sim
+```
+
+```{r}
+#| code-fold: false
 
 power_estimate
 ```
@@ -2540,10 +2544,14 @@ model_data <-
 ### Inspect Model Data
 
 ```{r}
+#| code-fold: false
+
 model_data |> nrow()
 ```
 
 ```{r}
+#| code-fold: false
+
 model_data |>
   pull(id) |>
   unique() |>
@@ -2551,6 +2559,8 @@ model_data |>
 ```
 
 ```{r}
+#| code-fold: false
+
 model_data |>
   pull(ga_week) |>
   unique() |>
@@ -2558,6 +2568,8 @@ model_data |>
 ```
 
 ```{r}
+#| code-fold: false
+
 model_data |>
   summarize(
     n = n(),
@@ -2568,6 +2580,8 @@ model_data |>
 ```
 
 ```{r}
+#| code-fold: false
+
 model_data |> glimpse()
 ```
 
@@ -2588,6 +2602,8 @@ model_data_gee <-
 ```
 
 ```{r}
+#| code-fold: false
+
 model_data_gee |>
   summarize(
     n = n(),
@@ -2600,6 +2616,8 @@ model_data_gee |>
 #### Model Data
 
 ```{r}
+#| code-fold: false
+
 model_gee <- geeglm(
   sri ~ ga_week_centered,
   family = gaussian,
@@ -2613,10 +2631,14 @@ model_gee <- geeglm(
 #### Inspect Model Results
 
 ```{r}
+#| code-fold: false
+
 model_gee
 ```
 
 ```{r}
+#| code-fold: false
+
 summary(model_gee)
 ```
 
@@ -2628,6 +2650,10 @@ beta  <- coefs["ga_week_centered", "Estimate"]
 se    <- coefs["ga_week_centered", "Std.err"]
 
 p_one_tailed <- pnorm(beta / se)
+```
+
+```{r}
+#| code-fold: false
 
 p_one_tailed
 ```
@@ -2648,6 +2674,8 @@ tibble(x = residuals(model_gee)[, 1]) |>
 ```
 
 ```{r}
+#| code-fold: false
+
 tibble(x = residuals(model_gee)[, 1]) |>
   rutils:::normality_summary("x") |>
   print(n = Inf)
@@ -2671,6 +2699,10 @@ scale_parameter <- summary(model_gee)$dispersion[[1]]
 sd_residuals <- sqrt(scale_parameter)
 
 d_by_week <- beta / sd_residuals
+```
+
+```{r}
+#| code-fold: false
 
 d_by_week
 ```
@@ -2681,11 +2713,17 @@ se_beta <- summary(model_gee)$coefficients["ga_week_centered", "Std.err"]
 # 1.645 == One-tailed 95% CI z-score
 ci_lower <- (beta - (1.645 * se_beta)) / sd_residuals
 ci_upper <- (beta + (1.645 * se_beta)) / sd_residuals
+```
+
+```{r}
+#| code-fold: false
 
 c(ci_lower, ci_upper)
 ```
 
 ```{r}
+#| code-fold: false
+
 interpret_cohens_d(d_by_week)
 ```
 
@@ -2700,10 +2738,14 @@ d_5_weeks <- d_by_week * 5
 ```
 
 ```{r}
+#| code-fold: false
+
 d_5_weeks
 ```
 
 ```{r}
+#| code-fold: false
+
 interpret_cohens_d(d_5_weeks)
 ```
 
@@ -2726,6 +2768,8 @@ rejects <- 0
 ```
 
 ```{r}
+#| code-fold: false
+
 cli_progress_bar(total = n_sim, clear = FALSE)
 
 for (i in seq_len(n_sim)){
@@ -2765,6 +2809,10 @@ for (i in seq_len(n_sim)){
 cli_progress_done()
 
 power_estimate <- rejects / n_sim
+```
+
+```{r}
+#| code-fold: false
 
 power_estimate
 ```

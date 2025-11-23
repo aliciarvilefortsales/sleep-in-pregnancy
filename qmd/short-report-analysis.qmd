@@ -53,11 +53,6 @@ library(tidyr)
 source(here("R", "anonymize_id.R"))
 ```
 
-```{r}
-Skewness <- skewness
-Kurtosis <- kurtosis
-```
-
 ### Set Data Directories
 
 ```{r}
@@ -306,16 +301,10 @@ field_form_data <-
     )
   ) |>
   mutate(
-    gestations = case_when(
-      id == "ae5fc5cd" ~ 3,
-      TRUE ~ gestations
-    ),
-  ) |>
-  mutate(
     bmi_before = weight_before / ((height / 100)^2),
     bmi_current = weight_current / ((height / 100)^2)
   ) |>
-  dplyr::select(-cpf) |>
+  # dplyr::select(-cpf) |>
   relocate(
     id, timestamp, birth_date, age, weight_before, weight_current, height, bmi_before, bmi_current, family_income
   )
@@ -390,7 +379,7 @@ valid_cases <-
   left_join(sleep_data, by = "id") |>
   left_join(medical_record_data, by = "id") |>
   filter(birth_center_delivery == TRUE) |>
-  drop_na(labor_duration, baby_weight, fps_mean, waso_mean) |>
+  drop_na(labor_duration, baby_weight, fps_mean, waso_mean) |> #
   pull(id)
 ```
 
@@ -421,27 +410,24 @@ data <-
 data |> glimpse()
 ```
 
-## Get Time Interval of Data Collection
+## Get Descriptive Statistics of the Time Interval of Data Collection
 
 ```{r}
-#| label: Get Time Interval of Data Collection
+#| label: Get Descriptive Statistics of the Time Interval of Data Collection
 #| code-fold: false
 
-tibble(
-    min =
-      data |>
-      pull(timestamp) |>
-      min(na.rm = FALSE),
-    max =
-      data |>
-      pull(timestamp) |>
-      max(na.rm = FALSE),
-    int =
-      min |>
-      interval(max) |>
-      as.period()
+cli::cli_h1("timestamp")
+cat_line()
+
+data |>
+  rutils:::stats_summary(
+    col = "timestamp",
+    name = "timestamp",
+    threshold = NULL
   ) |>
-  glimpse()
+  print(n = Inf)
+
+cat_line()
 ```
 
 ## Get Frequencies for Logical Variables
@@ -568,7 +554,11 @@ for (i in linear_temporal_vars) {
   cat_line()
 
   data |>
-    rutils:::stats_summary(col = i, name = i) |>
+    rutils:::stats_summary(
+      col = i,
+      name = i,
+      threshold = NULL
+    ) |>
     print(n = Inf)
 
   cat_line()

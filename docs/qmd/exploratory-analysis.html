@@ -278,7 +278,6 @@ window.Quarto = {
 <a href="#quantitative-variables" id="toc-quantitative-variables" class="nav-link" data-scroll-target="#quantitative-variables"><span class="header-section-number">1.7</span> Quantitative Variables</a>
   <ul class="collapse">
 <li><a href="#days-from-actigraphy-processed-data" id="toc-days-from-actigraphy-processed-data" class="nav-link" data-scroll-target="#days-from-actigraphy-processed-data"><span class="header-section-number">1.7.1</span> Days from Actigraphy Processed Data</a></li>
-  <li><a href="#others" id="toc-others" class="nav-link" data-scroll-target="#others"><span class="header-section-number">1.7.2</span> Others</a></li>
   </ul>
 </li>
   <li>
@@ -353,7 +352,7 @@ window.Quarto = {
 </section><section id="load-custom-functions" class="level3" data-number="1.1.2"><h3 data-number="1.1.2" class="anchored" data-anchor-id="load-custom-functions">
 <span class="header-section-number">1.1.2</span> Load Custom Functions</h3>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"R"</span>, <span class="st">"anonymize_id.R"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"R"</span>, <span class="st">"anonymize_id.R"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
@@ -419,7 +418,7 @@ window.Quarto = {
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">private_key_path</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"_ssh"</span>, <span class="st">"id_rsa"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">private_key_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"_ssh"</span>, <span class="st">"id_rsa"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
@@ -431,7 +430,7 @@ window.Quarto = {
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">public_key_path</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"_ssh"</span>, <span class="st">"id_rsa.pub"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">public_key_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"_ssh"</span>, <span class="st">"id_rsa.pub"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="getting-data-from-google-sheets" class="level2" data-number="1.3"><h2 data-number="1.3" class="anchored" data-anchor-id="getting-data-from-google-sheets">
@@ -723,7 +722,7 @@ window.Quarto = {
 </section><section id="getting-data-from-osf" class="level2" data-number="1.5"><h2 data-number="1.5" class="anchored" data-anchor-id="getting-data-from-osf">
 <span class="header-section-number">1.5</span> Getting Data from OSF</h2>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_dir</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
@@ -746,8 +745,8 @@ window.Quarto = {
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">osfr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/osfr/reference/osf_retrieve.html">osf_retrieve_file</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">osfr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/osfr/reference/osf_ls_files.html">osf_ls_files</a></span><span class="op">(</span>n_max <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">valid_cases_pattern</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"actigraphy-processed-data"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">valid_cases_pattern</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"actigraphy-processed-data"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">osfr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/osfr/reference/osf_download.html">osf_download</a></span><span class="op">(</span></span>
 <span>    path <span class="op">=</span> <span class="va">data_dir</span>,</span>
 <span>    conflicts <span class="op">=</span> <span class="st">"overwrite"</span>,</span>
@@ -767,7 +766,7 @@ window.Quarto = {
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">osfr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/osfr/reference/osf_retrieve.html">osf_retrieve_file</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">osfr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/osfr/reference/osf_ls_files.html">osf_ls_files</a></span><span class="op">(</span>n_max <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">valid_cases_pattern</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">valid_cases_pattern</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">osfr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/osfr/reference/osf_download.html">osf_download</a></span><span class="op">(</span></span>
 <span>    path <span class="op">=</span> <span class="va">data_dir</span>,</span>
 <span>    conflicts <span class="op">=</span> <span class="st">"overwrite"</span>,</span>
@@ -780,7 +779,7 @@ window.Quarto = {
 <span>  <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html">setdiff</a></span><span class="op">(</span></span>
 <span>    <span class="va">test</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_extract.html">str_extract</a></span><span class="op">(</span><span class="st">".*(?=_medical)"</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_extract.html">str_extract</a></span><span class="op">(</span><span class="st">".*(?=_medical)"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
@@ -849,65 +848,10 @@ window.Quarto = {
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">days_by_id</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">days</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-</section><section id="others" class="level3" data-number="1.7.2"><h3 data-number="1.7.2" class="anchored" data-anchor-id="others">
-<span class="header-section-number">1.7.2</span> Others</h3>
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
-<span>    min <span class="op">=</span> <span class="va">general_data</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">timestamp</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    max <span class="op">=</span> <span class="va">general_data</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">timestamp</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    int <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/interval.html">interval</a></span><span class="op">(</span><span class="va">min</span>, <span class="va">max</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/as.period.html">as.period</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details><details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span> <span class="fu">summarytools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/summarytools/man/freq.html">freq</a></span><span class="op">(</span><span class="va">awakenings_mean</span>,  style <span class="op">=</span> <span class="st">"rmarkdown"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details><details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">summarytools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/summarytools/man/descr.html">descr</a></span><span class="op">(</span></span>
-<span>    <span class="va">age</span>,</span>
-<span>    round.digits <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>    style <span class="op">=</span> <span class="st">"rmarkdown"</span></span>
-<span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details><details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">summarytools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/summarytools/man/descr.html">descr</a></span><span class="op">(</span></span>
-<span>    <span class="va">family_income</span>,</span>
-<span>    round.digits <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>    style <span class="op">=</span> <span class="st">"rmarkdown"</span></span>
-<span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details><div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">rutils</span><span class="fu">:::</span><span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"hfs"</span>, <span class="st">"_"</span>, <span class="st">"mean"</span><span class="op">)</span>,</span>
-<span>    threshold <span class="op">=</span> <span class="cn">NULL</span></span>
-<span>    <span class="co"># threshold = hms::parse_hms("12:00:00")</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">rutils</span><span class="fu">:::</span><span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"hfs"</span>, <span class="st">"_"</span>, <span class="st">"sd"</span><span class="op">)</span>,</span>
-<span>    threshold <span class="op">=</span> <span class="cn">NULL</span></span>
-<span>    <span class="co"># threshold = hms::parse_hms("12:00:00")</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details><div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">summarytools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/summarytools/man/descr.html">descr</a></span><span class="op">(</span></span>
-<span>    <span class="va">awakenings_sd</span>,</span>
-<span>    style <span class="op">=</span> <span class="st">"rmarkdown"</span></span>
-<span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span> <span class="fu">summarytools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/summarytools/man/descr.html">descr</a></span><span class="op">(</span><span class="va">labor_duration</span>, style <span class="op">=</span> <span class="st">"rmarkdown"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details><div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span> <span class="fu">plotr</span><span class="fu">:::</span><span class="fu">plot_dist</span><span class="op">(</span>col <span class="op">=</span> <span class="st">"bmi_current"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
-<div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span> <span class="fu">plotr</span><span class="fu">:::</span><span class="fu">plot_box_plot</span><span class="op">(</span>col <span class="op">=</span> <span class="st">"bmi_current"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
 </section></section><section id="partogram-duration-model" class="level2" data-number="1.8"><h2 data-number="1.8" class="anchored" data-anchor-id="partogram-duration-model">
 <span class="header-section-number">1.8</span> Partogram Duration Model</h2>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">form</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/formula.html">formula</a></span><span class="op">(</span><span class="va">partogram_duration</span> <span class="op">~</span> <span class="va">begin_dilation</span> <span class="op">+</span> <span class="va">baby_head_perimeter</span> <span class="op">+</span> <span class="va">baby_abdominal_perimeter</span><span class="op">)</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">form</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/formula.html">formula</a></span><span class="op">(</span><span class="va">partogram_duration</span> <span class="op">~</span> <span class="va">begin_dilation</span> <span class="op">+</span> <span class="va">baby_head_perimeter</span> <span class="op">+</span> <span class="va">baby_abdominal_perimeter</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># baby_weight</span></span>
 <span><span class="co"># baby_length</span></span>
@@ -917,13 +861,13 @@ window.Quarto = {
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu">parsnip</span><span class="fu">::</span><span class="fu"><a href="https://parsnip.tidymodels.org/reference/linear_reg.html">linear_reg</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">parsnip</span><span class="fu">::</span><span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine</a></span><span class="op">(</span><span class="st">"lm"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">model</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">parsnip</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span></span>
 <span>    formula <span class="op">=</span> <span class="va">form</span>,</span>
@@ -932,24 +876,24 @@ window.Quarto = {
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/glance.html">glance</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit_augment</span> <span class="op">&lt;-</span> <span class="va">fit</span> <span class="op">|&gt;</span> <span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span>new_data <span class="op">=</span> <span class="va">medical_record_data</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit_augment</span> <span class="op">&lt;-</span> <span class="va">fit</span> <span class="op">|&gt;</span> <span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span>new_data <span class="op">=</span> <span class="va">medical_record_data</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit_error</span> <span class="op">&lt;-</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit_error</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">fit_augment</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/transmute.html">transmute</a></span><span class="op">(</span></span>
 <span>    .pred <span class="op">=</span> <span class="va">.pred</span>,</span>
@@ -960,7 +904,7 @@ window.Quarto = {
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit_augment</span> <span class="op">&lt;-</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit_augment</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">fit</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span></span>
 <span>    new_data <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
@@ -970,7 +914,7 @@ window.Quarto = {
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">medical_record_data</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">medical_record_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span></span>
 <span>    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span></span>
 <span>      x <span class="op">=</span> <span class="va">partogram_duration</span>,</span>
@@ -992,7 +936,7 @@ window.Quarto = {
 <section id="correlation-matrices" class="level3" data-number="1.8.1"><h3 data-number="1.8.1" class="anchored" data-anchor-id="correlation-matrices">
 <span class="header-section-number">1.8.1</span> Correlation Matrices</h3>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">plotr</span><span class="fu">:::</span><span class="fu">plot_ggally</span><span class="op">(</span></span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
 <span>      <span class="st">"labor_duration"</span>, <span class="st">"age"</span>, <span class="st">"family_income"</span>, <span class="st">"bmi_before"</span></span>
@@ -1004,7 +948,7 @@ window.Quarto = {
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">plotr</span><span class="fu">:::</span><span class="fu">plot_ggally</span><span class="op">(</span></span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
 <span>      <span class="st">"labor_duration"</span>, <span class="st">"gestations"</span>, <span class="st">"deliveries"</span>, <span class="st">"abortions"</span></span>
@@ -1016,7 +960,7 @@ window.Quarto = {
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">plotr</span><span class="fu">:::</span><span class="fu">plot_ggally</span><span class="op">(</span></span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
 <span>      <span class="st">"labor_duration"</span>, <span class="st">"baby_weight"</span>, <span class="st">"baby_length"</span>,</span>
@@ -1031,7 +975,7 @@ window.Quarto = {
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">plotr</span><span class="fu">:::</span><span class="fu">plot_ggally</span><span class="op">(</span></span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"labor_duration"</span>, <span class="st">"fps_mean"</span>, <span class="st">"waso_mean"</span>, <span class="st">"awakenings_mean"</span><span class="op">)</span>,</span>
 <span>    labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Duração do parto"</span>, <span class="st">"FPS"</span>, <span class="st">"WASO"</span>, <span class="st">"Desp."</span><span class="op">)</span></span>
@@ -1039,7 +983,7 @@ window.Quarto = {
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    his_mean <span class="op">=</span> <span class="va">his_mean</span> <span class="op">|&gt;</span> <span class="fu">lubritime</span><span class="fu">::</span><span class="fu"><a href="https://danielvartan.github.io/lubritime/reference/link_to_timeline.html">link_to_timeline</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    hfs_mean <span class="op">=</span> <span class="va">hfs_mean</span> <span class="op">|&gt;</span> <span class="fu">lubritime</span><span class="fu">::</span><span class="fu"><a href="https://danielvartan.github.io/lubritime/reference/link_to_timeline.html">link_to_timeline</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -1056,7 +1000,7 @@ window.Quarto = {
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb66"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">general_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">plotr</span><span class="fu">:::</span><span class="fu">plot_ggally</span><span class="op">(</span></span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
 <span>      <span class="st">"fps_mean"</span>, <span class="st">"tts_mean"</span>, <span class="st">"waso_mean"</span>, <span class="st">"awakenings_mean"</span>,</span>
@@ -1069,25 +1013,25 @@ window.Quarto = {
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb67"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">grDevices</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">grDevices</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="actograms" class="level3" data-number="1.8.2"><h3 data-number="1.8.2" class="anchored" data-anchor-id="actograms">
 <span class="header-section-number">1.8.2</span> Actograms</h3>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb68"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">actigraphy_data</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_ls.html">dir_ls</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"file"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_subset.html">str_subset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"f1e30a89"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">actverse</span><span class="fu">::</span><span class="fu"><a href="https://danielvartan.github.io/actverse/reference/read_acttrust.html">read_acttrust</a></span><span class="op">(</span>tz <span class="op">=</span> <span class="st">"America/Sao_Paulo"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">actigraphy_data</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dir_ls</span><span class="op">(</span>type <span class="op">=</span> <span class="st">"file"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_subset.html">str_subset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"f1e30a89"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://danielvartan.github.io/actverse/reference/read_acttrust.html">read_acttrust</a></span><span class="op">(</span>tz <span class="op">=</span> <span class="st">"America/Sao_Paulo"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb69"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">actigraphy_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">actverse</span><span class="fu">::</span><span class="fu"><a href="https://danielvartan.github.io/actverse/reference/actogram.html">actogram</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">actigraphy_data</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://danielvartan.github.io/actverse/reference/actogram.html">actogram</a></span><span class="op">(</span></span>
 <span>    days <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
-<span>    latitude <span class="op">=</span> <span class="fu">orbis</span><span class="fu">::</span><span class="fu">get_brazil_state_latitude</span><span class="op">(</span><span class="st">"sp"</span><span class="op">)</span>,</span>
-<span>    longitude <span class="op">=</span> <span class="fu">orbis</span><span class="fu">::</span><span class="fu">get_brazil_state_longitude</span><span class="op">(</span><span class="st">"sp"</span><span class="op">)</span></span>
+<span>    latitude <span class="op">=</span> <span class="fu"><a href="https://danielvartan.github.io/orbis/reference/brazil_state_latitude.html">brazil_state_latitude</a></span><span class="op">(</span><span class="st">"sp"</span><span class="op">)</span>,</span>
+<span>    longitude <span class="op">=</span> <span class="fu"><a href="https://danielvartan.github.io/orbis/reference/brazil_state_longitude.html">brazil_state_longitude</a></span><span class="op">(</span><span class="st">"sp"</span><span class="op">)</span></span>
 <span>    <span class="co"># locale = "pt_BR.UTF-8",</span></span>
 <span>    <span class="co"># x_label = "2 Dias — Horas",</span></span>
 <span>    <span class="co"># y_label = "Dias",</span></span>
@@ -1113,26 +1057,26 @@ window.Quarto = {
 </section><section id="sleep-irregularity-index-sri" class="level3" data-number="1.8.3"><h3 data-number="1.8.3" class="anchored" data-anchor-id="sleep-irregularity-index-sri">
 <span class="header-section-number">1.8.3</span> Sleep Irregularity Index (SRI)</h3>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sri_data</span> <span class="op">&lt;-</span> <span class="va">actigraphy_data</span> <span class="op">|&gt;</span> <span class="fu">actverse</span><span class="fu">::</span><span class="fu"><a href="https://danielvartan.github.io/actverse/reference/sri.html">sri</a></span><span class="op">(</span><span class="op">)</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sri_data</span> <span class="op">&lt;-</span> <span class="va">actigraphy_data</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://danielvartan.github.io/actverse/reference/sri.html">sri</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">sri_data</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sri_data</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sri_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">rutils</span><span class="fu">:::</span><span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span><span class="st">"sri"</span>, threshold <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb72"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sri_data</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sri_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">sri</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">rutils</span><span class="fu">:::</span><span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span><span class="st">"sri"</span>, threshold <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb73"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">sri_data</span><span class="op">$</span><span class="va">sri</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">sri_data</span><span class="op">$</span><span class="va">sri</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">y_scale</span> <span class="op">&lt;-</span> \<span class="op">(</span><span class="op">)</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
 <span>  <span class="va">y_scale</span> <span class="op">&lt;-</span> \<span class="op">(</span><span class="op">)</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
@@ -1157,21 +1101,21 @@ window.Quarto = {
 </section><section id="percentage-of-time-asleep" class="level3" data-number="1.8.4"><h3 data-number="1.8.4" class="anchored" data-anchor-id="percentage-of-time-asleep">
 <span class="header-section-number">1.8.4</span> Percentage of Time Asleep</h3>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb74"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sleep_prop_data</span> <span class="op">&lt;-</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sleep_prop_data</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">actigraphy_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">actverse</span><span class="fu">::</span><span class="fu"><a href="https://danielvartan.github.io/actverse/reference/state_prop.html">state_prop</a></span><span class="op">(</span>state_values <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://danielvartan.github.io/actverse/reference/state_prop.html">state_prop</a></span><span class="op">(</span>state_values <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">sleep_prop_data</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb75"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sleep_prop_data</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sleep_prop_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">rutils</span><span class="fu">:::</span><span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span><span class="st">"prop"</span>, threshold <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb76"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sleep_prop_data</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb66"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sleep_prop_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>per <span class="op">=</span> <span class="va">prop</span> <span class="op">*</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span>, y <span class="op">=</span> <span class="va">per</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"#FC2913"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1189,7 +1133,7 @@ window.Quarto = {
 </section><section id="groups" class="level3" data-number="1.8.5"><h3 data-number="1.8.5" class="anchored" data-anchor-id="groups">
 <span class="header-section-number">1.8.5</span> Groups</h3>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb77"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">&lt;-</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb67"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">control_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
 <span>    <span class="va">sleep_data</span>,</span>
@@ -1220,7 +1164,7 @@ window.Quarto = {
 <span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html">drop_na</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb78"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">row_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb68"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">row_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"group_waso"</span>, <span class="st">"&gt;10% (Poor)"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"group_waso"</span>, <span class="st">"&lt;10% (Good)"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"group_fps"</span>, <span class="st">"&lt;7h (Poor)"</span><span class="op">)</span>,</span>
@@ -1289,14 +1233,14 @@ Table&nbsp;1.1: <span class="legend">Source: Created by the author</span>
 <section id="fsp" class="level4" data-number="1.8.5.1"><h4 data-number="1.8.5.1" class="anchored" data-anchor-id="fsp">
 <span class="header-section-number">1.8.5.1</span> FSP</h4>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb79"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb69"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">plot_ggally</span><span class="op">(</span></span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"labor_duration"</span>, <span class="st">"baby_weight"</span>, <span class="st">"fps_mean"</span>, <span class="st">"group_fps"</span><span class="op">)</span>,</span>
 <span>    mapping <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">group_fps</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb80"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    labor_duration <span class="op">=</span></span>
 <span>      <span class="va">labor_duration</span> <span class="op">|&gt;</span></span>
@@ -1335,14 +1279,14 @@ Figure&nbsp;1.1: <span class="legend">Fonte: Elaborado pela autora.</span>
 </section><section id="waso" class="level4" data-number="1.8.5.2"><h4 data-number="1.8.5.2" class="anchored" data-anchor-id="waso">
 <span class="header-section-number">1.8.5.2</span> WASO</h4>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb81"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">plot_ggally</span><span class="op">(</span></span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"labor_duration"</span>, <span class="st">"baby_weight"</span>, <span class="st">"waso_prop"</span>, <span class="st">"group_waso"</span><span class="op">)</span>,</span>
 <span>    mapping <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">group_waso</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb82"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">|&gt;</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb72"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">group_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    labor_duration <span class="op">=</span></span>
 <span>      <span class="va">labor_duration</span> <span class="op">|&gt;</span></span>
@@ -1397,7 +1341,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 \text{g de Hedges} = \cfrac{\overline{\text{X}}_{\text{Ruim}} - \overline{\text{X}}_{\text{Bom}}}{\text{SD}_{\text{pooled}}}
 \]</span></p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb83"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data</span> <span class="op">&lt;-</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb73"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">control_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
 <span>    <span class="va">sleep_data</span>,</span>
@@ -1436,7 +1380,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </div>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb84"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data_fps</span> <span class="op">&lt;-</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb74"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data_fps</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">model_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">labor_duration</span>, <span class="va">fps_mean</span>, <span class="va">baby_weight</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
@@ -1458,7 +1402,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb85"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data_fps</span> <span class="op">|&gt;</span> <span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb75"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data_fps</span> <span class="op">|&gt;</span> <span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <section id="welchs-t-test" class="level4" data-number="1.9.1.1"><h4 data-number="1.9.1.1" class="anchored" data-anchor-id="welchs-t-test">
@@ -1470,7 +1414,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </div>
 <p>Desired power: <span class="math inline">\((1 - \beta) \geq 0.8\)</span></p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb86"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># A posteriori</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb76"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># A posteriori</span></span>
 <span></span>
 <span><span class="va">pwr_analysis_fps_anconva</span> <span class="op">&lt;-</span> <span class="fu">pwrss</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pwrss/man/means.student.welch.html">pwrss.t.2means</a></span><span class="op">(</span></span>
 <span>  mu1 <span class="op">=</span> <span class="va">model_data_fps</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Poor"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span>na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
@@ -1491,7 +1435,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </section><section id="test" class="level5" data-number="1.9.1.1.2"><h5 data-number="1.9.1.1.2" class="anchored" data-anchor-id="test">
 <span class="header-section-number">1.9.1.1.2</span> Test</h5>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb87"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_t_test_fps</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb77"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_t_test_fps</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">model_data_fps</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Poor"</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="va">model_data_fps</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Good"</span><span class="op">)</span>,</span>
 <span>  alternative <span class="op">=</span> <span class="st">"greater"</span></span>
@@ -1501,13 +1445,13 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb88"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="va">model_t_test_fps</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb78"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="va">model_t_test_fps</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="effect-size" class="level5" data-number="1.9.1.1.3"><h5 data-number="1.9.1.1.3" class="anchored" data-anchor-id="effect-size">
 <span class="header-section-number">1.9.1.1.3</span> Effect Size</h5>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb89"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb79"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
 <span>  fps_mean_poor <span class="op">=</span></span>
 <span>    <span class="va">model_data_fps</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Poor"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -1523,7 +1467,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb90"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/cohens_d.html">cohens_d</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb80"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/cohens_d.html">cohens_d</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">model_data_fps</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Poor"</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="va">model_data_fps</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Good"</span><span class="op">)</span>,</span>
 <span>  pooled_sd <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -1545,7 +1489,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 <section id="test-1" class="level5" data-number="1.9.1.2.1"><h5 data-number="1.9.1.2.1" class="anchored" data-anchor-id="test-1">
 <span class="header-section-number">1.9.1.2.1</span> Test</h5>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb91"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_fps</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/aov.html">aov</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb81"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_fps</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/aov.html">aov</a></span><span class="op">(</span></span>
 <span>  formula <span class="op">=</span> <span class="va">labor_duration</span> <span class="op">~</span> <span class="va">baby_weight</span> <span class="op">*</span> <span class="va">group</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">model_data_fps</span></span>
 <span><span class="op">)</span></span>
@@ -1554,11 +1498,11 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb92"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_fps</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb82"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_fps</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb93"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_fps</span> <span class="op">|&gt;</span> <span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb83"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_fps</span> <span class="op">|&gt;</span> <span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="effect-size-1" class="level5" data-number="1.9.1.2.2"><h5 data-number="1.9.1.2.2" class="anchored" data-anchor-id="effect-size-1">
@@ -1566,7 +1510,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 <p>Veja <span class="citation" data-cites="cohen1992">(<a href="references.html#ref-cohen1992" role="doc-biblioref"><strong>cohen1992?</strong></a>)</span> para saber mais.</p>
 <p>Tamanho de efeito para duraçõa do parto e FSP encontrado por <span class="citation" data-cites="lee2004a">(<a href="references.html#ref-lee2004a" role="doc-biblioref"><strong>lee2004a?</strong></a>)</span>:</p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb94"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb84"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
 <span><span class="va">num_df</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
 <span><span class="va">den_df</span> <span class="op">&lt;-</span> <span class="fl">125</span></span>
 <span><span class="va">n_total_tst</span> <span class="op">&lt;-</span> <span class="va">den_df</span> <span class="op">+</span> <span class="va">k</span></span>
@@ -1579,7 +1523,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </div>
 <p>Tamanho de efeito <em>a posteriori</em>:</p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb95"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">effect_size_aov_fps</span> <span class="op">&lt;-</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb85"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">effect_size_aov_fps</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">model_aov_fps</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/eta_squared.html">cohens_f</a></span><span class="op">(</span></span>
 <span>    partial <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -1602,7 +1546,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </div>
 <p>Poder desejado: <span class="math inline">\((1 - \beta) \geq 0.8\)</span></p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb96"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># A posteriori</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb86"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># A posteriori</span></span>
 <span></span>
 <span><span class="va">pwr_analysis_fps_anconva</span> <span class="op">&lt;-</span> <span class="fu">pwrss</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pwrss/man/ancova.html">pwrss.f.ancova</a></span><span class="op">(</span></span>
 <span>  f2 <span class="op">=</span> <span class="va">effect_size_aov_fps</span><span class="op">$</span><span class="va">Cohens_f</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">^</span><span class="fl">2</span>,</span>
@@ -1627,7 +1571,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 <p>As an estimate of sleep disruption, WASO is reported as the percentage of minutes awake divided by minutes in bed after falling asleep. During a typical 7- to 8-hour sleep period, WASO of 15% represents more than an hour of wake time after falling asleep. WASO between 5% and 10% is typical in healthy, nonpregnant women5 and greater than 15% was considered severe sleep disruption for this study.<span class="citation" data-cites="lee2004a">(<a href="references.html#ref-lee2004a" role="doc-biblioref"><strong>lee2004a?</strong></a>[p.&nbsp;2042])</span>.</p>
 </blockquote>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb97"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data_waso</span> <span class="op">&lt;-</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb87"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data_waso</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">model_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">labor_duration</span>, <span class="va">waso_mean</span>, <span class="va">fps_mean</span>, <span class="va">baby_weight</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
@@ -1652,7 +1596,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb98"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data_waso</span> <span class="op">|&gt;</span> <span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb88"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_data_waso</span> <span class="op">|&gt;</span> <span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <section id="welchs-t-test-1" class="level4" data-number="1.9.2.1"><h4 data-number="1.9.2.1" class="anchored" data-anchor-id="welchs-t-test-1">
@@ -1664,7 +1608,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </div>
 <p>Desired power: <span class="math inline">\((1 - \beta) \geq 0.8\)</span></p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb99"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># A posteriori</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb89"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># A posteriori</span></span>
 <span></span>
 <span><span class="va">pwr_analysis_waso_t_test</span> <span class="op">&lt;-</span> <span class="fu">pwrss</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pwrss/man/means.student.welch.html">pwrss.t.2means</a></span><span class="op">(</span></span>
 <span>  mu1 <span class="op">=</span> <span class="va">model_data_waso</span> <span class="op">|&gt;</span></span>
@@ -1693,7 +1637,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </section><section id="test-2" class="level5" data-number="1.9.2.1.2"><h5 data-number="1.9.2.1.2" class="anchored" data-anchor-id="test-2">
 <span class="header-section-number">1.9.2.1.2</span> Test</h5>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb100"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_t_test_waso</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb90"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_t_test_waso</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">model_data_waso</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Poor"</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="va">model_data_waso</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Good"</span><span class="op">)</span>,</span>
 <span>  alternative <span class="op">=</span> <span class="st">"greater"</span></span>
@@ -1703,13 +1647,13 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb101"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="va">model_t_test_waso</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb91"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="va">model_t_test_waso</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="effect-size-2" class="level5" data-number="1.9.2.1.3"><h5 data-number="1.9.2.1.3" class="anchored" data-anchor-id="effect-size-2">
 <span class="header-section-number">1.9.2.1.3</span> Effect Size</h5>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb102"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb92"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
 <span>  waso_mean_poor <span class="op">=</span></span>
 <span>    <span class="va">model_data_waso</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Poor"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -1725,7 +1669,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb103"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/cohens_d.html">cohens_d</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb93"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/cohens_d.html">cohens_d</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">model_data_waso</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Poor"</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="va">model_data_waso</span> <span class="op">|&gt;</span> <span class="fu">get_labor_duration</span><span class="op">(</span><span class="st">"Good"</span><span class="op">)</span>,</span>
 <span>  pooled_sd <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -1744,7 +1688,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 <section id="test-3" class="level5" data-number="1.9.2.2.1"><h5 data-number="1.9.2.2.1" class="anchored" data-anchor-id="test-3">
 <span class="header-section-number">1.9.2.2.1</span> Test</h5>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb104"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_waso</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/aov.html">aov</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb94"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_waso</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/aov.html">aov</a></span><span class="op">(</span></span>
 <span>  formula <span class="op">=</span> <span class="va">labor_duration</span> <span class="op">~</span> <span class="va">baby_weight</span> <span class="op">*</span> <span class="va">group</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">model_data_waso</span></span>
 <span><span class="op">)</span></span>
@@ -1753,11 +1697,11 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb105"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_waso</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb95"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_waso</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb106"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_waso</span> <span class="op">|&gt;</span> <span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb96"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_aov_waso</span> <span class="op">|&gt;</span> <span class="fu">report</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="effect-size-3" class="level5" data-number="1.9.2.2.2"><h5 data-number="1.9.2.2.2" class="anchored" data-anchor-id="effect-size-3">
@@ -1765,7 +1709,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 <p>Veja <span class="citation" data-cites="cohen1992">(<a href="references.html#ref-cohen1992" role="doc-biblioref"><strong>cohen1992?</strong></a>)</span> para saber mais.</p>
 <p>Tamanho de efeito para duração do parto e WASO encontrado por <span class="citation" data-cites="lee2004a">(<a href="references.html#ref-lee2004a" role="doc-biblioref"><strong>lee2004a?</strong></a>)</span>:</p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb107"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb97"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
 <span><span class="va">num_df</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
 <span><span class="va">den_df</span> <span class="op">&lt;-</span> <span class="fl">125</span></span>
 <span><span class="va">n_total_waso</span> <span class="op">&lt;-</span> <span class="va">den_df</span> <span class="op">+</span> <span class="va">k</span></span>
@@ -1778,7 +1722,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </div>
 <p>Tamanho de efeito <em>a posteriori</em>:</p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb108"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">effect_size_aov_waso</span> <span class="op">&lt;-</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb98"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">effect_size_aov_waso</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">model_aov_waso</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">effectsize</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/effectsize/reference/eta_squared.html">cohens_f</a></span><span class="op">(</span></span>
 <span>    partial <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -1800,7 +1744,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </div>
 <p>Poder desejado: <span class="math inline">\((1 - \beta) \geq 0.8\)</span></p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb109"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pwr_analysis_waso_ancova</span> <span class="op">&lt;-</span> <span class="fu">pwrss</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pwrss/man/ancova.html">pwrss.f.ancova</a></span><span class="op">(</span></span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb99"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pwr_analysis_waso_ancova</span> <span class="op">&lt;-</span> <span class="fu">pwrss</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pwrss/man/ancova.html">pwrss.f.ancova</a></span><span class="op">(</span></span>
 <span>  f2 <span class="op">=</span> <span class="va">effect_size_aov_waso</span><span class="op">$</span><span class="va">Cohens_f</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">^</span><span class="fl">2</span>,</span>
 <span>  n.way <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  n.levels <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -1851,7 +1795,7 @@ Figure&nbsp;1.2: <span class="legend">Fonte: Elaborado pela autora.</span>
 </dl></section><section id="locking-the-data-directory" class="level2" data-number="1.11"><h2 data-number="1.11" class="anchored" data-anchor-id="locking-the-data-directory">
 <span class="header-section-number">1.11</span> Locking the Data Directory</h2>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb110"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_dir</span> <span class="op">|&gt;</span> <span class="fu">lockr</span><span class="fu">::</span><span class="fu"><a href="https://danielvartan.github.io/lockr/reference/lock_dir.html">lock_dir</a></span><span class="op">(</span>public_key <span class="op">=</span> <span class="va">public_key_path</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb100"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_dir</span> <span class="op">|&gt;</span> <span class="fu">lockr</span><span class="fu">::</span><span class="fu"><a href="https://danielvartan.github.io/lockr/reference/lock_dir.html">lock_dir</a></span><span class="op">(</span>public_key <span class="op">=</span> <span class="va">public_key_path</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 
