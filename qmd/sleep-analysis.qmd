@@ -66,24 +66,24 @@ parse_hms_as_duration <- function(x) {
 ```{r}
 data <-
   raw_data |>
-  dplyr::mutate(
-    dplyr::across(
-      .cols = dplyr::matches("^his|^hfs"),
+  mutate(
+    across(
+      .cols = matches("^his|^hfs"),
       .fns = hms::parse_hms
     ),
-    dplyr::across(
-      .cols = dplyr::matches("^fps|^tts_m|^tts_s|^waso"),
+    across(
+      .cols = matches("^fps|^tts_m|^tts_s|^waso"),
       .fns = parse_hms_as_duration
     ),
-    dplyr::across(
-      .cols = dplyr::matches("^tts_fps|^awakenings"),
+    across(
+      .cols = matches("^tts_fps|^awakenings"),
       .fns = as.numeric
     )
   )
 ```
 
 ```{r}
-data |> dplyr::glimpse()
+data |> glimpse()
 ```
 
 ## Analysis
@@ -196,27 +196,27 @@ rounded_stat <- function(x, fun = mean) {
 aggregate_mean_data <-
   data |>
   dplyr::select(-id) |>
-  dplyr::group_by() |>
-  dplyr::summarize(
-    dplyr::across(
-      .cols = dplyr::matches("^his|^hfs"),
+  group_by() |>
+  summarize(
+    across(
+      .cols = matches("^his|^hfs"),
       .fns = ~ circular_time_stat(.x, fun = circular::mean.circular)
     ),
-    dplyr::across(
-      .cols = dplyr::matches("^fps|^tts_m|^tts_s|^waso"),
+    across(
+      .cols = matches("^fps|^tts_m|^tts_s|^waso"),
       .fns = ~ linear_time_stat(.x, fun = mean)
     ),
-    dplyr::across(
-      .cols = dplyr::matches("^tts_fps|^awakenings"),
+    across(
+      .cols = matches("^tts_fps|^awakenings"),
       .fns = ~ rounded_stat(.x, fun = mean)
     )
   )|>
-  tidyr::pivot_longer(
-    cols = dplyr::everything(),
+  pivot_longer(
+    cols = everything(),
     names_to = c(".value", "type"),
     names_sep = "_(?!.*_)",
   ) |>
-  dplyr::relocate(tts_fps, .after = tts)
+  relocate(tts_fps, .after = tts)
 ```
 
 ```{r}
@@ -227,27 +227,27 @@ aggregate_mean_data
 aggregate_sd_data <-
   data |>
   dplyr::select(-id) |>
-  dplyr::group_by() |>
-  dplyr::summarize(
-    dplyr::across(
-      .cols = dplyr::matches("^his|^hfs"),
+  group_by() |>
+  summarize(
+    across(
+      .cols = matches("^his|^hfs"),
       .fns = ~ circular_time_stat(.x, fun = circular::sd.circular)
     ),
-    dplyr::across(
-      .cols = dplyr::matches("^fps|^tts_m|^tts_s|^waso"),
+    across(
+      .cols = matches("^fps|^tts_m|^tts_s|^waso"),
       .fns = ~ linear_time_stat(.x, fun = stats::sd)
     ),
-    dplyr::across(
-      .cols = dplyr::matches("^tts_fps|^awakenings"),
+    across(
+      .cols = matches("^tts_fps|^awakenings"),
       .fns = ~ rounded_stat(.x, fun = stats::sd)
     )
   )|>
-  tidyr::pivot_longer(
-    cols = dplyr::everything(),
+  pivot_longer(
+    cols = everything(),
     names_to = c(".value", "type"),
     names_sep = "_(?!.*_)",
   ) |>
-  dplyr::relocate(tts_fps, .after = tts)
+  relocate(tts_fps, .after = tts)
 ```
 
 ```{r}
@@ -292,7 +292,7 @@ circular_vector |> alt_circular_time_stat(fun = stats::sd)
 ### How Much We Lost By Transforming The `hms` Vector to Decimal Hours?
 
 ```{r}
-dplyr::tibble(
+tibble(
   original = circular_vector,
   processed = circular_vector |>
     hms_to_decimal_hours() |>

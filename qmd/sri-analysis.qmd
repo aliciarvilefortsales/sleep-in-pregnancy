@@ -71,11 +71,11 @@ source(here("R", "ga.R"))
 
 ```{r}
 data_dir <- here("data")
-processed_data_dir <- here("data", "processed")
-processed_actigraphy_data_dir <- here("data", "processed", "actigraphy")
-sri_data_dir <- here("data", "sri")
-sleep_prop_dir <- here("data", "sleep-prop")
-lux_data_dir <- here("data", "lux")
+processed_data_dir <- here(data_dir, "processed")
+actigraphy_processed_data_dir <- here(data_dir, "processed", "actigraphy")
+sri_data_dir <- here(data_dir, "sri")
+sleep_prop_dir <- here(data_dir, "sleep-prop")
+lux_data_dir <- here(data_dir, "lux")
 ```
 
 ```{r}
@@ -126,6 +126,12 @@ min_days <- 4
 min_valid_data <- 0.5 # By `sri` and gestational age (they are related)
 ```
 
+## Download Actigraphy Processed Data from OSF
+
+::: {.callout-note}
+See the `osf-routines.qmd` Quarto notebook to download and decrypt the actigraphy processed data from OSF.
+:::
+
 ## Download and Import the Control Form Data
 
 ```{r}
@@ -136,7 +142,8 @@ control_form_data <-
   "13wtDr4fRD1wJSM-qdLOdGSchF8oXU1bG0Jtccu24GhY" |>
   read_sheet(
     sheet = "Dataset",
-    col_types = "c"
+    col_types = "c",
+    na = c("", "NA")
   )
 ```
 
@@ -150,15 +157,10 @@ field_form_data <-
   "1tY_TT0nPXFsErYQS2VED0-hqTzgHudA9BfhRhYG19fw" |>
   read_sheet(
     sheet = "Dataset",
-    col_types = "c"
+    col_types = "c",
+    na = c("", "NA")
   )
 ```
-
-## Download Actigraphy Processed Data from OSF
-
-::: {.callout-note}
-See the `osf.qmd` Quarto notebook to download and decrypt the actigraphy processed data from OSF.
-:::
 
 ## Filter and Tidy the Control Form Data
 
@@ -173,8 +175,8 @@ control_form_data <-
     cpf = X5,
     id = X6,
     birth_center_delivery = X12,
-    ultrasound_date = X40,
-    ultrasound_ga = X39
+    ultrasound_ga = X39,
+    ultrasound_date = X40
   ) |>
   mutate(
     birth_center_delivery = case_when(
@@ -242,7 +244,7 @@ field_form_data <-
   ) |>
   mutate(
     id = anonymize_id(cpf, salt),
-    timestamp = mdy_hms(timestamp),
+    timestamp = mdy_hms(timestamp, tz = "America/Sao_Paulo"),
     birth_date = dmy(birth_date),
     age = scaler:::age(birth_date, timestamp),
     ethnicity = factor(
@@ -347,7 +349,7 @@ field_form_data |> glimpse()
 
 files <-
   dir_ls(
-    path = processed_actigraphy_data_dir,
+    path = actigraphy_processed_data_dir,
     type = "file",
     regexp = ".txt$"
   )
@@ -397,7 +399,7 @@ for (i in files) {
   i_data |>
     write_rds(
       path(
-        processed_actigraphy_data_dir,
+        actigraphy_processed_data_dir,
         paste0(i_id, "_actigraphy-processed-data.rds")
       )
     )
@@ -431,7 +433,7 @@ if (length(old_files) > 0) file_delete(old_files)
 ```{r}
 files <-
   dir_ls(
-    path = processed_actigraphy_data_dir,
+    path = actigraphy_processed_data_dir,
     type = "file",
     regexp = "_actigraphy-processed-data.rds$"
   )
@@ -730,7 +732,7 @@ if (length(old_files) > 0) file_delete(old_files)
 ```{r}
 files <-
   dir_ls(
-    path = processed_actigraphy_data_dir,
+    path = actigraphy_processed_data_dir,
     type = "file",
     regexp = "_actigraphy-processed-data.rds$"
   )
@@ -984,7 +986,7 @@ if (length(old_files) > 0) file_delete(old_files)
 ```{r}
 files <-
   dir_ls(
-    path = processed_actigraphy_data_dir,
+    path = actigraphy_processed_data_dir,
     type = "file",
     regexp = "_actigraphy-processed-data.rds$"
   )
@@ -2445,7 +2447,9 @@ plot_data |>
 
 
 
-## Bootstrap Test
+## Differences Test
+
+<!-- `infer`, by permutation -->
 
 ## Compute an *A Priori* Power Analysis
 

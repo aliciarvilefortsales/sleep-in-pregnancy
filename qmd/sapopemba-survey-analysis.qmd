@@ -48,7 +48,7 @@ library(stringr)
 ```{r}
 data_dir <- here("data")
 processed_data_dir <- here("data", "processed")
-processed_actigraphy_data_dir <- here("data", "processed", "actigraphy")
+actigraphy_processed_data_dir <- here("data", "processed", "actigraphy")
 sri_data_dir <- here("data", "sri")
 sleep_prop_dir <- here("data", "sleep-prop")
 lux_data_dir <- here("data", "lux")

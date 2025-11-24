@@ -57,8 +57,8 @@ source(here("R", "anonymize_id.R"))
 
 ```{r}
 data_dir <- here("data")
-processed_data_dir <- here("data", "processed")
-processed_actigraphy_data_dir <- here("data", "processed", "actigraphy")
+processed_data_dir <- here(data_dir, "processed")
+actigraphy_processed_data_dir <- here(data_dir, "processed", "actigraphy")
 ```
 
 ```{r}
@@ -97,7 +97,8 @@ control_form_data <-
   "13wtDr4fRD1wJSM-qdLOdGSchF8oXU1bG0Jtccu24GhY" |>
   read_sheet(
     sheet = "Dataset",
-    col_types = "c"
+    col_types = "c",
+    na = c("", "NA")
   )
 ```
 
@@ -113,7 +114,8 @@ field_form_data <-
   "1tY_TT0nPXFsErYQS2VED0-hqTzgHudA9BfhRhYG19fw" |>
   read_sheet(
     sheet = "Dataset",
-    col_types = "c"
+    col_types = "c",
+    na = c("", "NA")
   )
 ```
 
@@ -129,7 +131,8 @@ sleep_data <-
   "1iqjhdSiWYr9RYSvIvJQfFw35DR31YA_oj2SW8iR5WPw" |>
   read_sheet(
     sheet = "Dataset",
-    col_types = "c"
+    col_types = "c",
+    na = c("", "NA")
   )
 ```
 
@@ -145,7 +148,8 @@ medical_record_data <-
   "10yvvTOCjZsRKPO8A4yn0NCvWe4Jn_Kq-Zu_CV4miGJI" |>
   read_sheet(
     sheet = "Dataset",
-    col_types = "c"
+    col_types = "c",
+    na = c("", "NA")
   )
 ```
 
@@ -172,8 +176,8 @@ control_form_data <-
       tolower(trimws(birth_center_delivery)) == "não" ~ FALSE,
       TRUE ~ NA
     ),
-    birth = as_datetime(birth),
-    labor_start = as_datetime(labor_start)
+    birth = as_datetime(birth, tz = "America/Sao_Paulo"),
+    labor_start = as_datetime(labor_start, tz = "America/Sao_Paulo")
   ) |>
   mutate(
     labor_duration =
@@ -226,7 +230,7 @@ field_form_data <-
   ) |>
   mutate(
     id = anonymize_id(cpf, salt),
-    timestamp = mdy_hms(timestamp),
+    timestamp = mdy_hms(timestamp, tz = "America/Sao_Paulo"),
     birth_date = dmy(birth_date),
     age = scaler:::age(birth_date, timestamp),
     ethnicity = factor(
@@ -344,6 +348,8 @@ sleep_data |> glimpse()
 ## Filter and Tidy the Medical Record Data
 
 ```{r}
+#| label: Filter and Tidy the Medical Record Data
+
 medical_record_data <-
   medical_record_data |>
   mutate(
@@ -394,9 +400,9 @@ valid_cases
 ```{r}
 data <-
   control_form_data |>
+  left_join(field_form_data, by = "id") |>
   left_join(sleep_data, by = "id") |>
   left_join(medical_record_data, by = "id") |>
-  left_join(field_form_data, by = "id") |>
   mutate(
     waso_prop =
       waso_mean |>
@@ -411,17 +417,17 @@ data <-
 data |> glimpse()
 ```
 
-## Get Descriptive Statistics of the Time Interval of Data Collection
+## Get Descriptive Statistics of the Sample Time Interval
 
 ```{r}
-#| label: Get Descriptive Statistics of the Time Interval of Data Collection
+#| label: Get Descriptive Statistics of the Sample Time Interval
 #| code-fold: false
 
-cli::cli_h1("timestamp")
+cli_h1("timestamp")
 cat_line()
 
 data |>
-  rutils:::stats_summary(
+  stats_summary(
     col = "timestamp",
     name = "timestamp",
     threshold = NULL
@@ -446,11 +452,11 @@ logical_vars <-
 #| code-fold: false
 
 for (i in logical_vars) {
-  cli::cli_h1(i)
+  cli_h1(i)
   cat_line()
 
   data |>
-    rutils:::stats_summary(col = i, name = i) |>
+    stats_summary(col = i, name = i) |>
     print(n = Inf)
 
   cat_line()
@@ -473,11 +479,11 @@ categorical_vars <-
 #| code-fold: false
 
 for (i in categorical_vars) {
-  cli::cli_h1(i)
+  cli_h1(i)
   cat_line()
 
   data |>
-    rutils:::stats_summary(col = i, name = i) |>
+    stats_summary(col = i, name = i) |>
     print(n = Inf)
 
   cat_line()
@@ -499,11 +505,11 @@ numerical_vars <-
 #| code-fold: false
 
 for (i in numerical_vars) {
-  cli::cli_h1(i)
+  cli_h1(i)
   cat_line()
 
   data |>
-    rutils:::stats_summary(col = i, name = i) |>
+    stats_summary(col = i, name = i) |>
     print(n = Inf)
 
   cat_line()
@@ -511,31 +517,6 @@ for (i in numerical_vars) {
 ```
 
 ## Get Descriptive Statistics for Linear Temporal Variables
-
-```{r}
-#| eval: false
-#| include: false
-
-test <-
-  data |>
-  select(\(x) test_temporal(x, rm = c("Date", "POSIXct"))) |>
-  tbl_summary(
-    type = everything() ~ "continuous2",
-    statistic = all_continuous() ~ c(
-      "{mean} ({sd})",
-      "{median}",
-      "{min}, {max}",
-      "{IQR} ({p25}, {p75})",
-      "{var}",
-      "{Skewness}",
-      "{Kurtosis}"
-    ),
-    digits = all_continuous() ~ 3
-  ) |>
-  fmt_hms()
-
-test
-```
 
 ```{r}
 #| label: Get Descriptive Statistics for Linear Temporal Variables
@@ -551,11 +532,11 @@ linear_temporal_vars <-
 #| code-fold: false
 
 for (i in linear_temporal_vars) {
-  cli::cli_h1(i)
+  cli_h1(i)
   cat_line()
 
   data |>
-    rutils:::stats_summary(
+    stats_summary(
       col = i,
       name = i,
       threshold = NULL
@@ -581,14 +562,20 @@ circular_temporal_vars <-
 #| code-fold: false
 
 for (i in circular_temporal_vars) {
-  cli::cli_h1(i)
+  cli_h1(i)
   cat_line()
 
+  if (str_detect(i, "^hfs_")) {
+    threshold <- hms::parse_hms("18:00:00")
+  } else {
+    threshold <- hms::parse_hms("12:00:00")
+  }
+
   data |>
-    rutils:::stats_summary(
+    stats_summary(
       col = i,
       name = i,
-      threshold = hms::parse_hms("12:00:00")
+      threshold = threshold
     ) |>
     print(n = Inf)
 

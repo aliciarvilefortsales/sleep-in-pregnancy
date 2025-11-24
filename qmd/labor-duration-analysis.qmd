@@ -25,7 +25,9 @@ library(actverse) # github.com/danielvartan/actverse
 library(askpass)
 library(car)
 library(checkmate)
+library(cli)
 library(dplyr)
+library(fs)
 library(ggplot2)
 library(googlesheets4)
 library(grDevices)
@@ -33,16 +35,16 @@ library(here)
 library(hms)
 library(lubridate)
 library(lubritime) # github.com/danielvartan/lubritime
+library(readr)
 library(orbis) # github.com/danielvartan/orbis
-library(osfr)
 library(plotr) # github.com/danielvartan/plotr
+library(purrr)
 library(rutils) # github.com/danielvartan/rutils
 library(scaler) # github.com/danielvartan/scaler
 library(scales)
 library(sodium)
 library(stats)
 library(stringr)
-library(summarytools)
 library(tidyr)
 ```
 
@@ -50,6 +52,7 @@ library(tidyr)
 
 ```{r}
 source(here("R", "anonymize_id.R"))
+source(here("R", "ga.R"))
 ```
 
 ```{r}
@@ -98,11 +101,11 @@ f_unb <- function(k, n_total, f_test) {
 
 ```{r}
 data_dir <- here("data")
-processed_data_dir <- here("data", "processed")
-processed_actigraphy_data_dir <- here("data", "processed", "actigraphy")
-sri_data_dir <- here("data", "sri")
-sleep_prop_dir <- here("data", "sleep-prop")
-lux_data_dir <- here("data", "lux")
+processed_data_dir <- here(data_dir, "processed")
+actigraphy_processed_data_dir <- here(data_dir, "processed", "actigraphy")
+sri_data_dir <- here(data_dir, "sri")
+sleep_prop_dir <- here(data_dir, "sleep-prop")
+lux_data_dir <- here(data_dir, "lux")
 ```
 
 ```{r}
@@ -129,6 +132,12 @@ gs4_auth(
 salt <- Sys.getenv("PREGNANCY_SALT") # askpass()
 ```
 
+## Download Actigraphy Processed Data from OSF
+
+::: {.callout-note}
+See the `osf-routines.qmd` Quarto notebook to download and decrypt the actigraphy processed data from OSF.
+:::
+
 ## Download and Import the Control Form Data
 
 ```{r}
@@ -139,7 +148,8 @@ control_form_data <-
   "13wtDr4fRD1wJSM-qdLOdGSchF8oXU1bG0Jtccu24GhY" |>
   read_sheet(
     sheet = "Dataset",
-    col_types = "c"
+    col_types = "c",
+    na = c("", "NA")
   )
 ```
 
@@ -153,80 +163,157 @@ field_form_data <-
   "1tY_TT0nPXFsErYQS2VED0-hqTzgHudA9BfhRhYG19fw" |>
   read_sheet(
     sheet = "Dataset",
-    col_types = "c"
+    col_types = "c",
+    na = c("", "NA")
   )
 ```
 
-## Download Actigraphy Processed Data from OSF
-
-::: {.callout-note}
-See the `osf.qmd` Quarto notebook to download and decrypt the actigraphy processed data from OSF.
-:::
-
-## Getting Data from Google Sheets
-
-The following are internal data collected and organized using a Google Form to facilitate the management of the study.
+## Download and Import the Primary Sleep Data
 
 ```{r}
-#| output: false
+#| label: Download and Import the Primary Sleep Data
 
-control_form <- googlesheets4::read_sheet(
-  ss = "13wtDr4fRD1wJSM-qdLOdGSchF8oXU1bG0Jtccu24GhY",
-  sheet = "Dataset",
-  col_types = "c"
-)
+"18wKHeqbNfrQDzjyOKIX5MCgjVK0WMho6xvdQQpA7ZLE" |>
+  sheet_names() %>%
+  magrittr::extract(
+    !. %in% c(
+      c(
+        "Documentation",
+        "Codebook",
+        "Validation",
+        "Template",
+        "[TEMPLATE]"
+      )
+    )
+  ) |>
+  unique()
+
 ```
 
-The following are data extracted from the Google Form used to collect data from the participants of the study.
-
 ```{r}
-#| output: false
+#| code-fold: false
 
-field_form <- googlesheets4::read_sheet(
-  ss = "1tY_TT0nPXFsErYQS2VED0-hqTzgHudA9BfhRhYG19fw",
-  sheet = "Dataset",
-  col_types = "c"
-)
+sheet_names
 ```
 
-The sleep data were extracted using the Condor Instrument [ActStudio](https://condorinst.com/en/actstudio-software/) software and subsequently formatted in Google Sheets for further analysis.
-
 ```{r}
+#| label: Download and Import the Primary Sleep Data
 #| output: false
 
-sleep_input <- googlesheets4::read_sheet(
-  ss = "1iqjhdSiWYr9RYSvIvJQfFw35DR31YA_oj2SW8iR5WPw",
-  sheet = "Dataset",
-  col_types = "c"
-)
+primary_sleep_data <- tibble()
+
+for (i in sheet_names) {
+  i_data <-
+    "18wKHeqbNfrQDzjyOKIX5MCgjVK0WMho6xvdQQpA7ZLE" |>
+    read_sheet(
+      sheet = i,
+      col_types = "c",
+      na = c("", "NA")
+    ) |>
+      drop_na(date)
+
+  if (nrow(i_data) == 0) next
+
+  i_data <-
+    i_data |>
+    mutate(id = i) |>
+    relocate(id)
+
+  primary_sleep_data <-
+    primary_sleep_data |>
+    bind_rows(i_data)
+}
 ```
 
-Medical records were obtained from participants' medical files and organized in Google Sheets for subsequent analysis.
+## Download and Import the Secondary Sleep Data
 
 ```{r}
+#| label: Download and Import the Primary Sleep Data
+
+sheet_names <-
+  "12xFtuHk3dBB6KqU8qhLS17ZcrZqs0AjGWaQtnUE82Uk" |>
+  sheet_names() %>%
+  magrittr::extract(
+    !. %in% c(
+      c(
+        "Documentation",
+        "Codebook",
+        "Validation",
+        "Template",
+        "[TEMPLATE]"
+      )
+    )
+  ) |>
+  unique()
+```
+
+```{r}
+#| code-fold: false
+
+sheet_names
+```
+
+```{r}
+#| label: Download and Import the Secondary Sleep Data
 #| output: false
 
-medical_record_input <- googlesheets4::read_sheet(
-  ss = "10yvvTOCjZsRKPO8A4yn0NCvWe4Jn_Kq-Zu_CV4miGJI",
-  sheet = "Dataset",
-  col_types = "c"
-)
+secondary_sleep_data <- tibble()
+
+for (i in sheet_names) {
+  i_data <-
+    "12xFtuHk3dBB6KqU8qhLS17ZcrZqs0AjGWaQtnUE82Uk" |>
+    read_sheet(
+      sheet = i,
+      col_types = "c",
+      na = c("", "NA")
+    ) |>
+      drop_na(date)
+
+  if (nrow(i_data) == 0) next
+
+  i_data <-
+    i_data |>
+    mutate(id = i) |>
+    relocate(id)
+
+  secondary_sleep_data <-
+    secondary_sleep_data |>
+    bind_rows(i_data)
+}
 ```
 
-## Processing the Google Sheets Data
+## Download and Import the Medical Records Data
 
 ```{r}
-control_data <-
-  control_form |>
-  `names<-`(paste0("X", seq_along(control_form))) |>
-  dplyr::select(X5, X6, X7, X12, X13, X14) |>
+#| label: Download and Import the Medical Records Data
+#| output: false
+
+medical_record_data <-
+  "10yvvTOCjZsRKPO8A4yn0NCvWe4Jn_Kq-Zu_CV4miGJI" |>
+  read_sheet(
+    sheet = "Dataset",
+    col_types = "c",
+    na = c("", "NA")
+  )
+```
+
+## Filter and Tidy the Control Form Data
+
+```{r}
+#| label: Filter and Tidy the Control Form Data
+
+control_form_data <-
+  control_form_data |>
+  `names<-`(paste0("X", seq_along(control_form_data))) |>
+  dplyr::select(X5, X6, X12, X13, X14, X39, X40) |>
   rename(
     cpf = X5,
     id = X6,
-    name = X7,
     birth_center_delivery = X12,
     birth = X13,
-    labor_start = X14
+    labor_start = X14,
+    ultrasound_ga = X39,
+    ultrasound_date = X40
   ) |>
   mutate(
     birth_center_delivery = case_when(
@@ -234,27 +321,50 @@ control_data <-
       tolower(trimws(birth_center_delivery)) == "não" ~ FALSE,
       TRUE ~ NA
     ),
-    birth = lubridate::as_datetime(birth),
-    labor_start = lubridate::as_datetime(labor_start)
-  ) |>
-  mutate(
+    ultrasound_date = ymd(ultrasound_date),
+    ga_start = if_else(
+      is.na(ultrasound_ga),
+      as.Date(NA),
+      ga_start(
+        ultrasound = ultrasound_date,
+        ga =
+          str_extract(ultrasound_ga, "^\\d{1,2}") |>
+          as.integer() |>
+          weeks() |>
+          add(
+            str_extract(ultrasound_ga, "\\d(?= di)") |>
+            as.integer() |>
+            days()
+          )
+      )
+    ),
+    birth = as_datetime(birth, tz = "America/Sao_Paulo"),
+    labor_start = as_datetime(labor_start, tz = "America/Sao_Paulo"),
     labor_duration =
-      lubridate::interval(
+      interval(
         start = labor_start,
         end = birth
       ) |>
         lubritime::int_duration()
   ) |>
-  filter(!is.na(labor_duration)) |>
-  dplyr::select(id, birth_center_delivery, labor_start, labor_duration)
-
-control_data
+  dplyr::select(-starts_with("cpf")) |>
+  dplyr::select(
+    id, birth_center_delivery, ga_start, labor_start, labor_duration
+  )
 ```
 
 ```{r}
+control_form_data |> glimpse()
+```
+
+## Filter and Tidy the Field Form Data
+
+```{r}
+#| label: Filter and Tidy the Field Form Data
+
 field_form_data <-
-  field_form |>
-  `names<-`(paste0("X", seq_along(field_form))) |>
+  field_form_data |>
+  `names<-`(paste0("X", seq_along(field_form_data))) |>
   dplyr::select(
     X1, X4, X5, X11, X91, X92, X95, X96, X97, X99, X101, X102, X106, X119,
     X118, X125, X126
@@ -280,8 +390,8 @@ field_form_data <-
   ) |>
   mutate(
     id = anonymize_id(cpf, salt),
-    timestamp = lubridate::mdy_hms(timestamp),
-    birth_date = lubridate::dmy(birth_date),
+    timestamp = mdy_hms(timestamp, tz = "America/Sao_Paulo"),
+    birth_date = dmy(birth_date),
     age = scaler:::age(birth_date, timestamp),
     ethnicity = factor(
       ethnicity,
@@ -368,34 +478,102 @@ field_form_data <-
   relocate(
     id, timestamp, birth_date, age, weight_before, weight_current, height, bmi_before, bmi_current, family_income
   )
-
-field_form_data
 ```
 
 ```{r}
-sleep_data <-
-  sleep_input |>
+#| code-fold: false
+
+field_form_data |> glimpse()
+```
+
+## Filter and Tidy the Primary Sleep Data
+
+```{r}
+#| label: Filter and Tidy the Primary Sleep Data
+
+primary_sleep_data <-
+  primary_sleep_data |>
   mutate(
+    date = as.Date(date),
+    crossover = as.logical(crossover),
     across(
-      .cols = matches("^his_|^hfs_|^fps_|^tts_m|^tts_sd|^waso_"),
+      .cols = all_of(c("his", "hfs", "fps", "tts", "waso")),
       .fns = hms::parse_hms
     ),
+    awakenings = as.numeric(awakenings),
+    tts_fps = as.numeric(tts) / as.numeric(fps)
+  ) |>
+  relocate(tts_fps, .after = waso)
+```
+
+```{r}
+#| code-fold: false
+
+primary_sleep_data |> glimpse()
+```
+
+## Filter and Tidy the Secondary Sleep Data
+
+```{r}
+#| label: Filter and Tidy the Secondary Sleep Data
+
+secondary_sleep_data <-
+  secondary_sleep_data |>
+  mutate(
+    date = as.Date(date),
+    crossover = as.logical(crossover),
     across(
-      .cols = matches("^tts_fps_|^awakenings_"),
+      .cols = all_of(c("his", "hfs", "fps", "tts", "waso")),
+      .fns = hms::parse_hms
+    ),
+    awakenings = as.numeric(awakenings),
+    tts_fps = as.numeric(tts) / as.numeric(fps)
+  ) |>
+  relocate(tts_fps, .after = waso)
+```
+
+```{r}
+#| code-fold: false
+
+secondary_sleep_data |> glimpse()
+```
+
+## Filter and Tidy the Medical Record Data
+
+```{r}
+#| label: Filter and Tidy the Medical Record Data
+
+medical_record_data <-
+  medical_record_data |>
+  mutate(
+    across(
+      .cols = all_of(c("partograph_begin", "baby_birth")),
+      .fns = ~ ymd_hms(.x, tz = "America/Sao_Paulo")
+    ),
+    across(
+      .cols = -all_of(c("id", "partograph_begin", "baby_birth")),
       .fns = as.numeric
+    ),
+    across(
+      .cols = starts_with("apgar_"),
+      .fns = as.integer
     )
   )
+```
 
-sleep_data
+```{r}
+#| code-fold: false
+
+medical_record_data |> glimpse()
 ```
 
 ```{r}
 medical_record_data <-
-  medical_record_input |>
+  medical_record_data |>
   mutate(
     across(
       .cols = all_of(c("partograph_begin", "baby_birth")),
-      .fns = ~ lubridate::ymd_hms(.x, tz = "America/Sao_Paulo")
+      .fns = ~ ymd_hms(.x, tz = "America/Sao_Paulo")
     ),
     across(
       .cols = -all_of(c("id", "partograph_begin", "baby_birth")),
@@ -408,7 +586,7 @@ medical_record_data <-
   ) |>
   mutate(
     partogram_duration =
-      lubridate::interval(
+      interval(
         start = partograph_begin,
         end = baby_birth
       ) |>
@@ -418,11 +596,466 @@ medical_record_data <-
 medical_record_data
 ```
 
+## Import, Tidy and Transform the Processed Actigraphy Data
+
+### Get Paths to Processed Actigraphy Data Files
+
+```{r}
+#| label: Import, Tidy and Transform the Processed Actigraphy Data
+
+files <-
+  dir_ls(
+    path = actigraphy_processed_data_dir,
+    type = "file",
+    regexp = ".txt$"
+  )
+```
+
+### Import, Tidy, Transform, and Write Data Files
+
+```{r}
+#| eval: false
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  i_id <- str_remove(basename(i), "_actigraphy-processed-data.txt")
+
+  i_ga_start <-
+    control_form_data |>
+    filter(id == i_id) |>
+    pull(ga_start)
+
+  i_data <-
+    i |>
+    read_acttrust(tz = "America/Sao_Paulo") |>
+    mutate(
+      ga =
+        i_ga_start |>
+        ga_point(timestamp) |>
+        as.numeric() |>
+        as.duration() |>
+        add(
+          as_hms(timestamp) |>
+            as.numeric() |>
+            as.duration()
+        ),
+      ga_week =
+        ga |>
+        as.numeric() |>
+        divide_by(
+          ddays(7) |>
+            as.numeric()
+        ) |>
+        as.integer()
+    ) |>
+    suppressMessages() |>
+    suppressWarnings()
+
+  i_data |>
+    write_rds(
+      path(
+        actigraphy_processed_data_dir,
+        paste0(i_id, "_actigraphy-processed-data.rds")
+      )
+    )
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+## Import and Group the Validated Actigraphy Data
+
+### Get Paths to the Data Files
+
+```{r}
+#| label: Import and Group the Validated Actigraphy Data
+#| eval: false
+
+files <-
+  dir_ls(
+    path = actigraphy_processed_data_dir,
+    type = "file",
+    regexp = "_actigraphy-processed-data.rds$"
+  )
+```
+
+### Import and Group the Data
+
+```{r}
+#| eval: false
+
+actigraphy_data <-
+  files |>
+  map_dfr(read_rds)
+```
+
+```{r}
+#| eval: false
+#| code-fold: false
+
+actigraphy_data |> glimpse()
+```
+
+## Import, Group and Transform SRI Data
+
+::: {.callout-note}
+See the _SRI Analysis Report_ Quarto notebook report to process and write the Sleep Irregularity Index (SRI) data.
+:::
+
+### SRI by Gestational Age Week
+
+#### Get Paths to the Data Files
+
+```{r}
+#| label: Import, Group and Transform SRI Data
+
+files <-
+  dir_ls(
+    path = sri_data_dir,
+    type = "file",
+    regexp = "_sri-data.rds$"
+  )
+```
+
+#### Import, Group and Transform the Data
+
+```{r}
+sri_data <- tibble()
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  sri_data <-
+    i |>
+    read_rds() |>
+    mutate(
+      time =
+        time |>
+        as.numeric() |>
+        divide_by(60) |>
+        as.integer() |>
+        dminutes() |>
+        as.numeric() |>
+        as_hms()
+    ) |>
+    bind_rows(sri_data)
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+```{r}
+sri_data <-
+  sri_data |>
+  mutate(ga_week = as.factor(ga_week)) |>
+  arrange(ga_week)
+```
+
+```{r}
+#| code-fold: false
+
+sri_data |> glimpse()
+```
+
+### SRI Mean Data by Gestational Age Week
+
+#### Get Paths to Data Files
+
+```{r}
+files <-
+  dir_ls(
+    path = sri_data_dir,
+    type = "file",
+    regexp = "_sri-mean-data.rds$"
+  )
+```
+
+#### Import and Group Data
+
+```{r}
+sri_mean_data <- tibble()
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  sri_mean_data <-
+    i |>
+    read_rds(i) |>
+    bind_rows(sri_mean_data)
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+#### Transform SRI Mean Data
+
+```{r}
+sri_mean_data <-
+  sri_mean_data |>
+  mutate(ga_week = as.factor(ga_week)) |>
+  arrange(ga_week)
+```
+
+```{r}
+#| code-fold: false
+
+sri_mean_data |> glimpse()
+```
+
+## Get SRI Data Unique IDs
+
+```{r}
+#| labels: Get SRI Data Unique IDs
+
+sri_data_ids <- sri_data |> pull(id) |> unique()
+```
+
+```{r}
+#| code-fold: false
+
+sri_data_ids
+```
+
+## Import, Group and Transform Sleep Proportions Data
+
+::: {.callout-note}
+See the _SRI Analysis Report_ Quarto notebook report to process and write the Sleep Proportions Index data.
+:::
+
+### Sleep Proportions by Gestational Age Week
+
+#### Get Paths to Data Files
+
+```{r}
+#| label: Group and Transform Sleep Proportions Data
+
+files <-
+  dir_ls(
+    path = sleep_prop_dir,
+    type = "file",
+    regexp = "_sleep-prop-data.rds$"
+  )
+```
+
+#### Group and Transform Data
+
+```{r}
+sleep_prop_data <- tibble()
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  sleep_prop_data <-
+    i |>
+    read_rds() |>
+    mutate(
+      time =
+        time |>
+        as.numeric() |>
+        divide_by(60) |>
+        as.integer() |>
+        dminutes() |>
+        as.numeric() |>
+        as_hms()
+    ) |>
+    bind_rows(sleep_prop_data)
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+```{r}
+sleep_prop_data <-
+  sleep_prop_data |>
+  mutate(ga_week = as.factor(ga_week)) |>
+  arrange(ga_week)
+```
+
+```{r}
+#| code-fold: false
+
+sleep_prop_data |> glimpse()
+```
+
+### Sleep Proportions Mean Data by Gestational Age Week
+
+#### Get Paths to Mean Data Files
+
+```{r}
+#| label: Group and Transform Sleep Proportions Mean Data
+
+files <-
+  dir_ls(
+    path = sleep_prop_dir,
+    type = "file",
+    regexp = "_sleep-prop-mean-data.rds$"
+  )
+```
+
+#### Import and Group Mean Data
+
+```{r}
+sleep_prop_mean_data <- tibble()
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  sleep_prop_mean_data <-
+    i |>
+    read_rds(i) |>
+    bind_rows(sleep_prop_mean_data)
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+#### Transform Mean Data
+
+```{r}
+sleep_prop_mean_data <-
+  sleep_prop_mean_data |>
+  mutate(ga_week = as.factor(ga_week)) |>
+  arrange(ga_week)
+```
+
+```{r}
+#| code-fold: false
+
+sleep_prop_mean_data |> glimpse()
+```
+
+## Import, Group and Transform Illuminance Levels Data
+
+::: {.callout-note}
+See the _SRI Analysis Report_ Quarto notebook report to process and write the Illuminance Data data.
+:::
+
+### Illuminance Levels by Gestational Age Week
+
+#### Get Paths to Data Files
+
+```{r}
+#| label: Group and Transform Illuminance Data
+
+files <-
+  dir_ls(
+    path = lux_data_dir,
+    type = "file",
+    regexp = "_lux-data.rds$"
+  )
+```
+
+#### Group and Transform Data
+
+```{r}
+lux_data <- tibble()
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  lux_data <-
+    i |>
+    read_rds() |>
+    mutate(
+      time =
+        time |>
+        as.numeric() |>
+        divide_by(60) |>
+        as.integer() |>
+        dminutes() |>
+        as.numeric() |>
+        as_hms()
+    ) |>
+    bind_rows(lux_data)
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+```{r}
+lux_data <-
+  lux_data |>
+  mutate(ga_week = as.factor(ga_week)) |>
+  arrange(ga_week)
+```
+
+```{r}
+#| code-fold: false
+
+lux_data |> glimpse()
+```
+
+
+### Illuminance Levels Mean Data by Gestational Age Week
+
+#### Get Paths to Data Files
+
+```{r}
+#| label: Group and Transform Illuminance Mean Data
+
+files <-
+  dir_ls(
+    path = lux_data_dir,
+    type = "file",
+    regexp = "_lux-mean-data.rds$"
+  )
+```
+
+#### Import and Group Mean Data
+
+```{r}
+lux_mean_data <- tibble()
+
+cli_progress_bar(total = length(files), clear = FALSE)
+
+for (i in files) {
+  lux_mean_data <-
+    i |>
+    read_rds(i) |>
+    bind_rows(lux_mean_data)
+
+  cli_progress_update()
+}
+
+cli_progress_done()
+```
+
+#### Transform Mean Data
+
+```{r}
+lux_mean_data <-
+  lux_mean_data |>
+  mutate(ga_week = as.factor(ga_week)) |>
+  arrange(ga_week)
+```
+
+```{r}
+#| code-fold: false
+
+lux_mean_data |> glimpse()
+```
+
+
+## Define Valid Cases
+
 ```{r}
 valid_cases <-
   field_form_data |>
   left_join(
-    control_data,
+    control_form_data,
     by = "id"
   ) |>
   left_join(
@@ -441,8 +1074,16 @@ valid_cases
 ```
 
 ```{r}
-general_data <-
-  control_data |>
+#| code-fold: false
+
+valid_cases |> glimpse()
+```
+
+## Create Analysis Data
+
+```{r}
+data <-
+  control_form_data |>
   left_join(
     sleep_data,
     by = "id"
@@ -461,103 +1102,10 @@ general_data <-
   filter(id %in% valid_cases)
 ```
 
-## Getting Data from OSF
-
 ```{r}
-data_dir <- here("data")
-```
+#| code-fold: false
 
-```{r}
-if (!dir.exists(data_dir)) dir.create(data_dir)
-```
-
-```{r}
-valid_cases_pattern <- paste0("^", valid_cases, collapse = "|")
-```
-
-```{r}
-osf_processed_data_id <- "a2dsw"
-```
-
-```{r}
-osf_processed_data_id |>
-  osfr::osf_retrieve_node() |>
-  osfr::osf_ls_files(n_max = Inf) |>
-  filter(name == "actigraphy") |>
-  pull(id) |>
-  osfr::osf_retrieve_file() |>
-  osfr::osf_ls_files(n_max = Inf) |>
-  filter(str_detect(name, valid_cases_pattern)) |>
-  filter(str_detect(name, "actigraphy-processed-data")) |>
-  osfr::osf_download(
-    path = data_dir,
-    conflicts = "overwrite",
-    progress = TRUE
-  )
-```
-
-```{r}
-osf_raw_data_id <- "7kg34"
-```
-
-```{r}
-osf_raw_data_id |>
-  osfr::osf_retrieve_node() |>
-  osfr::osf_ls_files(n_max = Inf) |>
-  filter(name == "medical-record") |>
-  pull(id) |>
-  osfr::osf_retrieve_file() |>
-  osfr::osf_ls_files(n_max = Inf) |>
-  filter(str_detect(name, valid_cases_pattern)) |>
-  osfr::osf_download(
-    path = data_dir,
-    conflicts = "overwrite",
-    progress = TRUE
-  )
-```
-
-```{r}
-valid_cases |>
-  setdiff(
-    test |>
-    pull(name) |>
-    str_extract(".*(?=_medical)")
-  )
-```
-
-```{r}
-data_dir |>
-  lockr::unlock_dir(
-    private_key = private_key_path,
-    password = password
-  )
-```
-
-
-The actogram presented in the article was created using the [ActStudio](https://condorinst.com/en/actstudio-software/) software.
-
-```{r}
-general_data |> glimpse()
-```
-
-## Qualitative Variables
-
-```{r}
-#| output: asis
-
-general_data |> summarytools::freq(ethnicity, style = "rmarkdown")
-```
-
-```{r}
-#| output: asis
-
-general_data |> summarytools::freq(education,  style = "rmarkdown")
-```
-
-```{r}
-#| output: asis
-
-general_data |> summarytools::freq(solo,  style = "rmarkdown")
+data |> glimpse()
 ```
 
 ## Quantitative Variables
@@ -571,7 +1119,7 @@ ids <- model_data |> pull(id) |> unique()
 ```{r}
 files <-
   dir_ls(
-    path = processed_actigraphy_data_dir,
+    path = actigraphy_processed_data_dir,
     type = "file",
     regexp = paste0(ids, "_actigraphy-processed-data.rds$", collapse = "|")
   )
@@ -606,7 +1154,6 @@ days_by_id |> print(n = Inf)
 ```{r}
 days_by_id |> pull(days) |> summary()
 ```
-
 
 ## Partogram Duration Model
 
@@ -687,8 +1234,8 @@ medical_record_data |>
     color = "#FC2913"
   ) +
   ggplot2::labs(
-    x = "Duração do partograma (h)",
-    y = "Dilat. do colo do útero (cm)"
+    x = "Duração do Partograma (h)",
+    y = "Dilatação do Colo do Útero (cm)"
   ) +
   ggplot2::scale_x_time()
 
@@ -697,7 +1244,7 @@ medical_record_data |>
 ### Correlation Matrices
 
 ```{r}
-general_data |>
+data |>
   plotr:::plot_ggally(
     cols = c(
       "labor_duration", "age", "family_income", "bmi_before"
@@ -709,7 +1256,7 @@ general_data |>
 ```
 
 ```{r}
-general_data |>
+data |>
   plotr:::plot_ggally(
     cols = c(
       "labor_duration", "gestations", "deliveries", "abortions"
@@ -721,7 +1268,7 @@ general_data |>
 ```
 
 ```{r}
-general_data |>
+data |>
   plotr:::plot_ggally(
     cols = c(
       "labor_duration", "baby_weight", "baby_length",
@@ -736,7 +1283,7 @@ general_data |>
 ```
 
 ```{r}
-general_data |>
+data |>
   plotr:::plot_ggally(
     cols = c("labor_duration", "fps_mean", "waso_mean", "awakenings_mean"),
     labels = c("Duração do parto", "FPS", "WASO", "Desp.")
@@ -744,7 +1291,7 @@ general_data |>
 ```
 
 ```{r}
-general_data |>
+data |>
   mutate(
     his_mean = his_mean |> lubritime::link_to_timeline(),
     hfs_mean = hfs_mean |> lubritime::link_to_timeline()
@@ -763,7 +1310,7 @@ general_data |>
 ```{r}
 #| eval: false
 
-general_data |>
+data |>
   plotr:::plot_ggally(
     cols = c(
       "fps_mean", "tts_mean", "waso_mean", "awakenings_mean",
@@ -841,7 +1388,7 @@ See the _SRI Analysis Report_ for statistics and visualizations related to Illum
 
 ```{r}
 group_data <-
-  control_data |>
+  control_form_data |>
   left_join(
     sleep_data,
     by = "id"
@@ -1056,7 +1603,7 @@ $$
 
 ```{r}
 model_data <-
-  control_data |>
+  control_form_data |>
   left_join(
     sleep_data,
     by = "id"
@@ -1193,7 +1740,7 @@ effectsize::cohens_d(
 
 #### ANCOVA
 
-> See @rutherford2011[pp. 237-261] to lear more about ANOVA-ANCOVA assumptions.
+> See @rutherford2011[pp. 237-261] to learn more about ANOVA-ANCOVA assumptions.
 
 ##### Test
 
@@ -1218,7 +1765,7 @@ model_aov_fps |> report::report()
 
 Veja @cohen1992 para saber mais.
 
-Tamanho de efeito para duraçõa do parto e FSP encontrado por @lee2004a:
+Tamanho de efeito para duração do parto e FSP encontrado por @lee2004a:
 
 ```{r}
 k <- 3
@@ -1514,9 +2061,3 @@ Assumption 6
 
 Assumption 7
 : **Homogeneity of the coefficients** (ANCOVA). The regression coefficients of the dependent variable on the covariate in each treatment group are homogeneous [@rutherford2011[p. 240]].
-
-## Locking the Data Directory
-
-```{r}
-data_dir |> lockr::lock_dir(public_key = public_key_path)
-```
