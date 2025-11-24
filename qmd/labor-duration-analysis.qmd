@@ -197,7 +197,6 @@ sheet_names
 ```
 
 ```{r}
-#| label: Download and Import the Primary Sleep Data
 #| output: false
 
 primary_sleep_data <- tibble()
@@ -228,7 +227,7 @@ for (i in sheet_names) {
 ## Download and Import the Secondary Sleep Data
 
 ```{r}
-#| label: Download and Import the Primary Sleep Data
+#| label: Download and Import the Secondary Sleep Data
 
 sheet_names <-
   "12xFtuHk3dBB6KqU8qhLS17ZcrZqs0AjGWaQtnUE82Uk" |>
@@ -254,7 +253,6 @@ sheet_names
 ```
 
 ```{r}
-#| label: Download and Import the Secondary Sleep Data
 #| output: false
 
 secondary_sleep_data <- tibble()

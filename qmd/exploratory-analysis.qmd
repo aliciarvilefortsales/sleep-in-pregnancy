@@ -1,8 +1,3 @@
----
-execute:
-  eval: false
----
-
 # Exploratory Analysis
 
 ```{r}
@@ -13,6 +8,10 @@ library(here)
 
 source(here("R", "_setup.R"))
 ```
+
+## Overview
+
+This report provides an exploratory analysis of the data collected in the study: *Does Sleep Regularity Worsen Over the Third Trimester of Pregnancy?*.
 
 ## Set the Environment
 
@@ -90,7 +89,7 @@ gs4_auth(
 salt <- Sys.getenv("PREGNANCY_SALT") # askpass()
 ```
 
-## Set Initial Variables
+### Set Initial Variables
 
 ```{r}
 #| output: false
@@ -144,7 +143,8 @@ field_form_data <-
 ```{r}
 #| label: Download and Import the Primary Sleep Data
 
-"18wKHeqbNfrQDzjyOKIX5MCgjVK0WMho6xvdQQpA7ZLE" |>
+sheet_names <-
+  "18wKHeqbNfrQDzjyOKIX5MCgjVK0WMho6xvdQQpA7ZLE" |>
   sheet_names() %>%
   magrittr::extract(
     !. %in% c(
@@ -168,7 +168,6 @@ sheet_names
 ```
 
 ```{r}
-#| label: Download and Import the Primary Sleep Data
 #| output: false
 
 primary_sleep_data <- tibble()
@@ -199,7 +198,7 @@ for (i in sheet_names) {
 ## Download and Import the Secondary Sleep Data
 
 ```{r}
-#| label: Download and Import the Primary Sleep Data
+#| label: Download and Import the Secondary Sleep Data
 
 sheet_names <-
   "12xFtuHk3dBB6KqU8qhLS17ZcrZqs0AjGWaQtnUE82Uk" |>
@@ -225,7 +224,6 @@ sheet_names
 ```
 
 ```{r}
-#| label: Download and Import the Secondary Sleep Data
 #| output: false
 
 secondary_sleep_data <- tibble()
@@ -315,6 +313,8 @@ control_form_data <-
 ```
 
 ```{r}
+#| code-fold: false
+
 control_form_data |> glimpse()
 ```
 
@@ -516,7 +516,7 @@ medical_record_data <-
       .fns = as.numeric
     ),
     across(
-      .cols = starts_with("apgar_"),
+      .cols = matches("^begin_dilation$|^apgar_"),
       .fns = as.integer
     )
   ) |>
@@ -534,35 +534,6 @@ medical_record_data <-
 #| code-fold: false
 
 medical_record_data |> glimpse()
-```
-
-```{r}
-medical_record_data <-
-  medical_record_data |>
-  mutate(
-    across(
-      .cols = all_of(c("partograph_begin", "baby_birth")),
-      .fns = ~ ymd_hms(.x, tz = "America/Sao_Paulo")
-    ),
-    across(
-      .cols = -all_of(c("id", "partograph_begin", "baby_birth")),
-      .fns = as.numeric
-    ),
-    across(
-      .cols = matches("^begin_dilation$|^apgar_"),
-      .fns = as.integer
-    )
-  ) |>
-  mutate(
-    partogram_duration =
-      interval(
-        start = partograph_begin,
-        end = baby_birth
-      ) |>
-        int_duration()
-  )
-
-medical_record_data
 ```
 
 ## Import, Tidy and Transform the Processed Actigraphy Data
@@ -663,7 +634,7 @@ actigraphy_data <-
 
 ```{r}
 #| eval: false
-#| code-fold: false
+#| include: false
 
 actigraphy_data |> glimpse()
 ```
@@ -755,7 +726,7 @@ secondary_sleep_data_stats <-
 ```{r}
 #| code-fold: false
 
-secondary_mean_sleep_data |> glimpse()
+secondary_sleep_data_stats |> glimpse()
 ```
 
 ## Import, Group and Transform SRI Data
@@ -821,7 +792,7 @@ sri_data <-
 sri_data |> glimpse()
 ```
 
-### SRI Mean Data by Gestational Age Week
+### SRI Mean Data by Gestational Age Week and ID
 
 #### Get Paths to Data Files
 
@@ -868,6 +839,20 @@ sri_mean_data <-
 sri_mean_data |> glimpse()
 ```
 
+### SRI Mean Data by Gestational Age Week (Only)
+
+```{r}
+sri_mean_data_by_ga_week <-
+  sri_data |>
+  summarize(
+    sri_mean = mean(sri, na.rm = TRUE),
+    sri_sd = sd(sri, na.rm = TRUE),
+    sri_min = min(sri, na.rm = TRUE),
+    sri_max = max(sri, na.rm = TRUE),
+    .by = ga_week
+  )
+```
+
 ## Get SRI Data Unique IDs
 
 ```{r}
@@ -880,6 +865,82 @@ sri_data_ids <- sri_data |> pull(id) |> unique()
 #| code-fold: false
 
 sri_data_ids
+```
+
+## Categorize Participantes by SRI Levels
+
+```{r}
+#| label: Categorize Participantes by SRI Levels
+
+sri_data_by_id <-
+  sri_data |>
+  summarize(
+    sri = mean(sri, na.rm = TRUE),
+    .by = id
+  )
+```
+
+```{r}
+sri_quintiles <-
+  sri_data_by_id |>
+  pull(sri) |>
+  quantile(probs = c(0, 0.2, 0.4, 0.6, 0.8, 1))
+```
+
+```{r}
+#| code-fold: false
+
+sri_quintiles
+```
+
+```{r}
+sri_top_quintile <- sri_quintiles[5]
+```
+
+```{r}
+sri_bottom_quintile <- sri_quintiles[2]
+```
+
+```{r}
+regular_sri_ids <-
+  sri_data_by_id |>
+  filter(sri >= sri_top_quintile) |>
+  pull(id)
+```
+
+```{r}
+#| code-fold: false
+
+regular_sri_ids
+```
+
+```{r}
+others_sri_ids <-
+  sri_data_by_id |>
+  filter(
+    sri > sri_bottom_quintile &
+    sri < sri_top_quintile
+  ) |>
+  pull(id)
+```
+
+```{r}
+#| code-fold: false
+
+others_sri_ids
+```
+
+```{r}
+irregular_sri_ids <-
+  sri_data_by_id |>
+  filter(sri <= sri_bottom_quintile) |>
+  pull(id)
+```
+
+```{r}
+#| code-fold: false
+
+irregular_sri_ids
 ```
 
 ## Import, Group and Transform Sleep Proportions Data
@@ -945,7 +1006,7 @@ sleep_prop_data <-
 sleep_prop_data |> glimpse()
 ```
 
-### Sleep Proportions Mean Data by Gestational Age Week
+### Sleep Proportions Mean Data by Gestational Age Week and IDs
 
 #### Get Paths to Mean Data Files
 
@@ -992,6 +1053,20 @@ sleep_prop_mean_data <-
 #| code-fold: false
 
 sleep_prop_mean_data |> glimpse()
+```
+
+### Sleep Proportions Mean Data by Gestational Age Week (Only)
+
+```{r}
+sleep_prop_mean_data_by_ga_week <-
+  sleep_prop_data |>
+  summarize(
+    sleep_prop_mean = mean(prop, na.rm = TRUE),
+    sleep_prop_sd = sd(prop, na.rm = TRUE),
+    sleep_prop_min = min(prop, na.rm = TRUE),
+    sleep_prop_max = max(prop, na.rm = TRUE),
+    .by = ga_week
+  )
 ```
 
 ## Import, Group and Transform Illuminance Levels Data
@@ -1058,7 +1133,7 @@ lux_data |> glimpse()
 ```
 
 
-### Illuminance Levels Mean Data by Gestational Age Week
+### Illuminance Levels Mean Data by Gestational Age Week and IDs
 
 #### Get Paths to Data Files
 
@@ -1107,6 +1182,20 @@ lux_mean_data <-
 lux_mean_data |> glimpse()
 ```
 
+### Illuminance Levels Mean Data by Gestational Age Week (Only)
+
+```{r}
+lux_mean_data_by_ga_week <-
+  lux_data |>
+  summarize(
+    lux_mean = mean(lux, na.rm = TRUE),
+    lux_sd = sd(lux, na.rm = TRUE),
+    lux_min = min(lux, na.rm = TRUE),
+    lux_max = max(lux, na.rm = TRUE),
+    .by = ga_week
+  )
+```
+
 ## Create Main Dataset
 
 ```{r}
@@ -1117,17 +1206,27 @@ data <-
   left_join(control_form_data, by = "id") |>
   left_join(medical_record_data, by = "id") |>
   left_join(
-    primary_mean_sleep_data,
+    primary_sleep_data_stats,
     by = "id",
     suffix = c("", "_primary")
   ) |>
   left_join(
-    secondary_mean_sleep_data,
+    secondary_sleep_data_stats,
     by = "id",
     suffix = c("", "_secondary")
   ) |>
   filter(id %in% sri_data_ids) |>
   rename(n_primary_sleep = n, n_secondary_sleep = n_secondary) |>
+  mutate(
+    ga_duration =
+      interval(
+        start = ga_start,
+        end = baby_birth
+      ) |>
+      int_length(),
+    ga_duration = ifelse(sign(ga_duration) == -1, NA, ga_duration),
+    ga_duration = as.duration(ga_duration)
+  ) |>
   dplyr::select(-starts_with("cpf"))
 ```
 
@@ -1136,113 +1235,13 @@ data |> glimpse()
 ```
 
 
-## Get Descriptive Statistics of the Sample Time Interval
-
-```{r}
-#| label: Get Descriptive Statistics of the Sample Time Interval
-#| code-fold: false
-
-cli_h1("timestamp")
-cat_line()
-
-data |>
-  stats_summary(
-    col = "timestamp",
-    name = "timestamp",
-    threshold = NULL
-  ) |>
-  print(n = Inf)
-
-cat_line()
-```
-
-## Get Frequencies for Logical Variables
-
-```{r}
-#| label: Get Frequencies for Logical Variables
-
-logical_vars <-
-  data |>
-  select(where(is.logical)) |>
-  names()
-```
-
-```{r}
-#| code-fold: false
-
-for (i in logical_vars) {
-  cli_h1(i)
-  cat_line()
-
-  data |>
-    stats_summary(col = i, name = i) |>
-    print(n = Inf)
-
-  cat_line()
-}
-```
-
-## Get Frequencies for Categorical Variables
-
-```{r}
-#| label: Get Frequencies for Categorical Variables
-
-categorical_vars <-
-  data |>
-  select(where(is.character) | where(is.factor)) |>
-  select(-id) |>
-  names()
-```
-
-```{r}
-#| code-fold: false
-
-for (i in categorical_vars) {
-  cli_h1(i)
-  cat_line()
-
-  data |>
-    stats_summary(col = i, name = i) |>
-    print(n = Inf)
-
-  cat_line()
-}
-```
-
-## Get Descriptive Statistics for Numerical Variables
-
-```{r}
-#| label: Get Descriptive Statistics for Numerical Variables
-
-numerical_vars <-
-  data |>
-  select(where(is.numeric) & !where(test_temporal)) |>
-  names()
-```
-
-```{r}
-#| code-fold: false
-
-for (i in numerical_vars) {
-  cli_h1(i)
-  cat_line()
-
-  data |>
-    stats_summary(col = i, name = i) |>
-    print(n = Inf)
-
-  cat_line()
-}
-```
-
-## Get Descriptive Statistics for Linear Temporal Variables
+## Get Frequency and Descriptive Statistics (General)
 
 ```{r}
 #| label: Get Descriptive Statistics for Linear Temporal Variables
 
-linear_temporal_vars <-
+variables <-
   data |>
-  select(where(test_temporal)) |>
   select(!starts_with(c("his_", "hfs_"))) |>
   names()
 ```
@@ -1250,7 +1249,7 @@ linear_temporal_vars <-
 ```{r}
 #| code-fold: false
 
-for (i in linear_temporal_vars) {
+for (i in variables) {
   cli_h1(i)
   cat_line()
 
@@ -1266,12 +1265,12 @@ for (i in linear_temporal_vars) {
 }
 ```
 
-## Get Descriptive Statistics for Circular Temporal Variables
+## Get Frequency and Descriptive Statistics (Circular Temporal Variables)
 
 ```{r}
 #| label: Get Descriptive Statistics for Circular Temporal Variables
 
-circular_temporal_vars <-
+variables <-
   data |>
   select(starts_with(c("his_", "hfs_"))) |>
   names()
@@ -1280,7 +1279,7 @@ circular_temporal_vars <-
 ```{r}
 #| code-fold: false
 
-for (i in circular_temporal_vars) {
+for (i in variables) {
   cli_h1(i)
   cat_line()
 
@@ -1300,6 +1299,260 @@ for (i in circular_temporal_vars) {
 
   cat_line()
 }
+```
+
+## Group Data by Gestational Age Week
+
+::: {.callout-note}
+The sleep statistics (e.g., his, hfs) by gestational age week are not included.
+:::
+
+```{r}
+#| label: Group Data by Gestational Age Week
+
+ga_group_data <-
+  sri_mean_data_by_ga_week |>
+  left_join(sleep_prop_mean_data_by_ga_week, by = "ga_week") |>
+  left_join(lux_mean_data_by_ga_week, by = "ga_week") |>
+  arrange(ga_week)
+```
+
+```{r}
+#| code-fold: false
+
+ga_group_data |> glimpse()
+```
+
+```{r}
+ga_group_data
+```
+
+## Group Data by SRI Group
+
+```{r}
+#| label: Group Data by SRI Group
+
+sri_mean_data_by_sri_group <-
+  sri_data |>
+  filter(id %in% sri_data_ids) |>
+  mutate(
+    group = case_when(
+      id %in% regular_sri_ids ~ "regular",
+      id %in% others_sri_ids ~ "others",
+      id %in% irregular_sri_ids ~ "irregular"
+    )
+  ) |>
+  summarize(
+    sri_mean = mean(sri, na.rm = TRUE),
+    sri_sd = sd(sri, na.rm = TRUE),
+    sri_min = min(sri, na.rm = TRUE),
+    sri_max = max(sri, na.rm = TRUE),
+    .by = group
+  ) |>
+  arrange(desc(group))
+```
+
+```{r}
+sleep_prop_mean_data_by_sri_group <-
+  sleep_prop_data |>
+  filter(id %in% sri_data_ids) |>
+  mutate(
+    group = case_when(
+      id %in% regular_sri_ids ~ "regular",
+      id %in% others_sri_ids ~ "others",
+      id %in% irregular_sri_ids ~ "irregular"
+    )
+  ) |>
+  summarize(
+    sleep_prop_mean = mean(prop, na.rm = TRUE),
+    sleep_prop_sd = sd(prop, na.rm = TRUE),
+    sleep_prop_min = min(prop, na.rm = TRUE),
+    sleep_prop_max = max(prop, na.rm = TRUE),
+    .by = group
+  ) |>
+  arrange(desc(group))
+```
+
+```{r}
+lux_mean_data_by_sri_group <-
+  lux_data |>
+  filter(id %in% sri_data_ids) |>
+  mutate(
+    group = case_when(
+      id %in% regular_sri_ids ~ "regular",
+      id %in% others_sri_ids ~ "others",
+      id %in% irregular_sri_ids ~ "irregular"
+    )
+  ) |>
+  summarize(
+    lux_mean = mean(lux, na.rm = TRUE),
+    lux_sd = sd(lux, na.rm = TRUE),
+    lux_min = min(lux, na.rm = TRUE),
+    lux_max = max(lux, na.rm = TRUE),
+    .by = group
+  ) |>
+  arrange(desc(group))
+```
+
+```{r}
+primary_sleep_data_by_sri_group <-
+  primary_sleep_data |>
+  filter(id %in% sri_data_ids) |>
+  mutate(
+    group = case_when(
+      id %in% regular_sri_ids ~ "regular",
+      id %in% others_sri_ids ~ "others",
+      id %in% irregular_sri_ids ~ "irregular"
+    )
+  ) |>
+  summarize(
+    his_mean = summarize_his(his, mean, na.rm = TRUE),
+    his_sd = summarize_his(his, sd, na.rm = TRUE),
+    his_min = summarize_his(his, min, na.rm = TRUE),
+    his_max = summarize_his(his, max, na.rm = TRUE),
+    hfs_mean = summarize_hfs(hfs, mean, na.rm = TRUE),
+    hfs_sd = summarize_hfs(hfs, sd, na.rm = TRUE),
+    hfs_min = summarize_hfs(hfs, min, na.rm = TRUE),
+    hfs_max = summarize_hfs(hfs, max, na.rm = TRUE),
+    across(
+      .cols = c(fps, tts, waso),
+      .fns = list(
+        mean = \(x) x |> mean(na.rm = TRUE) |> as_hms(),
+        sd = \(x) x |> sd(na.rm = TRUE) |> as_hms(),
+        min = \(x) x |> min(na.rm = TRUE) |> as_hms(),
+        max = \(x) x |> max(na.rm = TRUE) |> as_hms()
+      ),
+      .names = "{.col}_{.fn}"
+    ),
+    across(
+      .cols = c(tts_fps, awakenings),
+      .fns = list(
+        mean = \(x) x |> mean(na.rm = TRUE),
+        sd = \(x) x |> sd(na.rm = TRUE),
+        min = \(x) x |> min(na.rm = TRUE),
+        max = \(x) x |> max(na.rm = TRUE)
+      ),
+      .names = "{.col}_{.fn}"
+    ),
+    .by = group
+  ) |>
+  arrange(desc(group))
+```
+
+```{r}
+sri_group_data <-
+  sri_mean_data_by_sri_group |>
+  left_join(sleep_prop_mean_data_by_sri_group, by = "group") |>
+  left_join(lux_mean_data_by_sri_group, by = "group") |>
+  left_join(primary_sleep_data_by_sri_group, by = "group") |>
+  arrange(desc(group))
+```
+
+```{r}
+#| code-fold: false
+
+sri_group_data |> glimpse()
+```
+
+```{r}
+sri_group_data
+```
+
+## Group Data by SRI Group and Gestational Age Week
+
+```{r}
+#| label: Group Data by SRI Group and Gestational Age Week
+
+sri_mean_data_by_sri_group_ga_week <-
+  sri_data |>
+  filter(id %in% sri_data_ids) |>
+  mutate(
+    group = case_when(
+      id %in% regular_sri_ids ~ "regular",
+      id %in% others_sri_ids ~ "others",
+      id %in% irregular_sri_ids ~ "irregular"
+    )
+  ) |>
+  summarize(
+    sri_mean = mean(sri, na.rm = TRUE),
+    sri_sd = sd(sri, na.rm = TRUE),
+    sri_min = min(sri, na.rm = TRUE),
+    sri_max = max(sri, na.rm = TRUE),
+    .by = c(group, ga_week)
+  ) |>
+  arrange(desc(group), ga_week)
+```
+
+```{r}
+#| code-fold: false
+
+sri_mean_data_by_sri_group_ga_week |> glimpse()
+```
+
+```{r}
+sri_mean_data_by_sri_group_ga_week
+```
+
+```{r}
+sleep_prop_data_by_sri_group_ga_week <-
+  sleep_prop_data |>
+  filter(id %in% sri_data_ids) |>
+  mutate(
+    group = case_when(
+      id %in% regular_sri_ids ~ "regular",
+      id %in% others_sri_ids ~ "others",
+      id %in% irregular_sri_ids ~ "irregular"
+    )
+  ) |>
+  summarize(
+    sleep_prop_mean = mean(prop, na.rm = TRUE),
+    sleep_prop_sd = sd(prop, na.rm = TRUE),
+    sleep_prop_min = min(prop, na.rm = TRUE),
+    sleep_prop_max = max(prop, na.rm = TRUE),
+    .by = c(group, ga_week)
+  ) |>
+  arrange(desc(group), ga_week)
+```
+
+```{r}
+#| code-fold: false
+
+sleep_prop_data_by_sri_group_ga_week |> glimpse()
+```
+
+```{r}
+sleep_prop_data_by_sri_group_ga_week
+```
+
+```{r}
+lux_data_by_sri_group_ga_week <-
+  lux_data |>
+  filter(id %in% sri_data_ids) |>
+  mutate(
+    group = case_when(
+      id %in% regular_sri_ids ~ "regular",
+      id %in% others_sri_ids ~ "others",
+      id %in% irregular_sri_ids ~ "irregular"
+    )
+  ) |>
+  summarize(
+    lux_mean = mean(lux, na.rm = TRUE),
+    lux_sd = sd(lux, na.rm = TRUE),
+    lux_min = min(lux, na.rm = TRUE),
+    lux_max = max(lux, na.rm = TRUE),
+    .by = c(group, ga_week)
+  ) |>
+  arrange(desc(group), ga_week)
+```
+
+```{r}
+#| code-fold: false
+
+lux_data_by_sri_group_ga_week |> glimpse()
+```
+
+```{r}
+lux_data_by_sri_group_ga_week
 ```
 
 ## Plot Distributions
@@ -1395,6 +1648,9 @@ data |>
 ```
 
 ```{r}
+#| fig-width: 10
+#| fig-height: 7.5
+
 data |>
   plotr:::plot_ggally(
     cols = c("partograph_duration", "fps_mean", "waso_mean", "awakenings_mean"),
@@ -1459,8 +1715,8 @@ actigraphy_data <-
 ```
 
 ```{r}
-#| fig-width: 16
-#| fig-height: 12
+#| fig-width: 10
+#| fig-height: 10
 
 actigraphy_data |>
   actogram(

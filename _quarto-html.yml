@@ -20,14 +20,17 @@ book:
     - part: "Chapters"
       chapters:
         - qmd/exploratory-analysis.qmd
-        - qmd/sapopemba-survey-analysis.qmd
-        - qmd/short-report-analysis.qmd
         - qmd/sri-analysis.qmd
+        - qmd/short-report-analysis.qmd
     - qmd/references.qmd
   appendices:
     - qmd/osf-routines.qmd
     - qmd/file-processing-routines.qmd
     - qmd/variable-computations.qmd
+    - qmd/sapopemba-survey-analysis.qmd
+    - qmd/birth-center-map.qmd
+    - qmd/sleep-analysis.qmd
+    - qmd/labor-duration-analysis.qmd
 
 knitr:
   opts_chunk:

@@ -627,6 +627,8 @@ data |>
 
 ```{r}
 #| label: Plot Correlation Matrices
+#| fig-width: 10
+#| fig-height: 7.5
 
 data |>
   plotr:::plot_ggally(
@@ -640,6 +642,9 @@ data |>
 ```
 
 ```{r}
+#| fig-width: 10
+#| fig-height: 7.5
+
 data |>
   plotr:::plot_ggally(
     cols = c(
@@ -652,6 +657,9 @@ data |>
 ```
 
 ```{r}
+#| fig-width: 10
+#| fig-height: 7.5
+
 data |>
   plotr:::plot_ggally(
     cols = c(
@@ -667,6 +675,9 @@ data |>
 ```
 
 ```{r}
+#| fig-width: 10
+#| fig-height: 7.5
+
 data |>
   plotr:::plot_ggally(
     cols = c("labor_duration", "fps_mean", "waso_mean", "awakenings_mean"),
@@ -675,6 +686,9 @@ data |>
 ```
 
 ```{r}
+#| fig-width: 10
+#| fig-height: 7.5
+
 data |>
   mutate(
     his_mean = his_mean |> link_to_timeline(),
@@ -693,6 +707,9 @@ data |>
 ```
 
 ```{r}
+#| fig-width: 10
+#| fig-height: 7.5
+
 data |>
   plotr:::plot_ggally(
     cols = c(
@@ -703,11 +720,4 @@ data |>
       "FPS", "TTS", "WASO", "Desp.", "Idade", "Renda", "IMC"
     )
   )
-```
-
-```{r}
-#| eval: false
-#| include: false
-
-dev.off()
 ```

@@ -60,8 +60,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../qmd/sri-analysis.html" rel="next">
-<link href="../qmd/sapopemba-survey-analysis.html" rel="prev">
+<link href="../qmd/references.html" rel="next">
+<link href="../qmd/sri-analysis.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -186,20 +186,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../qmd/sapopemba-survey-analysis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Sapopemba Survey Analysis</span></span></a>
+  <a href="../qmd/sri-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">SRI Analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmd/short-report-analysis.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Short Report Analysis</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../qmd/sri-analysis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">SRI Analysis</span></span></a>
   </div>
 </li>
       </ul>
@@ -228,13 +222,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmd/file-processing-routines.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Anonymize and Process Files</span></span></a>
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">File Processing Routines</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmd/variable-computations.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Variable Computations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmd/sapopemba-survey-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Sapopemba Survey Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmd/birth-center-map.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Birth Center Map</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmd/sleep-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Sleep Statistics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmd/labor-duration-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Labor Duration Analysis</span></span></a>
   </div>
 </li>
       </ul>
@@ -267,7 +285,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#filter-and-tidy-the-medical-record-data" id="toc-filter-and-tidy-the-medical-record-data" class="nav-link" data-scroll-target="#filter-and-tidy-the-medical-record-data"><span class="header-section-number">3.10</span> Filter and Tidy the Medical Record Data</a></li>
   <li><a href="#identify-valid-cases" id="toc-identify-valid-cases" class="nav-link" data-scroll-target="#identify-valid-cases"><span class="header-section-number">3.11</span> Identify Valid Cases</a></li>
   <li><a href="#create-the-data-for-analysis" id="toc-create-the-data-for-analysis" class="nav-link" data-scroll-target="#create-the-data-for-analysis"><span class="header-section-number">3.12</span> Create the Data for Analysis</a></li>
-  <li><a href="#get-descriptive-statistics-of-the-time-interval-of-data-collection" id="toc-get-descriptive-statistics-of-the-time-interval-of-data-collection" class="nav-link" data-scroll-target="#get-descriptive-statistics-of-the-time-interval-of-data-collection"><span class="header-section-number">3.13</span> Get Descriptive Statistics of the Time Interval of Data Collection</a></li>
+  <li><a href="#get-descriptive-statistics-of-the-sample-time-interval" id="toc-get-descriptive-statistics-of-the-sample-time-interval" class="nav-link" data-scroll-target="#get-descriptive-statistics-of-the-sample-time-interval"><span class="header-section-number">3.13</span> Get Descriptive Statistics of the Sample Time Interval</a></li>
   <li><a href="#get-frequencies-for-logical-variables" id="toc-get-frequencies-for-logical-variables" class="nav-link" data-scroll-target="#get-frequencies-for-logical-variables"><span class="header-section-number">3.14</span> Get Frequencies for Logical Variables</a></li>
   <li><a href="#get-frequencies-for-categorical-variables" id="toc-get-frequencies-for-categorical-variables" class="nav-link" data-scroll-target="#get-frequencies-for-categorical-variables"><span class="header-section-number">3.15</span> Get Frequencies for Categorical Variables</a></li>
   <li><a href="#get-descriptive-statistics-for-numerical-variables" id="toc-get-descriptive-statistics-for-numerical-variables" class="nav-link" data-scroll-target="#get-descriptive-statistics-for-numerical-variables"><span class="header-section-number">3.16</span> Get Descriptive Statistics for Numerical Variables</a></li>
@@ -346,8 +364,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="header-section-number">3.2.3</span> Set Data Directories</h3>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span><span class="op">)</span></span>
-<span><span class="va">processed_data_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"processed"</span><span class="op">)</span></span>
-<span><span class="va">processed_actigraphy_data_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"processed"</span>, <span class="st">"actigraphy"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span><span class="va">processed_data_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="va">data_dir</span>, <span class="st">"processed"</span><span class="op">)</span></span>
+<span><span class="va">actigraphy_processed_data_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="va">data_dir</span>, <span class="st">"processed"</span>, <span class="st">"actigraphy"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
@@ -378,7 +396,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  <span class="st">"13wtDr4fRD1wJSM-qdLOdGSchF8oXU1bG0Jtccu24GhY"</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://googlesheets4.tidyverse.org/reference/range_read.html">read_sheet</a></span><span class="op">(</span></span>
 <span>    sheet <span class="op">=</span> <span class="st">"Dataset"</span>,</span>
-<span>    col_types <span class="op">=</span> <span class="st">"c"</span></span>
+<span>    col_types <span class="op">=</span> <span class="st">"c"</span>,</span>
+<span>    na <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"NA"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
@@ -390,7 +409,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  <span class="st">"1tY_TT0nPXFsErYQS2VED0-hqTzgHudA9BfhRhYG19fw"</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://googlesheets4.tidyverse.org/reference/range_read.html">read_sheet</a></span><span class="op">(</span></span>
 <span>    sheet <span class="op">=</span> <span class="st">"Dataset"</span>,</span>
-<span>    col_types <span class="op">=</span> <span class="st">"c"</span></span>
+<span>    col_types <span class="op">=</span> <span class="st">"c"</span>,</span>
+<span>    na <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"NA"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
@@ -402,7 +422,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  <span class="st">"1iqjhdSiWYr9RYSvIvJQfFw35DR31YA_oj2SW8iR5WPw"</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://googlesheets4.tidyverse.org/reference/range_read.html">read_sheet</a></span><span class="op">(</span></span>
 <span>    sheet <span class="op">=</span> <span class="st">"Dataset"</span>,</span>
-<span>    col_types <span class="op">=</span> <span class="st">"c"</span></span>
+<span>    col_types <span class="op">=</span> <span class="st">"c"</span>,</span>
+<span>    na <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"NA"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
@@ -414,7 +435,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  <span class="st">"10yvvTOCjZsRKPO8A4yn0NCvWe4Jn_Kq-Zu_CV4miGJI"</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://googlesheets4.tidyverse.org/reference/range_read.html">read_sheet</a></span><span class="op">(</span></span>
 <span>    sheet <span class="op">=</span> <span class="st">"Dataset"</span>,</span>
-<span>    col_types <span class="op">=</span> <span class="st">"c"</span></span>
+<span>    col_types <span class="op">=</span> <span class="st">"c"</span>,</span>
+<span>    na <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"NA"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
@@ -439,8 +461,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/chartr.html">tolower</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/trimws.html">trimws</a></span><span class="op">(</span><span class="va">birth_center_delivery</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="st">"não"</span> <span class="op">~</span> <span class="cn">FALSE</span>,</span>
 <span>      <span class="cn">TRUE</span> <span class="op">~</span> <span class="cn">NA</span></span>
 <span>    <span class="op">)</span>,</span>
-<span>    birth <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/as_date.html">as_datetime</a></span><span class="op">(</span><span class="va">birth</span><span class="op">)</span>,</span>
-<span>    labor_start <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/as_date.html">as_datetime</a></span><span class="op">(</span><span class="va">labor_start</span><span class="op">)</span></span>
+<span>    birth <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/as_date.html">as_datetime</a></span><span class="op">(</span><span class="va">birth</span>, tz <span class="op">=</span> <span class="st">"America/Sao_Paulo"</span><span class="op">)</span>,</span>
+<span>    labor_start <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/as_date.html">as_datetime</a></span><span class="op">(</span><span class="va">labor_start</span>, tz <span class="op">=</span> <span class="st">"America/Sao_Paulo"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    labor_duration <span class="op">=</span></span>
@@ -494,7 +516,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    id <span class="op">=</span> <span class="fu">anonymize_id</span><span class="op">(</span><span class="va">cpf</span>, <span class="va">salt</span><span class="op">)</span>,</span>
-<span>    timestamp <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html">mdy_hms</a></span><span class="op">(</span><span class="va">timestamp</span><span class="op">)</span>,</span>
+<span>    timestamp <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html">mdy_hms</a></span><span class="op">(</span><span class="va">timestamp</span>, tz <span class="op">=</span> <span class="st">"America/Sao_Paulo"</span><span class="op">)</span>,</span>
 <span>    birth_date <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd.html">dmy</a></span><span class="op">(</span><span class="va">birth_date</span><span class="op">)</span>,</span>
 <span>    age <span class="op">=</span> <span class="fu">scaler</span><span class="fu">:::</span><span class="fu"><a href="https://danielvartan.github.io/scaler/reference/age.html">age</a></span><span class="op">(</span><span class="va">birth_date</span>, <span class="va">timestamp</span><span class="op">)</span>,</span>
 <span>    ethnicity <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span></span>
@@ -714,9 +736,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">control_form_data</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">field_form_data</span>, by <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">sleep_data</span>, by <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">medical_record_data</span>, by <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">field_form_data</span>, by <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    waso_prop <span class="op">=</span></span>
 <span>      <span class="va">waso_mean</span> <span class="op">|&gt;</span></span>
@@ -735,13 +757,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt; $ birth_center_delivery    &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, …</span></span>
 <span><span class="co">#&gt; $ labor_start              &lt;dttm&gt; 2023-08-06 09:30:00, 2023-08-01 03:30:00,…</span></span>
 <span><span class="co">#&gt; $ labor_duration           &lt;Duration&gt; 19440s (~5.4 hours), 99300s (~1.15 da…</span></span>
-<span><span class="co">#&gt; $ his_min                  &lt;time&gt; 01:26:15, 22:30:44, 23:25:39, 00:01:18, 0…</span></span>
-<span><span class="co">#&gt; $ his_max                  &lt;time&gt; 03:41:15, 05:55:44, 01:38:39, 02:05:18, 0…</span></span>
-<span><span class="co">#&gt; $ his_mean                 &lt;time&gt; 02:18:45, 00:39:32, 00:37:19, 01:12:54, 0…</span></span>
-<span><span class="co">#&gt; $ his_sd                   &lt;time&gt; 00:37:56, 02:40:43, 00:51:14, 00:38:38, 0…</span></span>
-<span><span class="co">#&gt; $ hfs_min                  &lt;time&gt; 07:42:15, 04:02:44, 07:13:39, 05:55:18, 0…</span></span>
-<span><span class="co">#&gt; $ hfs_max                  &lt;time&gt; 15:37:15, 10:32:44, 10:51:39, 09:13:18, 1…</span></span>
-<span><span class="co">#&gt; $ hfs_mean                 &lt;time&gt; 11:10:40, 07:30:20, 08:36:59, 07:51:18, 0…</span></span>
+<span><span class="co">#&gt; $ timestamp                &lt;dttm&gt; 2023-05-26 17:55:52, 2023-07-16 22:02:13,…</span></span>
+<span><span class="co">#&gt; $ birth_date               &lt;date&gt; 2001-07-25, 1989-03-06, 1996-05-11, 1989-…</span></span>
+<span><span class="co">#&gt; $ age                      &lt;dbl&gt; 21.83611111, 34.36111111, 27.20277778, 34.…</span></span>
+<span><span class="co">#&gt; $ weight_before            &lt;dbl&gt; 50, 75, 66, 87, 70, 73, 52, 61</span></span>
+<span><span class="co">#&gt; $ weight_current           &lt;dbl&gt; 75, 89, 79, 94, 76, 90, 62, 77</span></span>
+<span><span class="co">#&gt; $ height                   &lt;dbl&gt; 156, 164, 159, 174, 169, 159, 148, 160</span></span>
+<span><span class="co">#&gt; $ bmi_before               &lt;dbl&gt; 20.54569362, 27.88518739, 26.10656224, 28.…</span></span>
+<span><span class="co">#&gt; $ bmi_current              &lt;dbl&gt; 30.81854043, 33.09042237, 31.24876389, 31.…</span></span>
+<span><span class="co">#&gt; $ family_income            &lt;dbl&gt; 2800, 6000, 2500, 6000, 5000, 3000, 3500, …</span></span>
+<span><span class="co">#&gt; $ gestations               &lt;dbl&gt; 1, 1, 1, 1, 1, 2, 1, 1</span></span>
+<span><span class="co">#&gt; $ study                    &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, F…</span></span>
+<span><span class="co">#&gt; $ work                     &lt;lgl&gt; TRUE, TRUE, FALSE, TRUE, TRUE, FALSE, TRUE…</span></span>
+<span><span class="co">#&gt; $ health_plan              &lt;lgl&gt; FALSE, TRUE, FALSE, TRUE, TRUE, FALSE, FAL…</span></span>
+<span><span class="co">#&gt; $ solo                     &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, …</span></span>
+<span><span class="co">#&gt; $ ethnicity                &lt;ord&gt; Parda, Branca, Parda, Branca, Branca, Bran…</span></span>
+<span><span class="co">#&gt; $ exercise                 &lt;lgl&gt; NA, NA, NA, NA, NA, FALSE, FALSE, FALSE</span></span>
+<span><span class="co">#&gt; $ education                &lt;ord&gt; NA, NA, NA, NA, NA, Ensino superior incomp…</span></span>
+<span><span class="co">#&gt; $ deliveries               &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0</span></span>
+<span><span class="co">#&gt; $ abortions                &lt;dbl&gt; 0, 0, 0, 0, 0, 1, 0, 0</span></span>
+<span><span class="co">#&gt; $ his_min                  &lt;time&gt; 01:26:15, 22:30:44, 23:25:39, 00:01:18, 00…</span></span>
+<span><span class="co">#&gt; $ his_max                  &lt;time&gt; 03:41:15, 05:55:44, 01:38:39, 02:05:18, 03…</span></span>
+<span><span class="co">#&gt; $ his_mean                 &lt;time&gt; 02:18:45, 00:39:32, 00:37:19, 01:12:54, 01…</span></span>
+<span><span class="co">#&gt; $ his_sd                   &lt;time&gt; 00:37:56, 02:40:43, 00:51:14, 00:38:38, 01…</span></span>
+<span><span class="co">#&gt; $ hfs_min                  &lt;time&gt; 07:42:15, 04:02:44, 07:13:39, 05:55:18, 08…</span></span>
+<span><span class="co">#&gt; $ hfs_max                  &lt;time&gt; 15:37:15, 10:32:44, 10:51:39, 09:13:18, 10…</span></span>
+<span><span class="co">#&gt; $ hfs_mean                 &lt;time&gt; 11:10:40, 07:30:20, 08:36:59, 07:51:18, 09…</span></span>
 <span><span class="co">#&gt; $ hfs_sd                   &lt;time&gt; 02:25:50, 02:13:33, 01:13:28, 01:10:06, 0…</span></span>
 <span><span class="co">#&gt; $ fps_min                  &lt;time&gt; 05:01:00, 02:38:00, 06:21:00, 05:33:00, 0…</span></span>
 <span><span class="co">#&gt; $ fps_max                  &lt;time&gt; 13:40:00, 10:57:00, 09:44:00, 07:15:00, 0…</span></span>
@@ -751,60 +792,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt; $ tts_max                  &lt;time&gt; 10:00:00, 08:31:00, 06:23:00, 06:44:00, 0…</span></span>
 <span><span class="co">#&gt; $ tts_mean                 &lt;time&gt; 06:56:37, 05:47:36, 05:19:00, 06:00:00, 0…</span></span>
 <span><span class="co">#&gt; $ tts_sd                   &lt;time&gt; 02:05:55, 02:29:07, 00:49:14, 00:33:49, 0…</span></span>
-<span><span class="co">#&gt; $ tts_fps_min              &lt;dbl&gt; 73.17, 77.78, 53.74, 84.60, 69.86, 73.33, …</span></span>
-<span><span class="co">#&gt; $ tts_fps_max              &lt;dbl&gt; 92.38, 93.43, 80.35, 95.96, 92.89, 95.11, …</span></span>
-<span><span class="co">#&gt; $ tts_fps_mean             &lt;dbl&gt; 80.78, 86.06, 67.11, 90.53, 85.45, 85.62, …</span></span>
-<span><span class="co">#&gt; $ tts_fps_sd               &lt;dbl&gt; 6.34, 5.14, 9.20, 3.68, 7.08, 8.32, 3.49, …</span></span>
+<span><span class="co">#&gt; $ tts_fps_min              &lt;dbl&gt; 73.17, 77.78, 53.74, 84.60, 69.86, 73.33,…</span></span>
+<span><span class="co">#&gt; $ tts_fps_max              &lt;dbl&gt; 92.38, 93.43, 80.35, 95.96, 92.89, 95.11,…</span></span>
+<span><span class="co">#&gt; $ tts_fps_mean             &lt;dbl&gt; 80.78, 86.06, 67.11, 90.53, 85.45, 85.62,…</span></span>
+<span><span class="co">#&gt; $ tts_fps_sd               &lt;dbl&gt; 6.34, 5.14, 9.20, 3.68, 7.08, 8.32, 3.49,…</span></span>
 <span><span class="co">#&gt; $ waso_min                 &lt;time&gt; 00:40:00, 00:18:00, 01:29:00, 00:17:07, 0…</span></span>
 <span><span class="co">#&gt; $ waso_max                 &lt;time&gt; 03:40:00, 02:26:00, 04:08:00, 01:07:00, 0…</span></span>
 <span><span class="co">#&gt; $ waso_mean                &lt;time&gt; 01:45:25, 01:03:12, 02:40:00, 00:38:20, 0…</span></span>
-<span><span class="co">#&gt; $ waso_sd                  &lt;time&gt; 01:00:18, 00:48:39, 00:58:46, 00:17:07, 0…</span></span>
+<span><span class="co">#&gt; $ waso_sd                  &lt;time&gt; 01:00:18, 00:48:39, 00:58:46, 00:17:07, 00…</span></span>
 <span><span class="co">#&gt; $ awakenings_min           &lt;dbl&gt; 8, 4, 10, 3, 3, 8, 8, 6</span></span>
 <span><span class="co">#&gt; $ awakenings_max           &lt;dbl&gt; 34, 13, 21, 10, 15, 20, 19, 14</span></span>
 <span><span class="co">#&gt; $ awakenings_mean          &lt;dbl&gt; 18.00, 8.40, 16.67, 5.83, 10.29, 13.80, 13…</span></span>
 <span><span class="co">#&gt; $ awakenings_sd            &lt;dbl&gt; 7.33, 3.50, 4.27, 2.27, 3.61, 4.26, 4.31, …</span></span>
 <span><span class="co">#&gt; $ partograph_begin         &lt;dttm&gt; 2023-06-08 11:40:00, 2023-08-02 03:00:00, …</span></span>
 <span><span class="co">#&gt; $ begin_dilation           &lt;dbl&gt; 7, 7, 7, 6, 5, 7, 7, 10</span></span>
-<span><span class="co">#&gt; $ baby_birth               &lt;dttm&gt; 2023-06-08 14:54:00, 2023-08-02 07:05:00, …</span></span>
+<span><span class="co">#&gt; $ baby_birth               &lt;dttm&gt; 2023-06-08 14:54:00, 2023-08-02 07:05:00,…</span></span>
 <span><span class="co">#&gt; $ baby_weight              &lt;dbl&gt; 2995, 2785, 3730, 3340, 3010, 2740, 3080,…</span></span>
-<span><span class="co">#&gt; $ baby_length              &lt;dbl&gt; 46.0, 46.0, 51.0, 49.5, 45.5, 47.0, 49.0, …</span></span>
+<span><span class="co">#&gt; $ baby_length              &lt;dbl&gt; 46.0, 46.0, 51.0, 49.5, 45.5, 47.0, 49.0,…</span></span>
 <span><span class="co">#&gt; $ baby_head_perimeter      &lt;dbl&gt; 32.5, 33.0, 34.0, 35.0, 33.0, 32.0, 31.2,…</span></span>
 <span><span class="co">#&gt; $ baby_thoracic_perimeter  &lt;dbl&gt; 31.0, 32.0, 34.5, 33.5, 32.0, 31.0, 32.0, …</span></span>
 <span><span class="co">#&gt; $ baby_abdominal_perimeter &lt;dbl&gt; 30.0, 30.0, 31.5, 32.5, 33.5, 28.0, 30.0, …</span></span>
 <span><span class="co">#&gt; $ apgar_score_1_minute     &lt;int&gt; 9, 9, 9, 9, 9, 9, 9, 9</span></span>
 <span><span class="co">#&gt; $ apgar_score_5_minute     &lt;int&gt; 10, 10, 10, 10, 10, 10, 10, 10</span></span>
-<span><span class="co">#&gt; $ timestamp                &lt;dttm&gt; 2023-05-26 17:55:52, 2023-07-16 22:02:13, …</span></span>
-<span><span class="co">#&gt; $ birth_date               &lt;date&gt; 2001-07-25, 1989-03-06, 1996-05-11, 1989-0…</span></span>
-<span><span class="co">#&gt; $ age                      &lt;dbl&gt; 21.83611111, 34.36111111, 27.20277778, 34.…</span></span>
-<span><span class="co">#&gt; $ weight_before            &lt;dbl&gt; 50, 75, 66, 87, 70, 73, 52, 61</span></span>
-<span><span class="co">#&gt; $ weight_current           &lt;dbl&gt; 75, 89, 79, 94, 76, 90, 62, 77</span></span>
-<span><span class="co">#&gt; $ height                   &lt;dbl&gt; 156, 164, 159, 174, 169, 159, 148, 160</span></span>
-<span><span class="co">#&gt; $ bmi_before               &lt;dbl&gt; 20.54569362, 27.88518739, 26.10656224, 28.…</span></span>
-<span><span class="co">#&gt; $ bmi_current              &lt;dbl&gt; 30.81854043, 33.09042237, 31.24876389, 31.…</span></span>
-<span><span class="co">#&gt; $ family_income            &lt;dbl&gt; 2800, 6000, 2500, 6000, 5000, 3000, 3500,…</span></span>
-<span><span class="co">#&gt; $ gestations               &lt;dbl&gt; 1, 1, 1, 1, 1, 2, 1, 1</span></span>
-<span><span class="co">#&gt; $ study                    &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, …</span></span>
-<span><span class="co">#&gt; $ work                     &lt;lgl&gt; TRUE, TRUE, FALSE, TRUE, TRUE, FALSE, TRUE…</span></span>
-<span><span class="co">#&gt; $ health_plan              &lt;lgl&gt; FALSE, TRUE, FALSE, TRUE, TRUE, FALSE, FAL…</span></span>
-<span><span class="co">#&gt; $ solo                     &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, …</span></span>
-<span><span class="co">#&gt; $ ethnicity                &lt;ord&gt; Parda, Branca, Parda, Branca, Branca, Bran…</span></span>
-<span><span class="co">#&gt; $ exercise                 &lt;lgl&gt; NA, NA, NA, NA, NA, FALSE, FALSE, FALSE</span></span>
-<span><span class="co">#&gt; $ education                &lt;ord&gt; NA, NA, NA, NA, NA, Ensino superior incomp…</span></span>
-<span><span class="co">#&gt; $ deliveries               &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0</span></span>
-<span><span class="co">#&gt; $ abortions                &lt;dbl&gt; 0, 0, 0, 0, 0, 1, 0, 0</span></span>
 <span><span class="co">#&gt; $ waso_prop                &lt;dbl&gt; 0.20194763729, 0.15408370581, 0.3335649756…</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-</section><section id="get-descriptive-statistics-of-the-time-interval-of-data-collection" class="level2" data-number="3.13"><h2 data-number="3.13" class="anchored" data-anchor-id="get-descriptive-statistics-of-the-time-interval-of-data-collection">
-<span class="header-section-number">3.13</span> Get Descriptive Statistics of the Time Interval of Data Collection</h2>
+</section><section id="get-descriptive-statistics-of-the-sample-time-interval" class="level2" data-number="3.13"><h2 data-number="3.13" class="anchored" data-anchor-id="get-descriptive-statistics-of-the-sample-time-interval">
+<span class="header-section-number">3.13</span> Get Descriptive Statistics of the Sample Time Interval</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_h1.html">cli_h1</a></span><span class="op">(</span><span class="st">"timestamp"</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_h1.html">cli_h1</a></span><span class="op">(</span><span class="st">"timestamp"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── timestamp ────────────────────────────────────────────────────────────────</span></span>
 <span><span class="fu"><a href="https://cli.r-lib.org/reference/cat_line.html">cat_line</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">rutils</span><span class="fu">:::</span><span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span></span>
 <span>    col <span class="op">=</span> <span class="st">"timestamp"</span>,</span>
 <span>    name <span class="op">=</span> <span class="st">"timestamp"</span>,</span>
 <span>    threshold <span class="op">=</span> <span class="cn">NULL</span></span>
@@ -818,14 +840,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;  3 n        8                                    </span></span>
 <span><span class="co">#&gt;  4 n_rm_na  8                                    </span></span>
 <span><span class="co">#&gt;  5 n_na     0                                    </span></span>
-<span><span class="co">#&gt;  6 mean     2023-12-22 00:44:03.375              </span></span>
+<span><span class="co">#&gt;  6 mean     2023-12-22 03:44:03.375              </span></span>
 <span><span class="co">#&gt;  7 var      428938220369039s (~13592231.99 years)</span></span>
 <span><span class="co">#&gt;  8 sd       20710823.7491665s (~34.24 weeks)     </span></span>
-<span><span class="co">#&gt;  9 min      2023-05-26 17:55:52                  </span></span>
-<span><span class="co">#&gt; 10 q_1      2023-07-02 20:27:32                  </span></span>
-<span><span class="co">#&gt; 11 median   2023-07-20 21:49:20                  </span></span>
-<span><span class="co">#&gt; 12 q_3      2024-09-06 09:44:44                  </span></span>
-<span><span class="co">#&gt; 13 max      2024-11-02 21:04:31                  </span></span>
+<span><span class="co">#&gt;  9 min      2023-05-26 20:55:52                  </span></span>
+<span><span class="co">#&gt; 10 q_1      2023-07-02 23:27:32                  </span></span>
+<span><span class="co">#&gt; 11 median   2023-07-21 00:49:20                  </span></span>
+<span><span class="co">#&gt; 12 q_3      2024-09-06 12:44:44                  </span></span>
+<span><span class="co">#&gt; 13 max      2024-11-03 00:04:31                  </span></span>
 <span><span class="co">#&gt; 14 iqr      37286232s (~1.18 years)              </span></span>
 <span><span class="co">#&gt; 15 range    45457719s (~1.44 years)              </span></span>
 <span><span class="co">#&gt; 16 skewness 0.521032391062454                    </span></span>
@@ -844,11 +866,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="va">logical_vars</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_h1.html">cli_h1</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://cli.r-lib.org/reference/cli_h1.html">cli_h1</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://cli.r-lib.org/reference/cat_line.html">cat_line</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">data</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">rutils</span><span class="fu">:::</span><span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">i</span>, name <span class="op">=</span> <span class="va">i</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">i</span>, name <span class="op">=</span> <span class="va">i</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="fu"><a href="https://cli.r-lib.org/reference/cat_line.html">cat_line</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -954,11 +976,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="va">categorical_vars</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_h1.html">cli_h1</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://cli.r-lib.org/reference/cli_h1.html">cli_h1</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://cli.r-lib.org/reference/cat_line.html">cat_line</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">data</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">rutils</span><span class="fu">:::</span><span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">i</span>, name <span class="op">=</span> <span class="va">i</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">i</span>, name <span class="op">=</span> <span class="va">i</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="fu"><a href="https://cli.r-lib.org/reference/cat_line.html">cat_line</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -1006,15 +1028,245 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="va">numerical_vars</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_h1.html">cli_h1</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://cli.r-lib.org/reference/cli_h1.html">cli_h1</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://cli.r-lib.org/reference/cat_line.html">cat_line</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">data</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">rutils</span><span class="fu">:::</span><span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">i</span>, name <span class="op">=</span> <span class="va">i</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">i</span>, name <span class="op">=</span> <span class="va">i</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="fu"><a href="https://cli.r-lib.org/reference/cat_line.html">cat_line</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── age ──────────────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
+<span><span class="co">#&gt;    name     value             </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;             </span></span>
+<span><span class="co">#&gt;  1 name     age               </span></span>
+<span><span class="co">#&gt;  2 class    numeric           </span></span>
+<span><span class="co">#&gt;  3 n        8                 </span></span>
+<span><span class="co">#&gt;  4 n_rm_na  8                 </span></span>
+<span><span class="co">#&gt;  5 n_na     0                 </span></span>
+<span><span class="co">#&gt;  6 mean     29.2003472222222  </span></span>
+<span><span class="co">#&gt;  7 var      27.065602816358   </span></span>
+<span><span class="co">#&gt;  8 sd       5.20246122680006  </span></span>
+<span><span class="co">#&gt;  9 min      21.8361111111111  </span></span>
+<span><span class="co">#&gt; 10 q_1      25.0847222222222  </span></span>
+<span><span class="co">#&gt; 11 median   29.5208333333333  </span></span>
+<span><span class="co">#&gt; 12 q_3      34.3548611111111  </span></span>
+<span><span class="co">#&gt; 13 max      34.6166666666667  </span></span>
+<span><span class="co">#&gt; 14 iqr      9.27013888888889  </span></span>
+<span><span class="co">#&gt; 15 range    12.7805555555556  </span></span>
+<span><span class="co">#&gt; 16 skewness -0.167796245966507</span></span>
+<span><span class="co">#&gt; 17 kurtosis 1.39285363405217</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── weight_before ────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
+<span><span class="co">#&gt;    name     value             </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;             </span></span>
+<span><span class="co">#&gt;  1 name     weight_before     </span></span>
+<span><span class="co">#&gt;  2 class    numeric           </span></span>
+<span><span class="co">#&gt;  3 n        8                 </span></span>
+<span><span class="co">#&gt;  4 n_rm_na  8                 </span></span>
+<span><span class="co">#&gt;  5 n_na     0                 </span></span>
+<span><span class="co">#&gt;  6 mean     66.75             </span></span>
+<span><span class="co">#&gt;  7 var      151.357142857143  </span></span>
+<span><span class="co">#&gt;  8 sd       12.3027290816771  </span></span>
+<span><span class="co">#&gt;  9 min      50                </span></span>
+<span><span class="co">#&gt; 10 q_1      58.75             </span></span>
+<span><span class="co">#&gt; 11 median   68                </span></span>
+<span><span class="co">#&gt; 12 q_3      73.5              </span></span>
+<span><span class="co">#&gt; 13 max      87                </span></span>
+<span><span class="co">#&gt; 14 iqr      14.75             </span></span>
+<span><span class="co">#&gt; 15 range    37                </span></span>
+<span><span class="co">#&gt; 16 skewness 0.0856852230790232</span></span>
+<span><span class="co">#&gt; 17 kurtosis 2.14914988571679</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── weight_current ───────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
+<span><span class="co">#&gt;    name     value             </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;             </span></span>
+<span><span class="co">#&gt;  1 name     weight_current    </span></span>
+<span><span class="co">#&gt;  2 class    numeric           </span></span>
+<span><span class="co">#&gt;  3 n        8                 </span></span>
+<span><span class="co">#&gt;  4 n_rm_na  8                 </span></span>
+<span><span class="co">#&gt;  5 n_na     0                 </span></span>
+<span><span class="co">#&gt;  6 mean     80.25             </span></span>
+<span><span class="co">#&gt;  7 var      107.357142857143  </span></span>
+<span><span class="co">#&gt;  8 sd       10.3613292032028  </span></span>
+<span><span class="co">#&gt;  9 min      62                </span></span>
+<span><span class="co">#&gt; 10 q_1      75.75             </span></span>
+<span><span class="co">#&gt; 11 median   78                </span></span>
+<span><span class="co">#&gt; 12 q_3      89.25             </span></span>
+<span><span class="co">#&gt; 13 max      94                </span></span>
+<span><span class="co">#&gt; 14 iqr      13.5              </span></span>
+<span><span class="co">#&gt; 15 range    32                </span></span>
+<span><span class="co">#&gt; 16 skewness -0.293774808039906</span></span>
+<span><span class="co">#&gt; 17 kurtosis 2.30577434618454</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── height ───────────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
+<span><span class="co">#&gt;    name     value             </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;             </span></span>
+<span><span class="co">#&gt;  1 name     height            </span></span>
+<span><span class="co">#&gt;  2 class    numeric           </span></span>
+<span><span class="co">#&gt;  3 n        8                 </span></span>
+<span><span class="co">#&gt;  4 n_rm_na  8                 </span></span>
+<span><span class="co">#&gt;  5 n_na     0                 </span></span>
+<span><span class="co">#&gt;  6 mean     161.125           </span></span>
+<span><span class="co">#&gt;  7 var      63.5535714285714  </span></span>
+<span><span class="co">#&gt;  8 sd       7.97204938698773  </span></span>
+<span><span class="co">#&gt;  9 min      148               </span></span>
+<span><span class="co">#&gt; 10 q_1      158.25            </span></span>
+<span><span class="co">#&gt; 11 median   159.5             </span></span>
+<span><span class="co">#&gt; 12 q_3      165.25            </span></span>
+<span><span class="co">#&gt; 13 max      174               </span></span>
+<span><span class="co">#&gt; 14 iqr      7                 </span></span>
+<span><span class="co">#&gt; 15 range    26                </span></span>
+<span><span class="co">#&gt; 16 skewness 0.0693762409985175</span></span>
+<span><span class="co">#&gt; 17 kurtosis 2.49806627428723</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── bmi_before ───────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
+<span><span class="co">#&gt;    name     value             </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;             </span></span>
+<span><span class="co">#&gt;  1 name     bmi_before        </span></span>
+<span><span class="co">#&gt;  2 class    numeric           </span></span>
+<span><span class="co">#&gt;  3 n        8                 </span></span>
+<span><span class="co">#&gt;  4 n_rm_na  8                 </span></span>
+<span><span class="co">#&gt;  5 n_na     0                 </span></span>
+<span><span class="co">#&gt;  6 mean     25.5281928033487  </span></span>
+<span><span class="co">#&gt;  7 var      8.47626423008758  </span></span>
+<span><span class="co">#&gt;  8 sd       2.91140245072501  </span></span>
+<span><span class="co">#&gt;  9 min      20.5456936226167  </span></span>
+<span><span class="co">#&gt; 10 q_1      23.8060827930971  </span></span>
+<span><span class="co">#&gt; 11 median   25.307754002811   </span></span>
+<span><span class="co">#&gt; 12 q_3      28.0977985873214  </span></span>
+<span><span class="co">#&gt; 13 max      28.8754400537953  </span></span>
+<span><span class="co">#&gt; 14 iqr      4.2917157942243   </span></span>
+<span><span class="co">#&gt; 15 range    8.32974643117864  </span></span>
+<span><span class="co">#&gt; 16 skewness -0.319302799272042</span></span>
+<span><span class="co">#&gt; 17 kurtosis 2.04128796287026</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── bmi_current ──────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
+<span><span class="co">#&gt;    name     value            </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;            </span></span>
+<span><span class="co">#&gt;  1 name     bmi_current      </span></span>
+<span><span class="co">#&gt;  2 class    numeric          </span></span>
+<span><span class="co">#&gt;  3 n        8                </span></span>
+<span><span class="co">#&gt;  4 n_rm_na  8                </span></span>
+<span><span class="co">#&gt;  5 n_na     0                </span></span>
+<span><span class="co">#&gt;  6 mean     30.8498060929956 </span></span>
+<span><span class="co">#&gt;  7 var      7.5472695581915  </span></span>
+<span><span class="co">#&gt;  8 sd       2.7472294331183  </span></span>
+<span><span class="co">#&gt;  9 min      26.609712545079  </span></span>
+<span><span class="co">#&gt; 10 q_1      29.6349268398466 </span></span>
+<span><span class="co">#&gt; 11 median   30.9331174887289 </span></span>
+<span><span class="co">#&gt; 12 q_3      31.7091785122846 </span></span>
+<span><span class="co">#&gt; 13 max      35.5998576005696 </span></span>
+<span><span class="co">#&gt; 14 iqr      2.07425167243796 </span></span>
+<span><span class="co">#&gt; 15 range    8.99014505549064 </span></span>
+<span><span class="co">#&gt; 16 skewness 0.186586651959977</span></span>
+<span><span class="co">#&gt; 17 kurtosis 2.57909194524704</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── family_income ────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
+<span><span class="co">#&gt;    name     value            </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;            </span></span>
+<span><span class="co">#&gt;  1 name     family_income    </span></span>
+<span><span class="co">#&gt;  2 class    numeric          </span></span>
+<span><span class="co">#&gt;  3 n        8                </span></span>
+<span><span class="co">#&gt;  4 n_rm_na  8                </span></span>
+<span><span class="co">#&gt;  5 n_na     0                </span></span>
+<span><span class="co">#&gt;  6 mean     4475             </span></span>
+<span><span class="co">#&gt;  7 var      3019285.71428571 </span></span>
+<span><span class="co">#&gt;  8 sd       1737.60919492437 </span></span>
+<span><span class="co">#&gt;  9 min      2500             </span></span>
+<span><span class="co">#&gt; 10 q_1      2950             </span></span>
+<span><span class="co">#&gt; 11 median   4250             </span></span>
+<span><span class="co">#&gt; 12 q_3      6000             </span></span>
+<span><span class="co">#&gt; 13 max      7000             </span></span>
+<span><span class="co">#&gt; 14 iqr      3050             </span></span>
+<span><span class="co">#&gt; 15 range    4500             </span></span>
+<span><span class="co">#&gt; 16 skewness 0.197867678604843</span></span>
+<span><span class="co">#&gt; 17 kurtosis 1.43751388342507</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── gestations ───────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
+<span><span class="co">#&gt;    name     value            </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;            </span></span>
+<span><span class="co">#&gt;  1 name     gestations       </span></span>
+<span><span class="co">#&gt;  2 class    numeric          </span></span>
+<span><span class="co">#&gt;  3 n        8                </span></span>
+<span><span class="co">#&gt;  4 n_rm_na  8                </span></span>
+<span><span class="co">#&gt;  5 n_na     0                </span></span>
+<span><span class="co">#&gt;  6 mean     1.125            </span></span>
+<span><span class="co">#&gt;  7 var      0.125            </span></span>
+<span><span class="co">#&gt;  8 sd       0.353553390593274</span></span>
+<span><span class="co">#&gt;  9 min      1                </span></span>
+<span><span class="co">#&gt; 10 q_1      1                </span></span>
+<span><span class="co">#&gt; 11 median   1                </span></span>
+<span><span class="co">#&gt; 12 q_3      1                </span></span>
+<span><span class="co">#&gt; 13 max      2                </span></span>
+<span><span class="co">#&gt; 14 iqr      0                </span></span>
+<span><span class="co">#&gt; 15 range    1                </span></span>
+<span><span class="co">#&gt; 16 skewness 2.26778683805536 </span></span>
+<span><span class="co">#&gt; 17 kurtosis 6.14285714285714</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── deliveries ───────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
+<span><span class="co">#&gt;    name     value     </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;     </span></span>
+<span><span class="co">#&gt;  1 name     deliveries</span></span>
+<span><span class="co">#&gt;  2 class    numeric   </span></span>
+<span><span class="co">#&gt;  3 n        8         </span></span>
+<span><span class="co">#&gt;  4 n_rm_na  8         </span></span>
+<span><span class="co">#&gt;  5 n_na     0         </span></span>
+<span><span class="co">#&gt;  6 mean     0         </span></span>
+<span><span class="co">#&gt;  7 var      0         </span></span>
+<span><span class="co">#&gt;  8 sd       0         </span></span>
+<span><span class="co">#&gt;  9 min      0         </span></span>
+<span><span class="co">#&gt; 10 q_1      0         </span></span>
+<span><span class="co">#&gt; 11 median   0         </span></span>
+<span><span class="co">#&gt; 12 q_3      0         </span></span>
+<span><span class="co">#&gt; 13 max      0         </span></span>
+<span><span class="co">#&gt; 14 iqr      0         </span></span>
+<span><span class="co">#&gt; 15 range    0         </span></span>
+<span><span class="co">#&gt; 16 skewness NaN       </span></span>
+<span><span class="co">#&gt; 17 kurtosis NaN</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── abortions ────────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
+<span><span class="co">#&gt;    name     value            </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;            </span></span>
+<span><span class="co">#&gt;  1 name     abortions        </span></span>
+<span><span class="co">#&gt;  2 class    numeric          </span></span>
+<span><span class="co">#&gt;  3 n        8                </span></span>
+<span><span class="co">#&gt;  4 n_rm_na  8                </span></span>
+<span><span class="co">#&gt;  5 n_na     0                </span></span>
+<span><span class="co">#&gt;  6 mean     0.125            </span></span>
+<span><span class="co">#&gt;  7 var      0.125            </span></span>
+<span><span class="co">#&gt;  8 sd       0.353553390593274</span></span>
+<span><span class="co">#&gt;  9 min      0                </span></span>
+<span><span class="co">#&gt; 10 q_1      0                </span></span>
+<span><span class="co">#&gt; 11 median   0                </span></span>
+<span><span class="co">#&gt; 12 q_3      0                </span></span>
+<span><span class="co">#&gt; 13 max      1                </span></span>
+<span><span class="co">#&gt; 14 iqr      0                </span></span>
+<span><span class="co">#&gt; 15 range    1                </span></span>
+<span><span class="co">#&gt; 16 skewness 2.26778683805536 </span></span>
+<span><span class="co">#&gt; 17 kurtosis 6.14285714285714</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── tts_fps_min ──────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1384,236 +1636,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt; 16 skewness NaN                 </span></span>
 <span><span class="co">#&gt; 17 kurtosis NaN</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── age ──────────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
-<span><span class="co">#&gt;    name     value             </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;             </span></span>
-<span><span class="co">#&gt;  1 name     age               </span></span>
-<span><span class="co">#&gt;  2 class    numeric           </span></span>
-<span><span class="co">#&gt;  3 n        8                 </span></span>
-<span><span class="co">#&gt;  4 n_rm_na  8                 </span></span>
-<span><span class="co">#&gt;  5 n_na     0                 </span></span>
-<span><span class="co">#&gt;  6 mean     29.2003472222222  </span></span>
-<span><span class="co">#&gt;  7 var      27.065602816358   </span></span>
-<span><span class="co">#&gt;  8 sd       5.20246122680006  </span></span>
-<span><span class="co">#&gt;  9 min      21.8361111111111  </span></span>
-<span><span class="co">#&gt; 10 q_1      25.0847222222222  </span></span>
-<span><span class="co">#&gt; 11 median   29.5208333333333  </span></span>
-<span><span class="co">#&gt; 12 q_3      34.3548611111111  </span></span>
-<span><span class="co">#&gt; 13 max      34.6166666666667  </span></span>
-<span><span class="co">#&gt; 14 iqr      9.27013888888889  </span></span>
-<span><span class="co">#&gt; 15 range    12.7805555555556  </span></span>
-<span><span class="co">#&gt; 16 skewness -0.167796245966507</span></span>
-<span><span class="co">#&gt; 17 kurtosis 1.39285363405217</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── weight_before ────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
-<span><span class="co">#&gt;    name     value             </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;             </span></span>
-<span><span class="co">#&gt;  1 name     weight_before     </span></span>
-<span><span class="co">#&gt;  2 class    numeric           </span></span>
-<span><span class="co">#&gt;  3 n        8                 </span></span>
-<span><span class="co">#&gt;  4 n_rm_na  8                 </span></span>
-<span><span class="co">#&gt;  5 n_na     0                 </span></span>
-<span><span class="co">#&gt;  6 mean     66.75             </span></span>
-<span><span class="co">#&gt;  7 var      151.357142857143  </span></span>
-<span><span class="co">#&gt;  8 sd       12.3027290816771  </span></span>
-<span><span class="co">#&gt;  9 min      50                </span></span>
-<span><span class="co">#&gt; 10 q_1      58.75             </span></span>
-<span><span class="co">#&gt; 11 median   68                </span></span>
-<span><span class="co">#&gt; 12 q_3      73.5              </span></span>
-<span><span class="co">#&gt; 13 max      87                </span></span>
-<span><span class="co">#&gt; 14 iqr      14.75             </span></span>
-<span><span class="co">#&gt; 15 range    37                </span></span>
-<span><span class="co">#&gt; 16 skewness 0.0856852230790232</span></span>
-<span><span class="co">#&gt; 17 kurtosis 2.14914988571679</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── weight_current ───────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
-<span><span class="co">#&gt;    name     value             </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;             </span></span>
-<span><span class="co">#&gt;  1 name     weight_current    </span></span>
-<span><span class="co">#&gt;  2 class    numeric           </span></span>
-<span><span class="co">#&gt;  3 n        8                 </span></span>
-<span><span class="co">#&gt;  4 n_rm_na  8                 </span></span>
-<span><span class="co">#&gt;  5 n_na     0                 </span></span>
-<span><span class="co">#&gt;  6 mean     80.25             </span></span>
-<span><span class="co">#&gt;  7 var      107.357142857143  </span></span>
-<span><span class="co">#&gt;  8 sd       10.3613292032028  </span></span>
-<span><span class="co">#&gt;  9 min      62                </span></span>
-<span><span class="co">#&gt; 10 q_1      75.75             </span></span>
-<span><span class="co">#&gt; 11 median   78                </span></span>
-<span><span class="co">#&gt; 12 q_3      89.25             </span></span>
-<span><span class="co">#&gt; 13 max      94                </span></span>
-<span><span class="co">#&gt; 14 iqr      13.5              </span></span>
-<span><span class="co">#&gt; 15 range    32                </span></span>
-<span><span class="co">#&gt; 16 skewness -0.293774808039906</span></span>
-<span><span class="co">#&gt; 17 kurtosis 2.30577434618454</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── height ───────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
-<span><span class="co">#&gt;    name     value             </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;             </span></span>
-<span><span class="co">#&gt;  1 name     height            </span></span>
-<span><span class="co">#&gt;  2 class    numeric           </span></span>
-<span><span class="co">#&gt;  3 n        8                 </span></span>
-<span><span class="co">#&gt;  4 n_rm_na  8                 </span></span>
-<span><span class="co">#&gt;  5 n_na     0                 </span></span>
-<span><span class="co">#&gt;  6 mean     161.125           </span></span>
-<span><span class="co">#&gt;  7 var      63.5535714285714  </span></span>
-<span><span class="co">#&gt;  8 sd       7.97204938698773  </span></span>
-<span><span class="co">#&gt;  9 min      148               </span></span>
-<span><span class="co">#&gt; 10 q_1      158.25            </span></span>
-<span><span class="co">#&gt; 11 median   159.5             </span></span>
-<span><span class="co">#&gt; 12 q_3      165.25            </span></span>
-<span><span class="co">#&gt; 13 max      174               </span></span>
-<span><span class="co">#&gt; 14 iqr      7                 </span></span>
-<span><span class="co">#&gt; 15 range    26                </span></span>
-<span><span class="co">#&gt; 16 skewness 0.0693762409985175</span></span>
-<span><span class="co">#&gt; 17 kurtosis 2.49806627428723</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── bmi_before ───────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
-<span><span class="co">#&gt;    name     value             </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;             </span></span>
-<span><span class="co">#&gt;  1 name     bmi_before        </span></span>
-<span><span class="co">#&gt;  2 class    numeric           </span></span>
-<span><span class="co">#&gt;  3 n        8                 </span></span>
-<span><span class="co">#&gt;  4 n_rm_na  8                 </span></span>
-<span><span class="co">#&gt;  5 n_na     0                 </span></span>
-<span><span class="co">#&gt;  6 mean     25.5281928033487  </span></span>
-<span><span class="co">#&gt;  7 var      8.47626423008758  </span></span>
-<span><span class="co">#&gt;  8 sd       2.91140245072501  </span></span>
-<span><span class="co">#&gt;  9 min      20.5456936226167  </span></span>
-<span><span class="co">#&gt; 10 q_1      23.8060827930971  </span></span>
-<span><span class="co">#&gt; 11 median   25.307754002811   </span></span>
-<span><span class="co">#&gt; 12 q_3      28.0977985873214  </span></span>
-<span><span class="co">#&gt; 13 max      28.8754400537953  </span></span>
-<span><span class="co">#&gt; 14 iqr      4.2917157942243   </span></span>
-<span><span class="co">#&gt; 15 range    8.32974643117864  </span></span>
-<span><span class="co">#&gt; 16 skewness -0.319302799272042</span></span>
-<span><span class="co">#&gt; 17 kurtosis 2.04128796287026</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── bmi_current ──────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
-<span><span class="co">#&gt;    name     value            </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;            </span></span>
-<span><span class="co">#&gt;  1 name     bmi_current      </span></span>
-<span><span class="co">#&gt;  2 class    numeric          </span></span>
-<span><span class="co">#&gt;  3 n        8                </span></span>
-<span><span class="co">#&gt;  4 n_rm_na  8                </span></span>
-<span><span class="co">#&gt;  5 n_na     0                </span></span>
-<span><span class="co">#&gt;  6 mean     30.8498060929956 </span></span>
-<span><span class="co">#&gt;  7 var      7.5472695581915  </span></span>
-<span><span class="co">#&gt;  8 sd       2.7472294331183  </span></span>
-<span><span class="co">#&gt;  9 min      26.609712545079  </span></span>
-<span><span class="co">#&gt; 10 q_1      29.6349268398466 </span></span>
-<span><span class="co">#&gt; 11 median   30.9331174887289 </span></span>
-<span><span class="co">#&gt; 12 q_3      31.7091785122846 </span></span>
-<span><span class="co">#&gt; 13 max      35.5998576005696 </span></span>
-<span><span class="co">#&gt; 14 iqr      2.07425167243796 </span></span>
-<span><span class="co">#&gt; 15 range    8.99014505549064 </span></span>
-<span><span class="co">#&gt; 16 skewness 0.186586651959977</span></span>
-<span><span class="co">#&gt; 17 kurtosis 2.57909194524704</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── family_income ────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
-<span><span class="co">#&gt;    name     value            </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;            </span></span>
-<span><span class="co">#&gt;  1 name     family_income    </span></span>
-<span><span class="co">#&gt;  2 class    numeric          </span></span>
-<span><span class="co">#&gt;  3 n        8                </span></span>
-<span><span class="co">#&gt;  4 n_rm_na  8                </span></span>
-<span><span class="co">#&gt;  5 n_na     0                </span></span>
-<span><span class="co">#&gt;  6 mean     4475             </span></span>
-<span><span class="co">#&gt;  7 var      3019285.71428571 </span></span>
-<span><span class="co">#&gt;  8 sd       1737.60919492437 </span></span>
-<span><span class="co">#&gt;  9 min      2500             </span></span>
-<span><span class="co">#&gt; 10 q_1      2950             </span></span>
-<span><span class="co">#&gt; 11 median   4250             </span></span>
-<span><span class="co">#&gt; 12 q_3      6000             </span></span>
-<span><span class="co">#&gt; 13 max      7000             </span></span>
-<span><span class="co">#&gt; 14 iqr      3050             </span></span>
-<span><span class="co">#&gt; 15 range    4500             </span></span>
-<span><span class="co">#&gt; 16 skewness 0.197867678604843</span></span>
-<span><span class="co">#&gt; 17 kurtosis 1.43751388342507</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── gestations ───────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
-<span><span class="co">#&gt;    name     value            </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;            </span></span>
-<span><span class="co">#&gt;  1 name     gestations       </span></span>
-<span><span class="co">#&gt;  2 class    numeric          </span></span>
-<span><span class="co">#&gt;  3 n        8                </span></span>
-<span><span class="co">#&gt;  4 n_rm_na  8                </span></span>
-<span><span class="co">#&gt;  5 n_na     0                </span></span>
-<span><span class="co">#&gt;  6 mean     1.125            </span></span>
-<span><span class="co">#&gt;  7 var      0.125            </span></span>
-<span><span class="co">#&gt;  8 sd       0.353553390593274</span></span>
-<span><span class="co">#&gt;  9 min      1                </span></span>
-<span><span class="co">#&gt; 10 q_1      1                </span></span>
-<span><span class="co">#&gt; 11 median   1                </span></span>
-<span><span class="co">#&gt; 12 q_3      1                </span></span>
-<span><span class="co">#&gt; 13 max      2                </span></span>
-<span><span class="co">#&gt; 14 iqr      0                </span></span>
-<span><span class="co">#&gt; 15 range    1                </span></span>
-<span><span class="co">#&gt; 16 skewness 2.26778683805536 </span></span>
-<span><span class="co">#&gt; 17 kurtosis 6.14285714285714</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── deliveries ───────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
-<span><span class="co">#&gt;    name     value     </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;     </span></span>
-<span><span class="co">#&gt;  1 name     deliveries</span></span>
-<span><span class="co">#&gt;  2 class    numeric   </span></span>
-<span><span class="co">#&gt;  3 n        8         </span></span>
-<span><span class="co">#&gt;  4 n_rm_na  8         </span></span>
-<span><span class="co">#&gt;  5 n_na     0         </span></span>
-<span><span class="co">#&gt;  6 mean     0         </span></span>
-<span><span class="co">#&gt;  7 var      0         </span></span>
-<span><span class="co">#&gt;  8 sd       0         </span></span>
-<span><span class="co">#&gt;  9 min      0         </span></span>
-<span><span class="co">#&gt; 10 q_1      0         </span></span>
-<span><span class="co">#&gt; 11 median   0         </span></span>
-<span><span class="co">#&gt; 12 q_3      0         </span></span>
-<span><span class="co">#&gt; 13 max      0         </span></span>
-<span><span class="co">#&gt; 14 iqr      0         </span></span>
-<span><span class="co">#&gt; 15 range    0         </span></span>
-<span><span class="co">#&gt; 16 skewness NaN       </span></span>
-<span><span class="co">#&gt; 17 kurtosis NaN</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── abortions ────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
-<span><span class="co">#&gt;    name     value            </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;            </span></span>
-<span><span class="co">#&gt;  1 name     abortions        </span></span>
-<span><span class="co">#&gt;  2 class    numeric          </span></span>
-<span><span class="co">#&gt;  3 n        8                </span></span>
-<span><span class="co">#&gt;  4 n_rm_na  8                </span></span>
-<span><span class="co">#&gt;  5 n_na     0                </span></span>
-<span><span class="co">#&gt;  6 mean     0.125            </span></span>
-<span><span class="co">#&gt;  7 var      0.125            </span></span>
-<span><span class="co">#&gt;  8 sd       0.353553390593274</span></span>
-<span><span class="co">#&gt;  9 min      0                </span></span>
-<span><span class="co">#&gt; 10 q_1      0                </span></span>
-<span><span class="co">#&gt; 11 median   0                </span></span>
-<span><span class="co">#&gt; 12 q_3      0                </span></span>
-<span><span class="co">#&gt; 13 max      1                </span></span>
-<span><span class="co">#&gt; 14 iqr      0                </span></span>
-<span><span class="co">#&gt; 15 range    1                </span></span>
-<span><span class="co">#&gt; 16 skewness 2.26778683805536 </span></span>
-<span><span class="co">#&gt; 17 kurtosis 6.14285714285714</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── waso_prop ────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
@@ -1649,11 +1671,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="va">linear_temporal_vars</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_h1.html">cli_h1</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://cli.r-lib.org/reference/cli_h1.html">cli_h1</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://cli.r-lib.org/reference/cat_line.html">cat_line</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">data</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">rutils</span><span class="fu">:::</span><span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span></span>
 <span>      col <span class="op">=</span> <span class="va">i</span>,</span>
 <span>      name <span class="op">=</span> <span class="va">i</span>,</span>
 <span>      threshold <span class="op">=</span> <span class="cn">NULL</span></span>
@@ -1673,14 +1695,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;  3 n        8                                    </span></span>
 <span><span class="co">#&gt;  4 n_rm_na  8                                    </span></span>
 <span><span class="co">#&gt;  5 n_na     0                                    </span></span>
-<span><span class="co">#&gt;  6 mean     2024-01-15 05:28:07.5                </span></span>
+<span><span class="co">#&gt;  6 mean     2024-01-15 08:28:07.5                </span></span>
 <span><span class="co">#&gt;  7 var      410013741341250s (~12992551.44 years)</span></span>
 <span><span class="co">#&gt;  8 sd       20248796.0467098s (~33.48 weeks)     </span></span>
-<span><span class="co">#&gt;  9 min      2023-07-10 10:00:00                  </span></span>
-<span><span class="co">#&gt; 10 q_1      2023-07-29 18:52:30                  </span></span>
-<span><span class="co">#&gt; 11 median   2023-08-12 03:37:30                  </span></span>
-<span><span class="co">#&gt; 12 q_3      2024-09-22 20:45:00                  </span></span>
-<span><span class="co">#&gt; 13 max      2024-11-19 15:00:00                  </span></span>
+<span><span class="co">#&gt;  9 min      2023-07-10 13:00:00                  </span></span>
+<span><span class="co">#&gt; 10 q_1      2023-07-29 21:52:30                  </span></span>
+<span><span class="co">#&gt; 11 median   2023-08-12 06:37:30                  </span></span>
+<span><span class="co">#&gt; 12 q_3      2024-09-22 23:45:00                  </span></span>
+<span><span class="co">#&gt; 13 max      2024-11-19 18:00:00                  </span></span>
 <span><span class="co">#&gt; 14 iqr      36381150s (~1.15 years)              </span></span>
 <span><span class="co">#&gt; 15 range    43045200s (~1.36 years)              </span></span>
 <span><span class="co">#&gt; 16 skewness 0.534357534659942                    </span></span>
@@ -1708,6 +1730,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt; 15 range    26:38:00           </span></span>
 <span><span class="co">#&gt; 16 skewness 0.452083464933124  </span></span>
 <span><span class="co">#&gt; 17 kurtosis 1.81255885134332</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── timestamp ────────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
+<span><span class="co">#&gt;    name     value                                </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;                                </span></span>
+<span><span class="co">#&gt;  1 name     timestamp                            </span></span>
+<span><span class="co">#&gt;  2 class    POSIXct                              </span></span>
+<span><span class="co">#&gt;  3 n        8                                    </span></span>
+<span><span class="co">#&gt;  4 n_rm_na  8                                    </span></span>
+<span><span class="co">#&gt;  5 n_na     0                                    </span></span>
+<span><span class="co">#&gt;  6 mean     2023-12-22 03:44:03.375              </span></span>
+<span><span class="co">#&gt;  7 var      428938220369039s (~13592231.99 years)</span></span>
+<span><span class="co">#&gt;  8 sd       20710823.7491665s (~34.24 weeks)     </span></span>
+<span><span class="co">#&gt;  9 min      2023-05-26 20:55:52                  </span></span>
+<span><span class="co">#&gt; 10 q_1      2023-07-02 23:27:32                  </span></span>
+<span><span class="co">#&gt; 11 median   2023-07-21 00:49:20                  </span></span>
+<span><span class="co">#&gt; 12 q_3      2024-09-06 12:44:44                  </span></span>
+<span><span class="co">#&gt; 13 max      2024-11-03 00:04:31                  </span></span>
+<span><span class="co">#&gt; 14 iqr      37286232s (~1.18 years)              </span></span>
+<span><span class="co">#&gt; 15 range    45457719s (~1.44 years)              </span></span>
+<span><span class="co">#&gt; 16 skewness 0.521032391062454                    </span></span>
+<span><span class="co">#&gt; 17 kurtosis 1.32186244260741</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── birth_date ───────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
+<span><span class="co">#&gt;    name     value                             </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;                             </span></span>
+<span><span class="co">#&gt;  1 name     birth_date                        </span></span>
+<span><span class="co">#&gt;  2 class    Date                              </span></span>
+<span><span class="co">#&gt;  3 n        8                                 </span></span>
+<span><span class="co">#&gt;  4 n_rm_na  8                                 </span></span>
+<span><span class="co">#&gt;  5 n_na     0                                 </span></span>
+<span><span class="co">#&gt;  6 mean     1994-10-09                        </span></span>
+<span><span class="co">#&gt;  7 var      302993487771.429s (~9601.28 years)</span></span>
+<span><span class="co">#&gt;  8 sd       161798137.639008s (~5.13 years)   </span></span>
+<span><span class="co">#&gt;  9 min      1989-02-23                        </span></span>
+<span><span class="co">#&gt; 10 q_1      1989-12-16                        </span></span>
+<span><span class="co">#&gt; 11 median   1994-08-01                        </span></span>
+<span><span class="co">#&gt; 12 q_3      1998-09-28                        </span></span>
+<span><span class="co">#&gt; 13 max      2001-07-25                        </span></span>
+<span><span class="co">#&gt; 14 iqr      277192800s (~8.78 years)          </span></span>
+<span><span class="co">#&gt; 15 range    391824000s (~12.42 years)         </span></span>
+<span><span class="co">#&gt; 16 skewness 0.140349408142377                 </span></span>
+<span><span class="co">#&gt; 17 kurtosis 1.43088903557437</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── fps_min ──────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -2029,53 +2097,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt; 14 iqr      12230400s (~20.22 weeks)             </span></span>
 <span><span class="co">#&gt; 15 range    45835680s (~1.45 years)              </span></span>
 <span><span class="co">#&gt; 16 skewness 1.12604472970084                     </span></span>
-<span><span class="co">#&gt; 17 kurtosis 2.31504841634914</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── timestamp ────────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
-<span><span class="co">#&gt;    name     value                                </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;                                </span></span>
-<span><span class="co">#&gt;  1 name     timestamp                            </span></span>
-<span><span class="co">#&gt;  2 class    POSIXct                              </span></span>
-<span><span class="co">#&gt;  3 n        8                                    </span></span>
-<span><span class="co">#&gt;  4 n_rm_na  8                                    </span></span>
-<span><span class="co">#&gt;  5 n_na     0                                    </span></span>
-<span><span class="co">#&gt;  6 mean     2023-12-22 00:44:03.375              </span></span>
-<span><span class="co">#&gt;  7 var      428938220369039s (~13592231.99 years)</span></span>
-<span><span class="co">#&gt;  8 sd       20710823.7491665s (~34.24 weeks)     </span></span>
-<span><span class="co">#&gt;  9 min      2023-05-26 17:55:52                  </span></span>
-<span><span class="co">#&gt; 10 q_1      2023-07-02 20:27:32                  </span></span>
-<span><span class="co">#&gt; 11 median   2023-07-20 21:49:20                  </span></span>
-<span><span class="co">#&gt; 12 q_3      2024-09-06 09:44:44                  </span></span>
-<span><span class="co">#&gt; 13 max      2024-11-02 21:04:31                  </span></span>
-<span><span class="co">#&gt; 14 iqr      37286232s (~1.18 years)              </span></span>
-<span><span class="co">#&gt; 15 range    45457719s (~1.44 years)              </span></span>
-<span><span class="co">#&gt; 16 skewness 0.521032391062454                    </span></span>
-<span><span class="co">#&gt; 17 kurtosis 1.32186244260741</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── birth_date ───────────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
-<span><span class="co">#&gt;    name     value                             </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;                             </span></span>
-<span><span class="co">#&gt;  1 name     birth_date                        </span></span>
-<span><span class="co">#&gt;  2 class    Date                              </span></span>
-<span><span class="co">#&gt;  3 n        8                                 </span></span>
-<span><span class="co">#&gt;  4 n_rm_na  8                                 </span></span>
-<span><span class="co">#&gt;  5 n_na     0                                 </span></span>
-<span><span class="co">#&gt;  6 mean     1994-10-09                        </span></span>
-<span><span class="co">#&gt;  7 var      302993487771.429s (~9601.28 years)</span></span>
-<span><span class="co">#&gt;  8 sd       161798137.639008s (~5.13 years)   </span></span>
-<span><span class="co">#&gt;  9 min      1989-02-23                        </span></span>
-<span><span class="co">#&gt; 10 q_1      1989-12-16                        </span></span>
-<span><span class="co">#&gt; 11 median   1994-08-01                        </span></span>
-<span><span class="co">#&gt; 12 q_3      1998-09-28                        </span></span>
-<span><span class="co">#&gt; 13 max      2001-07-25                        </span></span>
-<span><span class="co">#&gt; 14 iqr      277192800s (~8.78 years)          </span></span>
-<span><span class="co">#&gt; 15 range    391824000s (~12.42 years)         </span></span>
-<span><span class="co">#&gt; 16 skewness 0.140349408142377                 </span></span>
-<span><span class="co">#&gt; 17 kurtosis 1.43088903557437</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span><span class="co">#&gt; 17 kurtosis 2.31504841634914</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section><section id="get-descriptive-statistics-for-circular-temporal-variables" class="level2" data-number="3.18"><h2 data-number="3.18" class="anchored" data-anchor-id="get-descriptive-statistics-for-circular-temporal-variables">
 <span class="header-section-number">3.18</span> Get Descriptive Statistics for Circular Temporal Variables</h2>
@@ -2088,14 +2110,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="va">circular_temporal_vars</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_h1.html">cli_h1</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://cli.r-lib.org/reference/cli_h1.html">cli_h1</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://cli.r-lib.org/reference/cat_line.html">cat_line</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">i</span>, <span class="st">"^hfs_"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">threshold</span> <span class="op">&lt;-</span> <span class="fu">hms</span><span class="fu">::</span><span class="fu"><a href="https://hms.tidyverse.org/reference/parse_hms.html">parse_hms</a></span><span class="op">(</span><span class="st">"18:00:00"</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="va">threshold</span> <span class="op">&lt;-</span> <span class="fu">hms</span><span class="fu">::</span><span class="fu"><a href="https://hms.tidyverse.org/reference/parse_hms.html">parse_hms</a></span><span class="op">(</span><span class="st">"12:00:00"</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span></span>
 <span>  <span class="va">data</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">rutils</span><span class="fu">:::</span><span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://danielvartan.github.io/rutils/reference/stats_summary.html">stats_summary</a></span><span class="op">(</span></span>
 <span>      col <span class="op">=</span> <span class="va">i</span>,</span>
 <span>      name <span class="op">=</span> <span class="va">i</span>,</span>
-<span>      threshold <span class="op">=</span> <span class="fu">hms</span><span class="fu">::</span><span class="fu"><a href="https://hms.tidyverse.org/reference/parse_hms.html">parse_hms</a></span><span class="op">(</span><span class="st">"12:00:00"</span><span class="op">)</span></span>
+<span>      threshold <span class="op">=</span> <span class="va">threshold</span></span>
 <span>    <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span>
 <span></span>
@@ -2220,25 +2248,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt; ── hfs_max ──────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; # A tibble: 17 × 2</span></span>
-<span><span class="co">#&gt;    name     value            </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;            </span></span>
-<span><span class="co">#&gt;  1 name     hfs_max          </span></span>
-<span><span class="co">#&gt;  2 class    hms              </span></span>
-<span><span class="co">#&gt;  3 n        8                </span></span>
-<span><span class="co">#&gt;  4 n_rm_na  8                </span></span>
-<span><span class="co">#&gt;  5 n_na     0                </span></span>
-<span><span class="co">#&gt;  6 mean     07:57:08.375     </span></span>
-<span><span class="co">#&gt;  7 var      20:47:24.267857  </span></span>
-<span><span class="co">#&gt;  8 sd       06:37:57.647377  </span></span>
-<span><span class="co">#&gt;  9 min      15:37:15         </span></span>
-<span><span class="co">#&gt; 10 q_1      09:18:27.75      </span></span>
-<span><span class="co">#&gt; 11 median   10:28:48         </span></span>
-<span><span class="co">#&gt; 12 q_3      10:37:51.75      </span></span>
-<span><span class="co">#&gt; 13 max      11:03:52         </span></span>
-<span><span class="co">#&gt; 14 iqr      01:19:24         </span></span>
-<span><span class="co">#&gt; 15 range    19:26:37         </span></span>
-<span><span class="co">#&gt; 16 skewness -2.22258852667749</span></span>
-<span><span class="co">#&gt; 17 kurtosis 6.02650638861947</span></span>
+<span><span class="co">#&gt;    name     value           </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;           </span></span>
+<span><span class="co">#&gt;  1 name     hfs_max         </span></span>
+<span><span class="co">#&gt;  2 class    hms             </span></span>
+<span><span class="co">#&gt;  3 n        8               </span></span>
+<span><span class="co">#&gt;  4 n_rm_na  8               </span></span>
+<span><span class="co">#&gt;  5 n_na     0               </span></span>
+<span><span class="co">#&gt;  6 mean     10:57:08.375    </span></span>
+<span><span class="co">#&gt;  7 var      14418:13:07.125 </span></span>
+<span><span class="co">#&gt;  8 sd       02:00:04.553222 </span></span>
+<span><span class="co">#&gt;  9 min      09:13:18        </span></span>
+<span><span class="co">#&gt; 10 q_1      10:08:41.75     </span></span>
+<span><span class="co">#&gt; 11 median   10:33:00        </span></span>
+<span><span class="co">#&gt; 12 q_3      10:54:42.25     </span></span>
+<span><span class="co">#&gt; 13 max      15:37:15        </span></span>
+<span><span class="co">#&gt; 14 iqr      00:46:00.5      </span></span>
+<span><span class="co">#&gt; 15 range    06:23:57        </span></span>
+<span><span class="co">#&gt; 16 skewness 1.75412979176181</span></span>
+<span><span class="co">#&gt; 17 kurtosis 4.99700382711105</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── hfs_mean ─────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -2312,7 +2340,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div>
-<figure class="figure"><p><a href="short-report-analysis_files/figure-html/unnamed-chunk-20-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="short-report-analysis_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></a></p>
+<figure class="figure"><p><a href="short-report-analysis_files/figure-html/unnamed-chunk-18-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="short-report-analysis_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -2328,7 +2356,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div>
-<figure class="figure"><p><a href="short-report-analysis_files/figure-html/unnamed-chunk-21-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="short-report-analysis_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></a></p>
+<figure class="figure"><p><a href="short-report-analysis_files/figure-html/unnamed-chunk-19-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="short-report-analysis_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -2341,7 +2369,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div>
-<figure class="figure"><p><a href="short-report-analysis_files/figure-html/unnamed-chunk-22-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="short-report-analysis_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></a></p>
+<figure class="figure"><p><a href="short-report-analysis_files/figure-html/unnamed-chunk-20-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="short-report-analysis_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -2360,7 +2388,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div>
-<figure class="figure"><p><a href="short-report-analysis_files/figure-html/Plot Correlation Matrices-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="short-report-analysis_files/figure-html/Plot Correlation Matrices-1.png" class="img-fluid figure-img" width="672"></a></p>
+<figure class="figure"><p><a href="short-report-analysis_files/figure-html/Plot Correlation Matrices-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="short-report-analysis_files/figure-html/Plot Correlation Matrices-1.png" class="img-fluid figure-img" width="960"></a></p>
 </figure>
 </div>
 </div>
@@ -2380,7 +2408,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt; Warning in cor(x, y): the standard deviation is zero</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div>
-<figure class="figure"><p><a href="short-report-analysis_files/figure-html/unnamed-chunk-23-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="short-report-analysis_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></a></p>
+<figure class="figure"><p><a href="short-report-analysis_files/figure-html/unnamed-chunk-21-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="short-report-analysis_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="960"></a></p>
 </figure>
 </div>
 </div>
@@ -2400,7 +2428,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div>
-<figure class="figure"><p><a href="short-report-analysis_files/figure-html/unnamed-chunk-24-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="short-report-analysis_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></a></p>
+<figure class="figure"><p><a href="short-report-analysis_files/figure-html/unnamed-chunk-22-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="short-report-analysis_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="960"></a></p>
 </figure>
 </div>
 </div>
@@ -2413,7 +2441,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div>
-<figure class="figure"><p><a href="short-report-analysis_files/figure-html/unnamed-chunk-25-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="short-report-analysis_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></a></p>
+<figure class="figure"><p><a href="short-report-analysis_files/figure-html/unnamed-chunk-23-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="short-report-analysis_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="960"></a></p>
 </figure>
 </div>
 </div>
@@ -2436,7 +2464,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div>
-<figure class="figure"><p><a href="short-report-analysis_files/figure-html/unnamed-chunk-26-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="short-report-analysis_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></a></p>
+<figure class="figure"><p><a href="short-report-analysis_files/figure-html/unnamed-chunk-24-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="short-report-analysis_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="960"></a></p>
 </figure>
 </div>
 </div>
@@ -2454,7 +2482,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div>
-<figure class="figure"><p><a href="short-report-analysis_files/figure-html/unnamed-chunk-27-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="short-report-analysis_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></a></p>
+<figure class="figure"><p><a href="short-report-analysis_files/figure-html/unnamed-chunk-25-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="short-report-analysis_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="960"></a></p>
 </figure>
 </div>
 </div>
@@ -2861,13 +2889,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
   });
   </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../qmd/sapopemba-survey-analysis.html" class="pagination-link" aria-label="Sapopemba Survey Analysis">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Sapopemba Survey Analysis</span></span>
+      <a href="../qmd/sri-analysis.html" class="pagination-link" aria-label="SRI Analysis">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">SRI Analysis</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../qmd/sri-analysis.html" class="pagination-link" aria-label="SRI Analysis">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">SRI Analysis</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../qmd/references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
