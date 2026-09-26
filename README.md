@@ -19,7 +19,7 @@ This repository contains materials for the study: *Does Sleep Regularity
 Worsen Over the Third Trimester of Pregnancy?*. The full research
 compendium, including data and supplementary materials, is available on
 the Open Science Framework ([OSF](https://osf.io/)) at:
-<https://doi.org/10.17605/OSF.IO/S4TBZ>
+<https://doi.org/10.17605/OSF.IO/S4TBZ>.
 
 ## Keys
 
